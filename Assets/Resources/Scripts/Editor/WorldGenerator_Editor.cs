@@ -2,7 +2,7 @@
 using UnityEditor;
 
 [CustomEditor(typeof(WorldGenerator))]
-public class WorldGenerator_Editor : Editor
+public class WorldGenerator2_Editor : Editor
 {
     public override void OnInspectorGUI()
     {
@@ -14,9 +14,6 @@ public class WorldGenerator_Editor : Editor
         }
 
         if (GUILayout.Button("Generate"))
-            worldGen.GenerateChunks();
-
-        if (GUILayout.Button("Clear"))
-            worldGen.DestroyChunks(false);
+            worldGen.Generate();
     }
 }

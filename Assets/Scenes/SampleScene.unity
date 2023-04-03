@@ -182,7 +182,7 @@ Transform:
   m_Children:
   - {fileID: 2028743328}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &489291976
 GameObject:
@@ -197,7 +197,7 @@ GameObject:
   - component: {fileID: 489291978}
   - component: {fileID: 489291977}
   m_Layer: 0
-  m_Name: WorldGenerator2
+  m_Name: WorldGenerator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -438,7 +438,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
@@ -904,216 +904,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2028743327}
   m_Mesh: {fileID: 1707171011}
---- !u!1 &2062830738
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2062830740}
-  - component: {fileID: 2062830739}
-  m_Layer: 0
-  m_Name: WorldGenerator
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2062830739
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2062830738}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af636a10ccb775d49957d9828c836091, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chunkPrefab: {fileID: 3443652634046302472, guid: d708544c36bec7f4ab7d9b922224a2e8, type: 3}
-  worldScaleRatio: 1
-  seed: 1
-  noiseScale: 15
-  chunksAmount: {x: 10, y: 10}
-  biomeData:
-  - name: Plains
-    bias: {x: 0, y: 0.4}
-    random: {x: 0, y: 0.5}
-    falloffRate: 0.01
-    weightBias:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 1
-        outSlope: 1
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 1
-        outSlope: 1
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    feature: {r: 0.4339623, g: 0.28326777, b: 0.23131008, a: 0}
-    biome: 12
-    noiseData:
-      offset: {x: 0, y: 0}
-      octaves: 1
-      lacunarity: 2
-      persistance: 0.5
-      heightAddend: 0
-      heightMultiplier: 2
-      noiseScale: 25
-      pattern: 00000000
-      seed: 0
-  - name: Plains2
-    bias: {x: 0, y: 0.4}
-    random: {x: 0.5, y: 1}
-    falloffRate: 0.02
-    weightBias:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 1
-        outSlope: 1
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 1
-        outSlope: 1
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    feature: {r: 0.26415092, g: 0.16042185, b: 0.12584549, a: 1}
-    biome: 13
-    noiseData:
-      offset: {x: 0, y: 0}
-      octaves: 1
-      lacunarity: 2
-      persistance: 0.5
-      heightAddend: 0
-      heightMultiplier: 2
-      noiseScale: 25
-      pattern: 00000000
-      seed: 0
-  - name: Hills
-    bias: {x: 0.4, y: 0.6}
-    random: {x: 0, y: 1}
-    falloffRate: 0.02
-    weightBias:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 1
-        outSlope: 1
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 1
-        outSlope: 1
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    feature: {r: 0.2627451, g: 0.16078432, b: 0.1254902, a: 0}
-    biome: 13
-    noiseData:
-      offset: {x: 0, y: 0}
-      octaves: 3
-      lacunarity: 2
-      persistance: 0.4
-      heightAddend: 37.5
-      heightMultiplier: 35
-      noiseScale: 50
-      pattern: 000000000200000001000000
-      seed: 0
-  - name: Mountains
-    bias: {x: 0.5, y: 1}
-    random: {x: 0, y: 1}
-    falloffRate: 0.01
-    weightBias:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 1
-        outSlope: 1
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 1
-        outSlope: 1
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    feature: {r: 0.5377358, g: 0.3881805, b: 0.35257208, a: 0}
-    biome: 14
-    noiseData:
-      offset: {x: 0, y: 0}
-      octaves: 2
-      lacunarity: 2
-      persistance: 0.4
-      heightAddend: 75
-      heightMultiplier: 35
-      noiseScale: 50
-      pattern: 0000000000000000
-      seed: 0
---- !u!4 &2062830740
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2062830738}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6549851776113691407
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
+using static UnityEngine.Mesh;
+using UnityEngine.Rendering;
 
+[RequireComponent(typeof(Terrain))]
 public class WorldGenerator : MonoBehaviour
 {
-    [SerializeField]
-    private Chunk chunkPrefab;
+    private Terrain terrain;
 
     [SerializeField]
     [Tooltip("1:_ scale.")]
@@ -18,27 +20,28 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField]
     private float noiseScale = 20;
     [SerializeField]
-    private Vector2Int chunksAmount;
-    [SerializeField]
     private BiomeData[] biomeData;
 
-    private Dictionary<Vector2, Chunk> chunks = new Dictionary<Vector2, Chunk>();
+    [SerializeField]
+    private float waterLevel = 100f;
 
-    public void GenerateChunks()
+
+    public void Generate()
     {
-        DestroyChunks();
+        if (this.terrain == null)
+            this.terrain = this.GetComponent<Terrain>();
 
         System.Array.Sort(this.biomeData);
         BiomeData[] biomes = new BiomeData[this.biomeData.Length];
 
-        for(int i = 0; i < this.biomeData.Length; i++)
+        for (int i = 0; i < this.biomeData.Length; i++)
         {
             biomes[i] = this.biomeData[i];
 
             biomes[i].noiseData = BiomeGenerator.GetBiomeNoiseData(this.biomeData[i].biome);
             biomes[i].noiseData.noiseScale /= this.worldScaleRatio;
             biomes[i].noiseData.heightMultiplier /= this.worldScaleRatio;
-            biomes[i].noiseData.heightAddend /= this.worldScaleRatio;
+            biomes[i].noiseData.heightAddend = (biomes[i].noiseData.heightAddend + this.waterLevel) / this.worldScaleRatio;
             biomes[i].falloffRate *= this.worldScaleRatio;
         }
 
@@ -47,51 +50,56 @@ public class WorldGenerator : MonoBehaviour
         biasData.noiseScale /= this.worldScaleRatio;
         randomnessData.noiseScale /= this.worldScaleRatio;
 
+        int size = this.terrain.terrainData.heightmapResolution;
 
-        float[,][] weights = BiomeGenerator.GetBiomeMap(this.chunksAmount.x, this.chunksAmount.y, Chunk.WIDTH, Chunk.HEIGHT, biomes, biasData, randomnessData);
+        float[,][] weights = BiomeGenerator.GetBiomeMap(1, 1, size, size, biomes, biasData, randomnessData);
+        float[,] heightMap = this.CreateHeightMap(size, weights, biomes);
+        this.terrain.terrainData.SetHeights(0, 0, heightMap);
 
-        for (int chunkY = 0; chunkY < this.chunksAmount.y; chunkY++)
-        {
-            for (int chunkX = 0; chunkX < this.chunksAmount.x; chunkX++)
-            {
-                Chunk c = Instantiate(this.chunkPrefab, this.transform);
-                c.Generate(new Vector2Int(chunkX, chunkY), weights, biomes, chunks);
-                this.chunks.Add(new Vector2(chunkX, chunkY), c);
-                c.gameObject.AddComponent<MeshCollider>();
-            }
-        }
+        this.transform.position = new Vector3(0, -this.waterLevel, 0);
     }
 
-    public void DestroyChunks(bool bufferedOnly = true)
+    private float[,] CreateHeightMap(int size, float[,][] weights, BiomeData[] biomes)
     {
-        if (bufferedOnly)
+        float[,] heightMap = new float[size, size];
+
+        Vector2[][] octaveOffsets = new Vector2[biomes.Length][];
+        float[] maxValues = new float[biomes.Length];
+
+        float maxTerrainHeight = this.terrain.terrainData.heightmapScale.y;
+
+        //int chunkOffsetX = chunkPos.x * (WIDTH - 1);
+        //int chunkOffsetY = chunkPos.y * (HEIGHT - 1);
+
+        for (int i = 0; i < biomes.Length; i++)
+            //octaveOffsets[i] = Synthesizer.CalculateOctaveOffsets(chunkOffsetX, chunkOffsetY, biomes[i].noiseData, out maxValues[i]);
+            octaveOffsets[i] = Synthesizer.CalculateOctaveOffsets(0, 0, biomes[i].noiseData, out maxValues[i]);
+
+        for (int y = 0; y < size; y++)
         {
-            foreach (Vector2 chunkPos in this.chunks.Keys)
+            for (int x = 0; x < size; x++)
             {
-                if (this.chunks[chunkPos] != null)
-                    DestroyImmediate(this.chunks[chunkPos].gameObject);
-            }
-        }
-        else
-        {
-            while (transform.childCount > 0)
-            {
-                DestroyImmediate(transform.GetChild(0).gameObject);
+                //float terrainHeight = Synthesizer.CalculateCompoundNoiseValue(x, y, octaveOffsets, biomes, maxValues, weights[chunkOffsetX + x, chunkOffsetY + y]);
+                float terrainHeight = Synthesizer.CalculateCompoundNoiseValue(x, y, octaveOffsets, biomes, maxValues, weights[x, y]);
+                heightMap[x, y] = terrainHeight / maxTerrainHeight;
             }
         }
 
-        this.chunks.Clear();
+        return heightMap;
+    }
+
+    private void Awake()
+    {
+        this.terrain = this.GetComponent<Terrain>();
     }
 
     private void Start()
     {
-        //GenerateChunks();
+        Generate();
     }
 
     private void OnValidate()
     {
-        this.chunksAmount.x = Mathf.Clamp(this.chunksAmount.x, 1, 50);
-        this.chunksAmount.y = Mathf.Clamp(this.chunksAmount.y, 1, 50);
         this.worldScaleRatio = Mathf.Clamp(this.worldScaleRatio, 1, 10);
         this.noiseScale = Mathf.Max(0.01f, this.noiseScale);
     }
