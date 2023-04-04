@@ -31,6 +31,8 @@ public class BiomeGenerator
     public static readonly NoiseData WEIRD_RIDGE = new NoiseData(new Vector2(0f, 0f), 40f, 50f, 100f, 3, 2f, 0.6f, 0, new NoisePattern[] { NoisePattern.Split, NoisePattern.Ridge, NoisePattern.Ridge });
 
 
+
+
     #region BiomeStuff
 
     /// <summary>
@@ -44,9 +46,10 @@ public class BiomeGenerator
     /// <param name="bias">The bias noise-map for biome-generation.</param>
     /// <param name="randomness">The randomness noise-map for biome-generation.</param>
     /// <returns>Weights for each vertex-position. (Not sepparated into chunks.)</returns>
-    public static float[,][] GetBiomeMap(int horChunks, int verChunks, int width, int height, BiomeData[] biomes, NoiseData bias, NoiseData randomness)
+    public static float[,][] GetBiomeMap(int horChunks, int verChunks, int width, int height, BiomeData[] biomes, NoiseData bias, NoiseData randomness, out int[,] dominantBiomes)
     {
         float[,][] weights = new float[horChunks * width, verChunks * height][]; //weights per biome in worldspace (no chunking)
+        dominantBiomes = new int[horChunks * width, verChunks * height]; //Caching dominant biomes per point.
         PointsToBlend toBlend = new PointsToBlend(); //points in worldspace to still blend (no chunking)
 
         //Generate entire biome-map (without blending)
@@ -72,6 +75,7 @@ public class BiomeGenerator
                         float biasValue = Synthesizer.CalculateNoiseValue(x, y, octaveOffsetsBias, bias, maxValueBias);
                         float randomnessValue = Synthesizer.CalculateNoiseValue(x, y, octaveOffsetsRandomness, randomness, maxValueRandomness);
                         int biomeIndex = GetDominantBiomeIndex(biasValue, randomnessValue, biomes);
+                        dominantBiomes[xInWorldSpace, yInWorldSpace] = biomeIndex;
                         weights[xInWorldSpace, yInWorldSpace] = new float[biomes.Length];
                         weights[xInWorldSpace, yInWorldSpace][biomeIndex] = 1f;
 

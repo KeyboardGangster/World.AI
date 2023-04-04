@@ -16,6 +16,10 @@ public struct BiomeData : System.IComparable<BiomeData>
     public Biomes biome;
     public NoiseData noiseData;
 
+    public TerrainLayer baseTerrainLayer;
+    public bool overrideSteepTerrainLayer;
+    public bool overrideInWaterTerrainLayer;
+
     public int CompareTo(BiomeData other)
     {
         int compareValue = bias.x.CompareTo(other.bias.x);

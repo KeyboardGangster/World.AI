@@ -10,6 +10,11 @@ using UnityEngine.Rendering;
 public class WorldGenerator : MonoBehaviour
 {
     private Terrain terrain;
+    private Dictionary<TerrainLayer, int> terrainLayersIndices;
+    [SerializeField]
+    private TerrainLayer slopeTerrainLayer;
+    [SerializeField]
+    private TerrainLayer inWaterTerrainLayer;
 
     [SerializeField]
     [Tooltip("1:_ scale.")]
@@ -33,6 +38,12 @@ public class WorldGenerator : MonoBehaviour
 
         System.Array.Sort(this.biomeData);
         BiomeData[] biomes = new BiomeData[this.biomeData.Length];
+        List<TerrainLayer> terrainLayers = new List<TerrainLayer>();
+        this.terrainLayersIndices = new Dictionary<TerrainLayer, int>();
+
+        int terrainLayerIndex = 0;
+        terrainLayerIndex = this.AddTerrainLayer(terrainLayers, this.slopeTerrainLayer, terrainLayerIndex);
+        terrainLayerIndex = this.AddTerrainLayer(terrainLayers, this.inWaterTerrainLayer, terrainLayerIndex);
 
         for (int i = 0; i < this.biomeData.Length; i++)
         {
@@ -41,9 +52,11 @@ public class WorldGenerator : MonoBehaviour
             biomes[i].noiseData = BiomeGenerator.GetBiomeNoiseData(this.biomeData[i].biome);
             biomes[i].noiseData.noiseScale /= this.worldScaleRatio;
             biomes[i].noiseData.heightMultiplier /= this.worldScaleRatio;
-            biomes[i].noiseData.heightAddend = (biomes[i].noiseData.heightAddend + this.waterLevel) / this.worldScaleRatio;
+            biomes[i].noiseData.heightAddend = (biomes[i].noiseData.heightAddend / this.worldScaleRatio) + this.waterLevel;
             biomes[i].falloffRate *= this.worldScaleRatio;
+            terrainLayerIndex = this.AddTerrainLayer(terrainLayers, biomes[i].baseTerrainLayer, terrainLayerIndex);
         }
+
 
         NoiseData biasData = new NoiseData(Vector2.zero, 1, 0, this.noiseScale * 30, 2, 2, 0.5f, this.seed);
         NoiseData randomnessData = new NoiseData(Vector2.one * 64000, 1, 0, this.noiseScale * 15, 2, 2, 0.5f, this.seed);
@@ -52,9 +65,14 @@ public class WorldGenerator : MonoBehaviour
 
         int size = this.terrain.terrainData.heightmapResolution;
 
-        float[,][] weights = BiomeGenerator.GetBiomeMap(1, 1, size, size, biomes, biasData, randomnessData);
+        float[,][] weights = BiomeGenerator.GetBiomeMap(1, 1, size, size, biomes, biasData, randomnessData, out int[,] dominantBiomes);
+
         float[,] heightMap = this.CreateHeightMap(size, weights, biomes);
         this.terrain.terrainData.SetHeights(0, 0, heightMap);
+
+        this.terrain.terrainData.terrainLayers = terrainLayers.ToArray();
+        float[,,] alphaMap = this.CreateAlphaMap(heightMap, weights, biomes, dominantBiomes);
+        this.terrain.terrainData.SetAlphamaps(0, 0, alphaMap);
 
         this.transform.position = new Vector3(0, -this.waterLevel, 0);
     }
@@ -86,6 +104,72 @@ public class WorldGenerator : MonoBehaviour
         }
 
         return heightMap;
+    }
+
+    private float[,,] CreateAlphaMap(float[,] heightMap, float[,][] weights, BiomeData[] biomes, int[,] dominantBiomes)
+    {
+        int heightMapRes = this.terrain.terrainData.heightmapResolution;
+        int alphaMapRes = this.terrain.terrainData.alphamapResolution;
+        float heightMapAlphaMapRatio = heightMapRes / (float)alphaMapRes;
+
+        float[,,] alphaMap = new float[alphaMapRes, alphaMapRes, this.terrainLayersIndices.Count];
+        float waterLevel = this.waterLevel / this.terrain.terrainData.heightmapScale.y;
+
+        for (int y = 0; y < alphaMapRes; y++)
+        {
+            for(int x = 0; x < alphaMapRes; x++)
+            {
+                int xInHeightMap = Mathf.FloorToInt(x * heightMapAlphaMapRatio);
+                int yInHeightMap = Mathf.FloorToInt(y * heightMapAlphaMapRatio);
+
+                BiomeData dominantBiome = biomes[dominantBiomes[xInHeightMap, yInHeightMap]];
+
+                bool isSteep = false;
+                float steepnessValue = 0;
+                bool isUnderWater = false;
+
+                if (!dominantBiome.overrideSteepTerrainLayer)
+                {
+                    //Fuck this undocumented shit, inverting coords works somehow.
+                    var angle = this.terrain.terrainData.GetSteepness(
+                    (float)y / (this.terrain.terrainData.alphamapHeight - 1),
+                    (float)x / (this.terrain.terrainData.alphamapWidth - 1));
+
+                    if (angle > 30f)
+                    {
+                        isSteep = true;
+                        steepnessValue = (float)(angle / 90.0);
+                        alphaMap[x, y, this.terrainLayersIndices[this.slopeTerrainLayer]] = steepnessValue;
+                    }
+                }
+                if (!isSteep && !dominantBiome.overrideInWaterTerrainLayer && heightMap[xInHeightMap, yInHeightMap] < waterLevel)
+                {
+                    alphaMap[x, y, this.terrainLayersIndices[this.inWaterTerrainLayer]] = 1f;
+                }
+                if (!isUnderWater)
+                {
+                    for (int i = 0; i < biomes.Length; i++)
+                    {
+                        alphaMap[x, y, this.terrainLayersIndices[biomes[i].baseTerrainLayer]] += weights[xInHeightMap, yInHeightMap][i] - steepnessValue;
+                    }
+                }
+            }
+        }
+
+        return alphaMap;
+    }
+
+    private int AddTerrainLayer(List<TerrainLayer> terrainLayers, TerrainLayer tl, int terrainLayerIndex)
+    {
+        if (!this.terrainLayersIndices.ContainsKey(tl))
+        {
+            TerrainLayer newTl = Instantiate(tl);
+            newTl.tileSize /= this.worldScaleRatio;
+            terrainLayers.Add(newTl);
+            this.terrainLayersIndices.Add(tl, terrainLayerIndex++);
+        }
+
+        return terrainLayerIndex;
     }
 
     private void Awake()

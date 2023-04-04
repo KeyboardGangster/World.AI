@@ -182,9 +182,9 @@ Transform:
   m_Children:
   - {fileID: 2028743328}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &489291976
+--- !u!1 &268765527
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -192,10 +192,10 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 489291980}
-  - component: {fileID: 489291979}
-  - component: {fileID: 489291978}
-  - component: {fileID: 489291977}
+  - component: {fileID: 268765531}
+  - component: {fileID: 268765530}
+  - component: {fileID: 268765529}
+  - component: {fileID: 268765528}
   m_Layer: 0
   m_Name: WorldGenerator
   m_TagString: Untagged
@@ -203,27 +203,27 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!154 &489291977
+--- !u!154 &268765528
 TerrainCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 489291976}
+  m_GameObject: {fileID: 268765527}
   m_Material: {fileID: 0}
   m_Enabled: 1
-  m_TerrainData: {fileID: 15600000, guid: 06c1ffd6bdb2a0446b6cdc83280543fa, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: fbce99ef0f0ea1c4e88291df6a6721fd, type: 2}
   m_EnableTreeColliders: 1
---- !u!218 &489291978
+--- !u!218 &268765529
 Terrain:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 489291976}
+  m_GameObject: {fileID: 268765527}
   m_Enabled: 1
   serializedVersion: 6
-  m_TerrainData: {fileID: 15600000, guid: 06c1ffd6bdb2a0446b6cdc83280543fa, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: fbce99ef0f0ea1c4e88291df6a6721fd, type: 2}
   m_TreeDistance: 5000
   m_TreeBillboardDistance: 50
   m_TreeCrossFadeLength: 5
@@ -235,7 +235,7 @@ Terrain:
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 2
   m_DrawHeightmap: 1
-  m_DrawInstanced: 0
+  m_DrawInstanced: 1
   m_DrawTreesAndFoliage: 1
   m_StaticShadowCaster: 0
   m_ReflectionProbeUsage: 1
@@ -248,18 +248,20 @@ Terrain:
   m_GroupingID: 0
   m_RenderingLayerMask: 257
   m_AllowAutoConnect: 1
---- !u!114 &489291979
+--- !u!114 &268765530
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 489291976}
+  m_GameObject: {fileID: 268765527}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c915736dd7e9b16429a40673e73f7bff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slopeTerrainLayer: {fileID: 8574412962073106934, guid: 2e777e4d7a2f36b4083adf524a0182a3, type: 2}
+  inWaterTerrainLayer: {fileID: 8574412962073106934, guid: ff7bd0e8fb496c34c935598686f2d0f6, type: 2}
   worldScaleRatio: 1
   seed: 1
   noiseScale: 15
@@ -304,6 +306,9 @@ MonoBehaviour:
       noiseScale: 25
       pattern: 00000000
       seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: 20b49afc56e8f814c82294b5642352fc, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
   - name: Plains2
     bias: {x: 0, y: 0.4}
     random: {x: 0.5, y: 1}
@@ -344,6 +349,9 @@ MonoBehaviour:
       noiseScale: 25
       pattern: 00000000
       seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: 5704c47654d85b34ab16417e4fbfe0d5, type: 2}
+    overrideSteepTerrainLayer: 1
+    overrideInWaterTerrainLayer: 0
   - name: Hills
     bias: {x: 0.4, y: 0.6}
     random: {x: 0, y: 1}
@@ -384,6 +392,9 @@ MonoBehaviour:
       noiseScale: 50
       pattern: 000000000200000001000000
       seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: 5704c47654d85b34ab16417e4fbfe0d5, type: 2}
+    overrideSteepTerrainLayer: 1
+    overrideInWaterTerrainLayer: 0
   - name: Mountains
     bias: {x: 0.5, y: 1}
     random: {x: 0, y: 1}
@@ -424,21 +435,564 @@ MonoBehaviour:
       noiseScale: 50
       pattern: 0000000000000000
       seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: 5704c47654d85b34ab16417e4fbfe0d5, type: 2}
+    overrideSteepTerrainLayer: 1
+    overrideInWaterTerrainLayer: 0
   waterLevel: 100
---- !u!4 &489291980
+--- !u!4 &268765531
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 489291976}
+  m_GameObject: {fileID: 268765527}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -100, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &528323156
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 528323160}
+  - component: {fileID: 528323159}
+  - component: {fileID: 528323158}
+  - component: {fileID: 528323157}
+  m_Layer: 0
+  m_Name: WorldGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!114 &528323157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 528323156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c915736dd7e9b16429a40673e73f7bff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slopeTerrainLayer: {fileID: 8574412962073106934, guid: 2e777e4d7a2f36b4083adf524a0182a3, type: 2}
+  inWaterTerrainLayer: {fileID: 8574412962073106934, guid: ff7bd0e8fb496c34c935598686f2d0f6, type: 2}
+  worldScaleRatio: 1
+  seed: 5
+  noiseScale: 15
+  biomeData:
+  - name: Plains
+    bias: {x: 0, y: 0.4}
+    random: {x: 0, y: 0.5}
+    falloffRate: 0.01
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.4339623, g: 0.28326777, b: 0.23131008, a: 0}
+    biome: 5
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 1
+      lacunarity: 2
+      persistance: 0.5
+      heightAddend: 0
+      heightMultiplier: 2
+      noiseScale: 25
+      pattern: 00000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: ae25c440b7b21f04e86202f13e2bd9e9, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  - name: Plains2
+    bias: {x: 0, y: 0.4}
+    random: {x: 0.5, y: 1}
+    falloffRate: 0.02
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.26415092, g: 0.16042185, b: 0.12584549, a: 1}
+    biome: 3
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 1
+      lacunarity: 2
+      persistance: 0.5
+      heightAddend: 0
+      heightMultiplier: 2
+      noiseScale: 25
+      pattern: 00000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: ff7bd0e8fb496c34c935598686f2d0f6, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  - name: Hills
+    bias: {x: 0.4, y: 0.6}
+    random: {x: 0, y: 1}
+    falloffRate: 0.02
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.2627451, g: 0.16078432, b: 0.1254902, a: 0}
+    biome: 0
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 3
+      lacunarity: 2
+      persistance: 0.4
+      heightAddend: 37.5
+      heightMultiplier: 35
+      noiseScale: 50
+      pattern: 000000000200000001000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: de4d71308078396439a5ff9e5f7d9278, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  - name: Mountains
+    bias: {x: 0.5, y: 1}
+    random: {x: 0, y: 1}
+    falloffRate: 0.01
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.5377358, g: 0.3881805, b: 0.35257208, a: 0}
+    biome: 1
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 2
+      lacunarity: 2
+      persistance: 0.4
+      heightAddend: 75
+      heightMultiplier: 35
+      noiseScale: 50
+      pattern: 0000000000000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: 219732fbe224ca14dab73f5fe673776f, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  waterLevel: 100
+--- !u!154 &528323158
+TerrainCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 528323156}
+  m_Material: {fileID: 0}
+  m_Enabled: 1
+  m_TerrainData: {fileID: 15600000, guid: bc3a51ba084f6fa48aa5caa6057f7bd5, type: 2}
+  m_EnableTreeColliders: 1
+--- !u!218 &528323159
+Terrain:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 528323156}
+  m_Enabled: 1
+  serializedVersion: 6
+  m_TerrainData: {fileID: 15600000, guid: bc3a51ba084f6fa48aa5caa6057f7bd5, type: 2}
+  m_TreeDistance: 5000
+  m_TreeBillboardDistance: 50
+  m_TreeCrossFadeLength: 5
+  m_TreeMaximumFullLODCount: 50
+  m_DetailObjectDistance: 80
+  m_DetailObjectDensity: 1
+  m_HeightmapPixelError: 5
+  m_SplatMapDistance: 1000
+  m_HeightmapMaximumLOD: 0
+  m_ShadowCastingMode: 2
+  m_DrawHeightmap: 1
+  m_DrawInstanced: 1
+  m_DrawTreesAndFoliage: 1
+  m_StaticShadowCaster: 0
+  m_ReflectionProbeUsage: 1
+  m_MaterialTemplate: {fileID: 2100000, guid: 22ff8771d87ef27429e670136399094b, type: 2}
+  m_BakeLightProbesForTrees: 1
+  m_PreserveTreePrototypeLayers: 0
+  m_DeringLightProbesForTrees: 1
+  m_ScaleInLightmap: 0.0256
+  m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
+  m_GroupingID: 0
+  m_RenderingLayerMask: 257
+  m_AllowAutoConnect: 1
+--- !u!4 &528323160
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 528323156}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1000, y: -100, z: 1000}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &652855321
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 652855325}
+  - component: {fileID: 652855324}
+  - component: {fileID: 652855323}
+  - component: {fileID: 652855322}
+  m_Layer: 0
+  m_Name: WorldGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!154 &652855322
+TerrainCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 652855321}
+  m_Material: {fileID: 0}
+  m_Enabled: 1
+  m_TerrainData: {fileID: 15600000, guid: 7c08e8cae9a3ad74681a86790acdab24, type: 2}
+  m_EnableTreeColliders: 1
+--- !u!218 &652855323
+Terrain:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 652855321}
+  m_Enabled: 1
+  serializedVersion: 6
+  m_TerrainData: {fileID: 15600000, guid: 7c08e8cae9a3ad74681a86790acdab24, type: 2}
+  m_TreeDistance: 5000
+  m_TreeBillboardDistance: 50
+  m_TreeCrossFadeLength: 5
+  m_TreeMaximumFullLODCount: 50
+  m_DetailObjectDistance: 80
+  m_DetailObjectDensity: 1
+  m_HeightmapPixelError: 5
+  m_SplatMapDistance: 1000
+  m_HeightmapMaximumLOD: 0
+  m_ShadowCastingMode: 2
+  m_DrawHeightmap: 1
+  m_DrawInstanced: 1
+  m_DrawTreesAndFoliage: 1
+  m_StaticShadowCaster: 0
+  m_ReflectionProbeUsage: 1
+  m_MaterialTemplate: {fileID: 2100000, guid: 22ff8771d87ef27429e670136399094b, type: 2}
+  m_BakeLightProbesForTrees: 1
+  m_PreserveTreePrototypeLayers: 0
+  m_DeringLightProbesForTrees: 1
+  m_ScaleInLightmap: 0.0256
+  m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
+  m_GroupingID: 0
+  m_RenderingLayerMask: 257
+  m_AllowAutoConnect: 1
+--- !u!114 &652855324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 652855321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c915736dd7e9b16429a40673e73f7bff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slopeTerrainLayer: {fileID: 8574412962073106934, guid: de4d71308078396439a5ff9e5f7d9278, type: 2}
+  inWaterTerrainLayer: {fileID: 8574412962073106934, guid: ff7bd0e8fb496c34c935598686f2d0f6, type: 2}
+  worldScaleRatio: 1
+  seed: 3
+  noiseScale: 15
+  biomeData:
+  - name: Plains
+    bias: {x: 0, y: 0.4}
+    random: {x: 0, y: 0.5}
+    falloffRate: 0.04
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.4339623, g: 0.28326777, b: 0.23131008, a: 0}
+    biome: 6
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 1
+      lacunarity: 2
+      persistance: 0.5
+      heightAddend: 0
+      heightMultiplier: 2
+      noiseScale: 25
+      pattern: 00000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: ff7bd0e8fb496c34c935598686f2d0f6, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  - name: Plains2
+    bias: {x: 0, y: 0.4}
+    random: {x: 0.5, y: 1}
+    falloffRate: 0.02
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.26415092, g: 0.16042185, b: 0.12584549, a: 1}
+    biome: 3
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 1
+      lacunarity: 2
+      persistance: 0.5
+      heightAddend: 0
+      heightMultiplier: 2
+      noiseScale: 25
+      pattern: 00000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: ae25c440b7b21f04e86202f13e2bd9e9, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  - name: Hills
+    bias: {x: 0.4, y: 0.6}
+    random: {x: 0, y: 1}
+    falloffRate: 0.02
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.2627451, g: 0.16078432, b: 0.1254902, a: 0}
+    biome: 5
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 3
+      lacunarity: 2
+      persistance: 0.4
+      heightAddend: 37.5
+      heightMultiplier: 35
+      noiseScale: 50
+      pattern: 000000000200000001000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: ae25c440b7b21f04e86202f13e2bd9e9, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  - name: Mountains
+    bias: {x: 0.5, y: 1}
+    random: {x: 0, y: 1}
+    falloffRate: 0.01
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.5377358, g: 0.3881805, b: 0.35257208, a: 0}
+    biome: 4
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 2
+      lacunarity: 2
+      persistance: 0.4
+      heightAddend: 75
+      heightMultiplier: 35
+      noiseScale: 50
+      pattern: 0000000000000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: ae25c440b7b21f04e86202f13e2bd9e9, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  waterLevel: 100
+--- !u!4 &652855325
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 652855321}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -100, z: -1000}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
@@ -511,7 +1065,7 @@ Light:
   m_RenderingLayerMask: 1
   m_Lightmapping: 1
   m_LightShadowCasterMode: 2
-  m_AreaSize: {x: 1, y: 1}
+  m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 1
@@ -527,14 +1081,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: 0.18121484, y: -0.25422344, z: 0.048556358, w: 0.94877493}
+  m_LocalRotation: {x: 0.069525905, y: 0.512597, z: -0.041692838, w: 0.85479367}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 21.626, y: -30, z: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 9.3, y: 61.9, z: 0}
 --- !u!114 &705507996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -657,6 +1211,1288 @@ MonoBehaviour:
   m_PointlightHDType: 0
   m_SpotLightShape: 0
   m_AreaLightShape: 0
+--- !u!1 &737142677
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 737142681}
+  - component: {fileID: 737142680}
+  - component: {fileID: 737142679}
+  - component: {fileID: 737142678}
+  m_Layer: 0
+  m_Name: WorldGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!114 &737142678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 737142677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c915736dd7e9b16429a40673e73f7bff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slopeTerrainLayer: {fileID: 8574412962073106934, guid: 20b49afc56e8f814c82294b5642352fc, type: 2}
+  inWaterTerrainLayer: {fileID: 8574412962073106934, guid: ff7bd0e8fb496c34c935598686f2d0f6, type: 2}
+  worldScaleRatio: 1
+  seed: 1
+  noiseScale: 15
+  biomeData:
+  - name: Plains
+    bias: {x: 0, y: 0.4}
+    random: {x: 0, y: 0.5}
+    falloffRate: 0.01
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.4339623, g: 0.28326777, b: 0.23131008, a: 0}
+    biome: 6
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 1
+      lacunarity: 2
+      persistance: 0.5
+      heightAddend: 0
+      heightMultiplier: 2
+      noiseScale: 25
+      pattern: 00000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: ff7bd0e8fb496c34c935598686f2d0f6, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  - name: Plains2
+    bias: {x: 0, y: 0.4}
+    random: {x: 0.5, y: 1}
+    falloffRate: 0.02
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.26415092, g: 0.16042185, b: 0.12584549, a: 1}
+    biome: 6
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 1
+      lacunarity: 2
+      persistance: 0.5
+      heightAddend: 0
+      heightMultiplier: 2
+      noiseScale: 25
+      pattern: 00000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: ff7bd0e8fb496c34c935598686f2d0f6, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  - name: Hills
+    bias: {x: 0.4, y: 0.6}
+    random: {x: 0, y: 1}
+    falloffRate: 0.02
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.2627451, g: 0.16078432, b: 0.1254902, a: 0}
+    biome: 6
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 3
+      lacunarity: 2
+      persistance: 0.4
+      heightAddend: 37.5
+      heightMultiplier: 35
+      noiseScale: 50
+      pattern: 000000000200000001000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: ff7bd0e8fb496c34c935598686f2d0f6, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  - name: Mountains
+    bias: {x: 0.5, y: 1}
+    random: {x: 0, y: 1}
+    falloffRate: 0.01
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.5377358, g: 0.3881805, b: 0.35257208, a: 0}
+    biome: 7
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 2
+      lacunarity: 2
+      persistance: 0.4
+      heightAddend: 75
+      heightMultiplier: 35
+      noiseScale: 50
+      pattern: 0000000000000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: 4f848ab6a2a234146a665e71f705b108, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  waterLevel: 100
+--- !u!154 &737142679
+TerrainCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 737142677}
+  m_Material: {fileID: 0}
+  m_Enabled: 1
+  m_TerrainData: {fileID: 15600000, guid: a7e28be655be63b4d90d57de8d348b8a, type: 2}
+  m_EnableTreeColliders: 1
+--- !u!218 &737142680
+Terrain:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 737142677}
+  m_Enabled: 1
+  serializedVersion: 6
+  m_TerrainData: {fileID: 15600000, guid: a7e28be655be63b4d90d57de8d348b8a, type: 2}
+  m_TreeDistance: 5000
+  m_TreeBillboardDistance: 50
+  m_TreeCrossFadeLength: 5
+  m_TreeMaximumFullLODCount: 50
+  m_DetailObjectDistance: 80
+  m_DetailObjectDensity: 1
+  m_HeightmapPixelError: 5
+  m_SplatMapDistance: 1000
+  m_HeightmapMaximumLOD: 0
+  m_ShadowCastingMode: 2
+  m_DrawHeightmap: 1
+  m_DrawInstanced: 1
+  m_DrawTreesAndFoliage: 1
+  m_StaticShadowCaster: 0
+  m_ReflectionProbeUsage: 1
+  m_MaterialTemplate: {fileID: 2100000, guid: 22ff8771d87ef27429e670136399094b, type: 2}
+  m_BakeLightProbesForTrees: 1
+  m_PreserveTreePrototypeLayers: 0
+  m_DeringLightProbesForTrees: 1
+  m_ScaleInLightmap: 0.0256
+  m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
+  m_GroupingID: 0
+  m_RenderingLayerMask: 257
+  m_AllowAutoConnect: 1
+--- !u!4 &737142681
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 737142677}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -100, z: -2000}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &740227445
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 740227449}
+  - component: {fileID: 740227448}
+  - component: {fileID: 740227447}
+  - component: {fileID: 740227446}
+  m_Layer: 0
+  m_Name: WorldGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!154 &740227446
+TerrainCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740227445}
+  m_Material: {fileID: 0}
+  m_Enabled: 1
+  m_TerrainData: {fileID: 15600000, guid: 10a27db443e8b1c42845a8e744973298, type: 2}
+  m_EnableTreeColliders: 1
+--- !u!218 &740227447
+Terrain:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740227445}
+  m_Enabled: 1
+  serializedVersion: 6
+  m_TerrainData: {fileID: 15600000, guid: 10a27db443e8b1c42845a8e744973298, type: 2}
+  m_TreeDistance: 5000
+  m_TreeBillboardDistance: 50
+  m_TreeCrossFadeLength: 5
+  m_TreeMaximumFullLODCount: 50
+  m_DetailObjectDistance: 80
+  m_DetailObjectDensity: 1
+  m_HeightmapPixelError: 5
+  m_SplatMapDistance: 1000
+  m_HeightmapMaximumLOD: 0
+  m_ShadowCastingMode: 2
+  m_DrawHeightmap: 1
+  m_DrawInstanced: 1
+  m_DrawTreesAndFoliage: 1
+  m_StaticShadowCaster: 0
+  m_ReflectionProbeUsage: 1
+  m_MaterialTemplate: {fileID: 2100000, guid: 22ff8771d87ef27429e670136399094b, type: 2}
+  m_BakeLightProbesForTrees: 1
+  m_PreserveTreePrototypeLayers: 0
+  m_DeringLightProbesForTrees: 1
+  m_ScaleInLightmap: 0.0256
+  m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
+  m_GroupingID: 0
+  m_RenderingLayerMask: 257
+  m_AllowAutoConnect: 1
+--- !u!114 &740227448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740227445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c915736dd7e9b16429a40673e73f7bff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slopeTerrainLayer: {fileID: 8574412962073106934, guid: 4f848ab6a2a234146a665e71f705b108, type: 2}
+  inWaterTerrainLayer: {fileID: 8574412962073106934, guid: ff7bd0e8fb496c34c935598686f2d0f6, type: 2}
+  worldScaleRatio: 1
+  seed: 1
+  noiseScale: 15
+  biomeData:
+  - name: Plains
+    bias: {x: 0, y: 0.4}
+    random: {x: 0, y: 0.5}
+    falloffRate: 0.01
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.4339623, g: 0.28326777, b: 0.23131008, a: 0}
+    biome: 14
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 1
+      lacunarity: 2
+      persistance: 0.5
+      heightAddend: 0
+      heightMultiplier: 2
+      noiseScale: 25
+      pattern: 00000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: 4f848ab6a2a234146a665e71f705b108, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  - name: Plains2
+    bias: {x: 0, y: 0.4}
+    random: {x: 0.5, y: 1}
+    falloffRate: 0.02
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.26415092, g: 0.16042185, b: 0.12584549, a: 1}
+    biome: 12
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 1
+      lacunarity: 2
+      persistance: 0.5
+      heightAddend: 0
+      heightMultiplier: 2
+      noiseScale: 25
+      pattern: 00000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: ff7bd0e8fb496c34c935598686f2d0f6, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 1
+  - name: Hills
+    bias: {x: 0.4, y: 0.6}
+    random: {x: 0, y: 1}
+    falloffRate: 0.02
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.2627451, g: 0.16078432, b: 0.1254902, a: 0}
+    biome: 12
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 3
+      lacunarity: 2
+      persistance: 0.4
+      heightAddend: 37.5
+      heightMultiplier: 35
+      noiseScale: 50
+      pattern: 000000000200000001000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: ff7bd0e8fb496c34c935598686f2d0f6, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 1
+  - name: Mountains
+    bias: {x: 0.5, y: 1}
+    random: {x: 0, y: 1}
+    falloffRate: 0.01
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.5377358, g: 0.3881805, b: 0.35257208, a: 0}
+    biome: 13
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 2
+      lacunarity: 2
+      persistance: 0.4
+      heightAddend: 75
+      heightMultiplier: 35
+      noiseScale: 50
+      pattern: 0000000000000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: ff7bd0e8fb496c34c935598686f2d0f6, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 1
+  waterLevel: 100
+--- !u!4 &740227449
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740227445}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1000, y: -100, z: -2000}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2023317549}
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1322045296
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1322045299}
+  - component: {fileID: 1322045298}
+  - component: {fileID: 1322045297}
+  m_Layer: 0
+  m_Name: MainCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1322045297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1322045296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23c1ce4fb46143f46bc5cb5224c934f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clearColorMode: 0
+  backgroundColorHDR: {r: 0.025, g: 0.07, b: 0.19, a: 0}
+  clearDepth: 1
+  volumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  volumeAnchorOverride: {fileID: 0}
+  antialiasing: 0
+  SMAAQuality: 2
+  dithering: 0
+  stopNaNs: 0
+  taaSharpenStrength: 0.5
+  TAAQuality: 1
+  taaHistorySharpening: 0.35
+  taaAntiFlicker: 0.5
+  taaMotionVectorRejection: 0
+  taaAntiHistoryRinging: 0
+  taaBaseBlendFactor: 0.875
+  taaJitterScale: 1
+  physicalParameters:
+    m_Iso: 200
+    m_ShutterSpeed: 0.005
+    m_Aperture: 16
+    m_FocusDistance: 10
+    m_BladeCount: 5
+    m_Curvature: {x: 2, y: 11}
+    m_BarrelClipping: 0.25
+    m_Anamorphism: 0
+  flipYMode: 0
+  xrRendering: 1
+  fullscreenPassthrough: 0
+  allowDynamicResolution: 0
+  customRenderingSettings: 0
+  invertFaceCulling: 0
+  probeLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  hasPersistentHistory: 0
+  allowDeepLearningSuperSampling: 1
+  deepLearningSuperSamplingUseCustomQualitySettings: 0
+  deepLearningSuperSamplingQuality: 0
+  deepLearningSuperSamplingUseCustomAttributes: 0
+  deepLearningSuperSamplingUseOptimalSettings: 1
+  deepLearningSuperSamplingSharpening: 0
+  exposureTarget: {fileID: 0}
+  materialMipBias: 0
+  m_RenderingPathCustomFrameSettings:
+    bitDatas:
+      data1: 72198260625768269
+      data2: 13763000477350330392
+    lodBias: 1
+    lodBiasMode: 0
+    lodBiasQualityLevel: 0
+    maximumLODLevel: 0
+    maximumLODLevelMode: 0
+    maximumLODLevelQualityLevel: 0
+    sssQualityMode: 0
+    sssQualityLevel: 0
+    sssCustomSampleBudget: 20
+    msaaMode: 1
+    materialQuality: 0
+  renderingPathCustomFrameSettingsOverrideMask:
+    mask:
+      data1: 0
+      data2: 0
+  defaultFrameSettings: 0
+  m_Version: 8
+  m_ObsoleteRenderingPath: 0
+  m_ObsoleteFrameSettings:
+    overrides: 0
+    enableShadow: 0
+    enableContactShadows: 0
+    enableShadowMask: 0
+    enableSSR: 0
+    enableSSAO: 0
+    enableSubsurfaceScattering: 0
+    enableTransmission: 0
+    enableAtmosphericScattering: 0
+    enableVolumetrics: 0
+    enableReprojectionForVolumetrics: 0
+    enableLightLayers: 0
+    enableExposureControl: 1
+    diffuseGlobalDimmer: 0
+    specularGlobalDimmer: 0
+    shaderLitMode: 0
+    enableDepthPrepassWithDeferredRendering: 0
+    enableTransparentPrepass: 0
+    enableMotionVectors: 0
+    enableObjectMotionVectors: 0
+    enableDecals: 0
+    enableRoughRefraction: 0
+    enableTransparentPostpass: 0
+    enableDistortion: 0
+    enablePostprocess: 0
+    enableOpaqueObjects: 0
+    enableTransparentObjects: 0
+    enableRealtimePlanarReflection: 0
+    enableMSAA: 0
+    enableAsyncCompute: 0
+    runLightListAsync: 0
+    runSSRAsync: 0
+    runSSAOAsync: 0
+    runContactShadowsAsync: 0
+    runVolumeVoxelizationAsync: 0
+    lightLoopSettings:
+      overrides: 0
+      enableDeferredTileAndCluster: 0
+      enableComputeLightEvaluation: 0
+      enableComputeLightVariants: 0
+      enableComputeMaterialVariants: 0
+      enableFptlForForwardOpaque: 0
+      enableBigTilePrepass: 0
+      isFptlEnabled: 0
+--- !u!20 &1322045298
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1322045296}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_FocalLength: 50
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 10000
+  field of view: 62
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 0
+  m_AllowMSAA: 0
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!4 &1322045299
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1322045296}
+  m_LocalRotation: {x: 0.39431018, y: 0.5836592, z: -0.38657993, w: 0.59532976}
+  m_LocalPosition: {x: -686.9734, y: 1145.0105, z: -7.8645678}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1433735121
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1433735125}
+  - component: {fileID: 1433735124}
+  - component: {fileID: 1433735123}
+  - component: {fileID: 1433735122}
+  m_Layer: 0
+  m_Name: WorldGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!154 &1433735122
+TerrainCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1433735121}
+  m_Material: {fileID: 0}
+  m_Enabled: 1
+  m_TerrainData: {fileID: 15600000, guid: 3de2db6fa991e654b81b4f573d7d81d3, type: 2}
+  m_EnableTreeColliders: 1
+--- !u!218 &1433735123
+Terrain:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1433735121}
+  m_Enabled: 1
+  serializedVersion: 6
+  m_TerrainData: {fileID: 15600000, guid: 3de2db6fa991e654b81b4f573d7d81d3, type: 2}
+  m_TreeDistance: 5000
+  m_TreeBillboardDistance: 50
+  m_TreeCrossFadeLength: 5
+  m_TreeMaximumFullLODCount: 50
+  m_DetailObjectDistance: 80
+  m_DetailObjectDensity: 1
+  m_HeightmapPixelError: 5
+  m_SplatMapDistance: 1000
+  m_HeightmapMaximumLOD: 0
+  m_ShadowCastingMode: 2
+  m_DrawHeightmap: 1
+  m_DrawInstanced: 1
+  m_DrawTreesAndFoliage: 1
+  m_StaticShadowCaster: 0
+  m_ReflectionProbeUsage: 1
+  m_MaterialTemplate: {fileID: 2100000, guid: 22ff8771d87ef27429e670136399094b, type: 2}
+  m_BakeLightProbesForTrees: 1
+  m_PreserveTreePrototypeLayers: 0
+  m_DeringLightProbesForTrees: 1
+  m_ScaleInLightmap: 0.0256
+  m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
+  m_GroupingID: 0
+  m_RenderingLayerMask: 257
+  m_AllowAutoConnect: 1
+--- !u!114 &1433735124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1433735121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c915736dd7e9b16429a40673e73f7bff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slopeTerrainLayer: {fileID: 8574412962073106934, guid: 2e777e4d7a2f36b4083adf524a0182a3, type: 2}
+  inWaterTerrainLayer: {fileID: 8574412962073106934, guid: ff7bd0e8fb496c34c935598686f2d0f6, type: 2}
+  worldScaleRatio: 1
+  seed: 4
+  noiseScale: 15
+  biomeData:
+  - name: Plains
+    bias: {x: 0, y: 0.4}
+    random: {x: 0, y: 0.5}
+    falloffRate: 0.01
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.4339623, g: 0.28326777, b: 0.23131008, a: 0}
+    biome: 9
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 1
+      lacunarity: 2
+      persistance: 0.5
+      heightAddend: 0
+      heightMultiplier: 2
+      noiseScale: 25
+      pattern: 00000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: 9ddc59a90ae619e40a295dd34b0f1db5, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  - name: Plains2
+    bias: {x: 0, y: 0.4}
+    random: {x: 0.5, y: 1}
+    falloffRate: 0.02
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.26415092, g: 0.16042185, b: 0.12584549, a: 1}
+    biome: 8
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 1
+      lacunarity: 2
+      persistance: 0.5
+      heightAddend: 0
+      heightMultiplier: 2
+      noiseScale: 25
+      pattern: 00000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: de4d71308078396439a5ff9e5f7d9278, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  - name: Hills
+    bias: {x: 0.4, y: 0.6}
+    random: {x: 0, y: 1}
+    falloffRate: 0.02
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.2627451, g: 0.16078432, b: 0.1254902, a: 0}
+    biome: 10
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 3
+      lacunarity: 2
+      persistance: 0.4
+      heightAddend: 37.5
+      heightMultiplier: 35
+      noiseScale: 50
+      pattern: 000000000200000001000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: 219732fbe224ca14dab73f5fe673776f, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  - name: Mountains
+    bias: {x: 0.5, y: 1}
+    random: {x: 0, y: 1}
+    falloffRate: 0.01
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.5377358, g: 0.3881805, b: 0.35257208, a: 0}
+    biome: 11
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 2
+      lacunarity: 2
+      persistance: 0.4
+      heightAddend: 75
+      heightMultiplier: 35
+      noiseScale: 50
+      pattern: 0000000000000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: 19890a773d5172944b3dc05f377658fb, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  waterLevel: 100
+--- !u!4 &1433735125
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1433735121}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1000, y: -100, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1469012431
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1469012435}
+  - component: {fileID: 1469012434}
+  - component: {fileID: 1469012433}
+  - component: {fileID: 1469012432}
+  m_Layer: 0
+  m_Name: WorldGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!114 &1469012432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1469012431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c915736dd7e9b16429a40673e73f7bff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slopeTerrainLayer: {fileID: 8574412962073106934, guid: 2e777e4d7a2f36b4083adf524a0182a3, type: 2}
+  inWaterTerrainLayer: {fileID: 8574412962073106934, guid: ff7bd0e8fb496c34c935598686f2d0f6, type: 2}
+  worldScaleRatio: 1
+  seed: 1
+  noiseScale: 30
+  biomeData:
+  - name: Plains
+    bias: {x: 0, y: 0.4}
+    random: {x: 0, y: 0.5}
+    falloffRate: 0.01
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.4339623, g: 0.28326777, b: 0.23131008, a: 0}
+    biome: 4
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 1
+      lacunarity: 2
+      persistance: 0.5
+      heightAddend: 0
+      heightMultiplier: 2
+      noiseScale: 25
+      pattern: 00000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: ae25c440b7b21f04e86202f13e2bd9e9, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  - name: Plains2
+    bias: {x: 0, y: 0.4}
+    random: {x: 0.5, y: 1}
+    falloffRate: 0.02
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.26415092, g: 0.16042185, b: 0.12584549, a: 1}
+    biome: 5
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 1
+      lacunarity: 2
+      persistance: 0.5
+      heightAddend: 0
+      heightMultiplier: 2
+      noiseScale: 25
+      pattern: 00000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: ae25c440b7b21f04e86202f13e2bd9e9, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  - name: Hills
+    bias: {x: 0.4, y: 0.6}
+    random: {x: 0, y: 1}
+    falloffRate: 0.02
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.2627451, g: 0.16078432, b: 0.1254902, a: 0}
+    biome: 0
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 3
+      lacunarity: 2
+      persistance: 0.4
+      heightAddend: 37.5
+      heightMultiplier: 35
+      noiseScale: 50
+      pattern: 000000000200000001000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: 39ce9cd7788e85e4382f2b5f569a1588, type: 2}
+    overrideSteepTerrainLayer: 1
+    overrideInWaterTerrainLayer: 0
+  - name: Mountains
+    bias: {x: 0.5, y: 1}
+    random: {x: 0, y: 1}
+    falloffRate: 0.01
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.5377358, g: 0.3881805, b: 0.35257208, a: 0}
+    biome: 1
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 2
+      lacunarity: 2
+      persistance: 0.4
+      heightAddend: 75
+      heightMultiplier: 35
+      noiseScale: 50
+      pattern: 0000000000000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: 39ce9cd7788e85e4382f2b5f569a1588, type: 2}
+    overrideSteepTerrainLayer: 1
+    overrideInWaterTerrainLayer: 0
+  waterLevel: 100
+--- !u!154 &1469012433
+TerrainCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1469012431}
+  m_Material: {fileID: 0}
+  m_Enabled: 1
+  m_TerrainData: {fileID: 15600000, guid: 55693aeb0d6cfc443a0489f0e896a567, type: 2}
+  m_EnableTreeColliders: 1
+--- !u!218 &1469012434
+Terrain:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1469012431}
+  m_Enabled: 1
+  serializedVersion: 6
+  m_TerrainData: {fileID: 15600000, guid: 55693aeb0d6cfc443a0489f0e896a567, type: 2}
+  m_TreeDistance: 5000
+  m_TreeBillboardDistance: 50
+  m_TreeCrossFadeLength: 5
+  m_TreeMaximumFullLODCount: 50
+  m_DetailObjectDistance: 80
+  m_DetailObjectDensity: 1
+  m_HeightmapPixelError: 5
+  m_SplatMapDistance: 1000
+  m_HeightmapMaximumLOD: 0
+  m_ShadowCastingMode: 2
+  m_DrawHeightmap: 1
+  m_DrawInstanced: 1
+  m_DrawTreesAndFoliage: 1
+  m_StaticShadowCaster: 0
+  m_ReflectionProbeUsage: 1
+  m_MaterialTemplate: {fileID: 2100000, guid: 22ff8771d87ef27429e670136399094b, type: 2}
+  m_BakeLightProbesForTrees: 1
+  m_PreserveTreePrototypeLayers: 0
+  m_DeringLightProbesForTrees: 1
+  m_ScaleInLightmap: 0.0256
+  m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
+  m_GroupingID: 0
+  m_RenderingLayerMask: 257
+  m_AllowAutoConnect: 1
+--- !u!4 &1469012435
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1469012431}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -100, z: 1000}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &1707171011
 Mesh:
   m_ObjectHideFlags: 0
@@ -821,6 +2657,104 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &2023317548
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2023317549}
+  - component: {fileID: 2023317552}
+  - component: {fileID: 2023317551}
+  - component: {fileID: 2023317550}
+  m_Layer: 0
+  m_Name: Plane
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2023317549
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023317548}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 500, y: 100, z: 500}
+  m_LocalScale: {x: 100, y: 1, z: 100}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 740227449}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &2023317550
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023317548}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &2023317551
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023317548}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 257
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: ae2e15044bf50dc42be338c13118b6de, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &2023317552
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023317548}
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &2028743327
 GameObject:
   m_ObjectHideFlags: 0
@@ -904,6 +2838,276 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2028743327}
   m_Mesh: {fileID: 1707171011}
+--- !u!1 &2112313568
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2112313572}
+  - component: {fileID: 2112313571}
+  - component: {fileID: 2112313570}
+  - component: {fileID: 2112313569}
+  m_Layer: 0
+  m_Name: WorldGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!154 &2112313569
+TerrainCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2112313568}
+  m_Material: {fileID: 0}
+  m_Enabled: 1
+  m_TerrainData: {fileID: 15600000, guid: 6a20b65338d5c45478e5d93e32c2374c, type: 2}
+  m_EnableTreeColliders: 1
+--- !u!218 &2112313570
+Terrain:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2112313568}
+  m_Enabled: 1
+  serializedVersion: 6
+  m_TerrainData: {fileID: 15600000, guid: 6a20b65338d5c45478e5d93e32c2374c, type: 2}
+  m_TreeDistance: 5000
+  m_TreeBillboardDistance: 50
+  m_TreeCrossFadeLength: 5
+  m_TreeMaximumFullLODCount: 50
+  m_DetailObjectDistance: 80
+  m_DetailObjectDensity: 1
+  m_HeightmapPixelError: 5
+  m_SplatMapDistance: 1000
+  m_HeightmapMaximumLOD: 0
+  m_ShadowCastingMode: 2
+  m_DrawHeightmap: 1
+  m_DrawInstanced: 1
+  m_DrawTreesAndFoliage: 1
+  m_StaticShadowCaster: 0
+  m_ReflectionProbeUsage: 1
+  m_MaterialTemplate: {fileID: 2100000, guid: 22ff8771d87ef27429e670136399094b, type: 2}
+  m_BakeLightProbesForTrees: 1
+  m_PreserveTreePrototypeLayers: 0
+  m_DeringLightProbesForTrees: 1
+  m_ScaleInLightmap: 0.0256
+  m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
+  m_GroupingID: 0
+  m_RenderingLayerMask: 257
+  m_AllowAutoConnect: 1
+--- !u!114 &2112313571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2112313568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c915736dd7e9b16429a40673e73f7bff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slopeTerrainLayer: {fileID: 8574412962073106934, guid: 19890a773d5172944b3dc05f377658fb, type: 2}
+  inWaterTerrainLayer: {fileID: 8574412962073106934, guid: ff7bd0e8fb496c34c935598686f2d0f6, type: 2}
+  worldScaleRatio: 1
+  seed: 2
+  noiseScale: 15
+  biomeData:
+  - name: Plains
+    bias: {x: 0, y: 0.4}
+    random: {x: 0, y: 0.5}
+    falloffRate: 0.01
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.4339623, g: 0.28326777, b: 0.23131008, a: 0}
+    biome: 9
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 1
+      lacunarity: 2
+      persistance: 0.5
+      heightAddend: 0
+      heightMultiplier: 2
+      noiseScale: 25
+      pattern: 00000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: 2e777e4d7a2f36b4083adf524a0182a3, type: 2}
+    overrideSteepTerrainLayer: 0
+    overrideInWaterTerrainLayer: 0
+  - name: Plains2
+    bias: {x: 0, y: 0.4}
+    random: {x: 0.5, y: 1}
+    falloffRate: 0.02
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.26415092, g: 0.16042185, b: 0.12584549, a: 1}
+    biome: 0
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 1
+      lacunarity: 2
+      persistance: 0.5
+      heightAddend: 0
+      heightMultiplier: 2
+      noiseScale: 25
+      pattern: 00000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: 5704c47654d85b34ab16417e4fbfe0d5, type: 2}
+    overrideSteepTerrainLayer: 1
+    overrideInWaterTerrainLayer: 0
+  - name: Hills
+    bias: {x: 0.4, y: 0.6}
+    random: {x: 0, y: 1}
+    falloffRate: 0.02
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.2627451, g: 0.16078432, b: 0.1254902, a: 0}
+    biome: 1
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 3
+      lacunarity: 2
+      persistance: 0.4
+      heightAddend: 37.5
+      heightMultiplier: 35
+      noiseScale: 50
+      pattern: 000000000200000001000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: 5704c47654d85b34ab16417e4fbfe0d5, type: 2}
+    overrideSteepTerrainLayer: 1
+    overrideInWaterTerrainLayer: 0
+  - name: Mountains
+    bias: {x: 0.5, y: 1}
+    random: {x: 0, y: 1}
+    falloffRate: 0.01
+    weightBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    feature: {r: 0.5377358, g: 0.3881805, b: 0.35257208, a: 0}
+    biome: 2
+    noiseData:
+      offset: {x: 0, y: 0}
+      octaves: 2
+      lacunarity: 2
+      persistance: 0.4
+      heightAddend: 75
+      heightMultiplier: 35
+      noiseScale: 50
+      pattern: 0000000000000000
+      seed: 0
+    baseTerrainLayer: {fileID: 8574412962073106934, guid: 5704c47654d85b34ab16417e4fbfe0d5, type: 2}
+    overrideSteepTerrainLayer: 1
+    overrideInWaterTerrainLayer: 0
+  waterLevel: 100
+--- !u!4 &2112313572
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2112313568}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1000, y: -100, z: -1000}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6549851776113691407
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -913,7 +3117,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6549851775257381120, guid: 1130a4e405a728c4692e5bfdabb4c5c5, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6549851775257381120, guid: 1130a4e405a728c4692e5bfdabb4c5c5, type: 3}
       propertyPath: m_LocalScale.x
@@ -929,15 +3133,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6549851775257381120, guid: 1130a4e405a728c4692e5bfdabb4c5c5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 57.145
+      value: 317.6
       objectReference: {fileID: 0}
     - target: {fileID: 6549851775257381120, guid: 1130a4e405a728c4692e5bfdabb4c5c5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 12.849
+      value: 3.144
       objectReference: {fileID: 0}
     - target: {fileID: 6549851775257381120, guid: 1130a4e405a728c4692e5bfdabb4c5c5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 100.511
+      value: 155.9
       objectReference: {fileID: 0}
     - target: {fileID: 6549851775257381120, guid: 1130a4e405a728c4692e5bfdabb4c5c5, type: 3}
       propertyPath: m_LocalRotation.w
