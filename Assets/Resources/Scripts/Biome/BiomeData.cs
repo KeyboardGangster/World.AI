@@ -5,20 +5,24 @@ using UnityEngine;
 [System.Serializable]
 public struct BiomeData : System.IComparable<BiomeData>
 {
-    public string name;
+    [Header("Biome Type")]
+    public Biomes biome;
+    public float falloffRate;
 
+    [Header("Biome Population")]
     public Vector2 bias;
     public Vector2 random;
-    public float falloffRate;
-    public AnimationCurve weightBias;
 
-    public Color feature;
-    public Biomes biome;
+    [HideInInspector]
     public NoiseData noiseData;
 
+    [Header("Biome Details (Should be hidden in the future)")]
     public TerrainLayer baseTerrainLayer;
     public bool overrideSteepTerrainLayer;
     public bool overrideInWaterTerrainLayer;
+
+    public GameObject[] trees;
+    public float treePropability;
 
     public int CompareTo(BiomeData other)
     {

@@ -1,5 +1,6 @@
+
 # W o r l d . A I
-![Samples of 1km² each.](https://i.imgur.com/7HeOw4K.jpg)
+![Samples of 1km² each.](https://i.imgur.com/UEPILDZ.png)
 Text to world using OpenAI and procedural generation techniques.
 
 ## Introduction
@@ -12,12 +13,12 @@ The idea is to simplify creating worlds for your purposes. This can speed up the
 
 ## Preview
 Here are some current results generated with this project.
-![Some sanddunes. F*** diagonal slopes. /\/\/\/](https://i.imgur.com/y1ILiOa.jpg)
-![Some grassy hills. Don't mind the sh***y line-like bumps. its a feature :)](https://i.imgur.com/Xye6p1N.jpg)
-![Red Desert next to mountains](https://i.imgur.com/9XvlBB2.jpg)
-![Some mountains](https://i.imgur.com/AFL5C9k.jpg)
+![Conifers and mountains](https://i.imgur.com/zz2HOWa.png)
+![Some sanddunes.](https://i.imgur.com/y1ILiOa.jpg)
+![2 color maple tree forest and hills.](https://i.imgur.com/4MCHGv8.png)
+![Some Sahara like biome idk](https://i.imgur.com/RVKNZd6.pngg)
 ## Notes
 
-Project is still in development and currently only includes procedural terrain-generation.
+Project is still in development and currently only includes procedural terrain-generation and tree placement.
 
 Currently only supports HDRP.

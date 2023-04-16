@@ -42,7 +42,7 @@ public class Synthesizer
             float amplitude = 1;
             float frequency = 1;
             float noiseValue = 0;
-            float currentWeight = biomes[biomeIndex].weightBias.Evaluate(weights[biomeIndex]);
+            float currentWeight = weights[biomeIndex];
 
             totalWeight += currentWeight;
 

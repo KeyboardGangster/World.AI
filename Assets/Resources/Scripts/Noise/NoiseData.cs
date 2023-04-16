@@ -72,6 +72,13 @@ public struct NoiseData
 
     }
 
+    /// <summary>
+    /// Initializes a new instance of this class, using an existing instance.
+    /// </summary>
+    /// <param name="n">The existing instance.</param>
+    /// <param name="heightAddend">Modification to height. Will be added to n.heightAddend.</param>
+    /// <param name="noiseScaleModifier">Modification to noise-scale. Will be added to n.noiseScale.</param>
+    /// <param name="seedModifier">Modification to seed. Will be added to n.seed.</param>
     public NoiseData(NoiseData n, float heightAddend, float noiseScaleModifier, int seedModifier)
     {
         this.offset = n.offset;

@@ -13,6 +13,9 @@ public class WorldGenerator2_Editor : Editor
 
         }
 
+        if (GUILayout.Button("Sort Biomes"))
+            worldGen.SortBiomeData();
+
         if (GUILayout.Button("Generate"))
             worldGen.Generate();
     }
