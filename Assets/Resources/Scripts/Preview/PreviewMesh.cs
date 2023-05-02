@@ -24,7 +24,6 @@ public class PreviewMesh : MonoBehaviour
 
     [Header("Misc")]
     public bool autoUpdate = false;
-    public Biomes biome;
 
     private Dictionary<Vector2, GameObject> chunks = new Dictionary<Vector2, GameObject>();
 
@@ -59,11 +58,11 @@ public class PreviewMesh : MonoBehaviour
         MeshData meshData = new MeshData(WIDTH, HEIGHT);
         int vertexIndex = 0;
 
-        Vector2[] octaveOffsets = new Vector2[noiseData.octaves];
+        Vector2[] octaveOffsets = new Vector2[noiseData.noise.Octaves];
         int chunkOffsetX = chunkPos.x * (WIDTH - 1);
         int chunkOffsetY = chunkPos.y * (HEIGHT - 1);
 
-        octaveOffsets = Synthesizer.CalculateOctaveOffsets(chunkOffsetX, chunkOffsetY, noiseData, out float maxValue);
+        octaveOffsets = Synthesizer.CalculateOctaveOffsets(chunkOffsetX, chunkOffsetY, 0, noiseData, out float maxValue);
 
         for (int y = 0; y < HEIGHT; y++)
         {
@@ -144,35 +143,26 @@ public class PreviewMesh : MonoBehaviour
     public void PrintNoiseData()
     {
         String nd = $"public static readonly NoiseData {this.noiseDataName.ToUpper()} = new NoiseData(" +
-            $"new Vector2({this.noiseData.offset.x}f, {this.noiseData.offset.y}f), " +
-            $"{this.noiseData.heightMultiplier}f, " +
-            $"{this.noiseData.heightAddend}f, " +
-            $"{this.noiseData.noiseScale}f, " +
-            $"{this.noiseData.octaves}, " +
-            $"{this.noiseData.lacunarity}f, " +
-            $"{this.noiseData.persistance}f, " +
-            $"{this.noiseData.seed}, " +
+            $"new Vector2({this.noiseData.noise.Offset.x}f, {this.noiseData.noise.Offset.y}f), " +
+            $"{this.noiseData.noise.HeightMultiplier}f, " +
+            $"{this.noiseData.noise.HeightAddend}f, " +
+            $"{this.noiseData.noise.NoiseScale}f, " +
+            $"{this.noiseData.noise.Octaves}, " +
+            $"{this.noiseData.noise.Lacunarity}f, " +
+            $"{this.noiseData.noise.Persistance}f, " +
             $"new NoisePattern[] {{";
 
-        for(int i = 0; i < this.noiseData.octaves; i++)
+        for(int i = 0; i < this.noiseData.noise.Octaves; i++)
         {
-            nd += $"NoisePattern.{this.noiseData.pattern[i].ToString()}";
+            nd += $"NoisePattern.{this.noiseData.noise.Pattern[i].ToString()}";
 
-            if (i < this.noiseData.octaves - 1)
+            if (i < this.noiseData.noise.Octaves - 1)
                 nd += ", ";
         }
 
         nd += "});";
 
         Debug.Log(nd);
-    }
-
-    public void SetToSelectedBiome()
-    {
-        NoiseData nd = BiomeGenerator.GetBiomeNoiseData(this.biome);
-
-        this.noiseDataName = this.biome.ToString();
-        this.noiseData = nd;
     }
     #endregion
 }

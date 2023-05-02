@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 
 [CustomEditor(typeof(PreviewMesh))]
 public class PreviewMesh_Editor : Editor
@@ -26,8 +27,5 @@ public class PreviewMesh_Editor : Editor
 
         if (GUILayout.Button("Print"))
             previewMesh.PrintNoiseData();
-
-        if (GUILayout.Button("Copy from selected Biome"))
-            previewMesh.SetToSelectedBiome();
     }
 }
