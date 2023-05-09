@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [CreateAssetMenu(menuName = "WorldAI/Biome")]
 public class SOBiome : ScriptableObject
@@ -9,6 +10,11 @@ public class SOBiome : ScriptableObject
     [TextArea(3, 10)]
     [Tooltip("150 words max!")]
     private string description;
+    /*
+    [SerializeField]
+    private Volume volume;*/
+    [SerializeField]
+    private SOBiomeLighting biomeLighting;
 
     [Header("Biome Type")]
     [SerializeField]
@@ -42,6 +48,7 @@ public class SOBiome : ScriptableObject
     private PropagationData[] propagationData;
 
     public string Description => this.description;
+    public SOBiomeLighting Lighting => this.biomeLighting;
     public NoiseData NoiseData => this.noiseData;
     public float FalloffRate => this.falloffRate;
     public TerrainLayer BaseTerrainLayer => this.baseTerrainLayer;

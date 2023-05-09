@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3a5c988dc50e17499978d6435f77559, type: 3}
+  m_Name: Biome3
+  m_EditorClassIdentifier: 
+  description: Savanna with occasional trees and rocks and dry grass.
+  biomeLighting: {fileID: 11400000, guid: e3d3546341bb55a4b9196089b8929a58, type: 2}
+  noiseData:
+    noise: {fileID: 11400000, guid: 942b8a6152e0ef549bc7b877fedb23ea, type: 2}
+    finalNoiseScale: 30
+    finalHeightAddend: 100
+    finalHeightMultiplier: 6.09
+  falloffRate: 0.03
+  baseTerrainLayer: {fileID: 8574412962073106934, guid: 40b867aede49f1545aa2cd4ae394019a, type: 2}
+  overrideSteepTerrainLayer: 0
+  overrideInWaterTerrainLayer: 0
+  trees:
+  - tree: {fileID: 11400000, guid: 700a28e7e879d0946b05eaee88eb2ef1, type: 2}
+    spawnRate: 0.102
+  - tree: {fileID: 11400000, guid: 124a99f33394e4748801738f0c9172b3, type: 2}
+    spawnRate: 0.108
+  - tree: {fileID: 11400000, guid: f4ad19ec07d0a2b43a93358bf5cb69f1, type: 2}
+    spawnRate: 0.109
+  forceRemoveTreesUnderwater: 0
+  grass:
+  - grass: {fileID: 11400000, guid: 1e5b35dafc46bb94c918695d19302741, type: 2}
+    spawnRate: 0.524
+    density: 1
+    biased: 0
+  grassNoiseScale: 0
+  propagationData:
+  - rocks:
+    - {fileID: 11400000, guid: 2aede799fca068f459cfd147e678ccca, type: 2}
+    - {fileID: 11400000, guid: 9a29884f4bc818740b5710e4b3aab6e1, type: 2}
+    - {fileID: 11400000, guid: 94863d204883bca4284a3edbbf36bdc8, type: 2}
+    - {fileID: 11400000, guid: 8c02beefa1ca54842b87e78acfa74216, type: 2}
+    - {fileID: 11400000, guid: 80d5497c4c943a24b906b428b34d7da9, type: 2}
+    spawnRate: 0.05
+    startingSize: 1
+    sizeDecrease: 0
+    minIterations: 1
+    maxIterations: 2

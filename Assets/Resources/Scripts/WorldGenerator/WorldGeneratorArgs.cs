@@ -146,6 +146,14 @@ public class WorldGeneratorArgs
     public BiomeData GetDominantBiome(int x, int z) => this.availableBiomes[this.dominantBiomeIndices[x, z]];
 
     /// <summary>
+    /// Returns the weight of the most dominant biome at given position in biomemap-resolution (currently biomemapRes = heightmapRes, still WIP)
+    /// </summary>
+    /// <param name="x">The x-coordinate in biomemap.</param>
+    /// <param name="z">The y-coordinate in biomemap.</param>
+    /// <returns>The weight of the most dominant biome at given position in biomemap-resolution.</returns>
+    public float GetDominantWeight(int x, int z) => this.weightsPerBiome[x, z][this.dominantBiomeIndices[x, z]];
+
+    /// <summary>
     /// Returns true if given biome-index corresponds to the most dominant biome at given position in biomemap-resolution.
     /// </summary>
     /// <param name="x">The x-coordinate in biomemap.</param>

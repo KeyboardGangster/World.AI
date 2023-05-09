@@ -6,7 +6,7 @@ using UnityEngine;
 using static UnityEngine.Mesh;
 using UnityEngine.Rendering;
 
-[RequireComponent(typeof(Terrain))]
+[RequireComponent(typeof(Terrain), typeof(BiomeVolumesBlender))]
 public class WorldGenerator : MonoBehaviour
 {
     private static int BASE_HEIGHTMAP_RESOLUTION = 1024;
@@ -19,6 +19,8 @@ public class WorldGenerator : MonoBehaviour
     private static int BASE_TERRAIN_HEIGHT = 600;
     private static bool DRAW_INSTANCED = true;
 
+    private WorldGeneratorArgs args;
+
     [SerializeField]
     private BiomeData[] biomeData = new BiomeData[]
     {
@@ -27,7 +29,7 @@ public class WorldGenerator : MonoBehaviour
         new BiomeData() { bias = new Vector2(0.5f, 1.0f), random = new Vector2(0.0f, 1.0f) }
     };
     [SerializeField]
-    private WorldSize size;
+    private WorldSize size = WorldSize.Large;
     [SerializeField]
     private int seed = 1;
 
@@ -49,14 +51,14 @@ public class WorldGenerator : MonoBehaviour
 
     public void Generate()
     {
-        WorldGeneratorArgs args = this.Prepare();
-        CreateBiomes(args);
-        CreateHeightMap(args);
-        CreateAlphaMap(args, this.slopeTerrainLayer, this.inWaterTerrainLayer);
-        CreateEntities(args);
+        this.Prepare();
+        CreateBiomes(this.args);
+        CreateHeightMap(this.args);
+        CreateAlphaMap(this.args, this.slopeTerrainLayer, this.inWaterTerrainLayer);
+        CreateEntities(this.args);
     }
 
-    private WorldGeneratorArgs Prepare()
+    private void Prepare()
     {
         if (this.terrain == null)
             this.terrain = this.GetComponent<Terrain>();
@@ -112,7 +114,7 @@ public class WorldGenerator : MonoBehaviour
 
         //1.Prepare Args
         this.SortBiomeData();
-        WorldGeneratorArgs args = WorldGeneratorArgs.CreateNew(
+        this.args = WorldGeneratorArgs.CreateNew(
             this.terrain,
             this.seed,
             this.noiseScale,
@@ -124,8 +126,6 @@ public class WorldGenerator : MonoBehaviour
             this.toyScaleRatio,
             this.waterLevel
         );
-
-        return args;
     }
 
     private static void CreateBiomes(WorldGeneratorArgs args)
@@ -236,6 +236,8 @@ public class WorldGenerator : MonoBehaviour
     private void Start()
     {
         Generate();
+        BiomeVolumesBlender volBlender = this.GetComponent<BiomeVolumesBlender>();
+        volBlender.Init(this.args);
     }
 
 
