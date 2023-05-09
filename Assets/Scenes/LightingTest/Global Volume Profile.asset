@@ -18,7 +18,7 @@ MonoBehaviour:
     m_Value: 0
   skyIntensityMode:
     m_OverrideState: 0
-    m_Value: 0
+    m_Value: 1
   exposure:
     m_OverrideState: 0
     m_Value: 0
@@ -229,7 +229,7 @@ MonoBehaviour:
     m_Value: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   tint:
     m_OverrideState: 1
-    m_Value: {r: 0.5953521, g: 1, b: 0.3160377, a: 1}
+    m_Value: {r: 0.6401299, g: 0.97751373, b: 0.990566, a: 1}
   maxFogDistance:
     m_OverrideState: 0
     m_Value: 5000
@@ -796,7 +796,7 @@ MonoBehaviour:
     m_Value: 2
   focusMode:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 1
   focusDistance:
     m_OverrideState: 0
     m_Value: 13.39

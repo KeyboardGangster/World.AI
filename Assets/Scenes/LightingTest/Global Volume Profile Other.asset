@@ -796,7 +796,7 @@ MonoBehaviour:
     m_Value: 0
   focusMode:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 1
   focusDistance:
     m_OverrideState: 0
     m_Value: 13.39
