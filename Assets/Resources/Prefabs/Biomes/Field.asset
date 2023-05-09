@@ -34,8 +34,8 @@ MonoBehaviour:
     density: 2
     biased: 1
   - grass: {fileID: 11400000, guid: e786efe4858e51a46817133900866329, type: 2}
-    spawnRate: 0.821
-    density: 2
+    spawnRate: 1
+    density: 3
     biased: 0
   grassNoiseScale: 1
   propagationData:
