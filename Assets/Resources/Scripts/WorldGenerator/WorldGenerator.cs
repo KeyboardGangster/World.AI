@@ -19,42 +19,81 @@ public class WorldGenerator : MonoBehaviour
     private static int BASE_TERRAIN_HEIGHT = 600;
     private static bool DRAW_INSTANCED = true;
 
-    private Terrain terrain;
-    [SerializeField]
-    private TerrainLayer slopeTerrainLayer;
-    [SerializeField]
-    private TerrainLayer inWaterTerrainLayer;
-
-    [SerializeField]
-    [Tooltip("Bigger Worlds, less detail. (1:x scale).")]
-    private float worldScaleRatio = 1f;
-    [SerializeField]
-    [Tooltip("Bigger Worlds by downsizing everything. (1:x scale)")]
-    private float toyScaleRatio = 1f;
-
-    [SerializeField]
-    private int seed = 1;
-    [SerializeField]
-    private float noiseScale = 20;
-    [SerializeField]
-    private NoiseData[] biomeNoise = new NoiseData[2];
     [SerializeField]
     private BiomeData[] biomeData = new BiomeData[]
     {
-        new BiomeData() { bias = new Vector2(0f  , 0.45f) },
-        new BiomeData() { bias = new Vector2(0.45f, 0.5f) },
-        new BiomeData() { bias = new Vector2(0.6f, 1f) }
+        new BiomeData() { bias = new Vector2(0.0f, 0.5f), random = new Vector2(0.0f, 0.5f) },
+        new BiomeData() { bias = new Vector2(0.0f, 0.5f), random = new Vector2(0.5f, 1.0f) },
+        new BiomeData() { bias = new Vector2(0.5f, 1.0f), random = new Vector2(0.0f, 1.0f) }
     };
-
     [SerializeField]
-    private float waterLevel = 100f;
+    private WorldSize size;
+    [SerializeField]
+    private int seed = 1;
+
+    private NoiseData[] biomeNoise;
+    private Terrain terrain;
+    private TerrainLayer slopeTerrainLayer;
+    private TerrainLayer inWaterTerrainLayer;
+
+    //Bigger Worlds, less detail. (1:x scale)
+    private float worldScaleRatio;
+    //Bigger Worlds by downsizing everything. (1:x scale)
+    private float toyScaleRatio;
+    //Biome-scale
+    private float noiseScale;
+    //At which height to draw with in-water-texture. Terrain-height adjusts automatically to this.
+    private float waterLevel;
 
     public void SortBiomeData() => System.Array.Sort(this.biomeData);
 
     public void Generate()
     {
+        WorldGeneratorArgs args = this.Prepare();
+        CreateBiomes(args);
+        CreateHeightMap(args);
+        CreateAlphaMap(args, this.slopeTerrainLayer, this.inWaterTerrainLayer);
+        CreateEntities(args);
+    }
+
+    private WorldGeneratorArgs Prepare()
+    {
         if (this.terrain == null)
             this.terrain = this.GetComponent<Terrain>();
+
+        this.slopeTerrainLayer = Resources.Load<TerrainLayer>("Materials/TerrainLayers/_DEFAULT_SLOPE");
+        this.inWaterTerrainLayer = Resources.Load<TerrainLayer>("Materials/TerrainLayers/_DEFAULT_IN_WATER");
+
+        switch(this.size)
+        {
+            case WorldSize.Small:
+                this.worldScaleRatio = 0.1f;
+                this.toyScaleRatio = 2f;
+                this.noiseScale = 4f;
+                break;
+            case WorldSize.Medium:
+                this.worldScaleRatio = 0.5f;
+                this.toyScaleRatio = 1f;
+                this.noiseScale = 10f;
+                break;
+            case WorldSize.Large:
+                this.worldScaleRatio = 1f;
+                this.toyScaleRatio = 1f;
+                this.noiseScale = 20f;
+                break;
+            default:
+                throw new System.NotImplementedException();
+        }
+
+        /*this.worldScaleRatio = 1f;
+        this.toyScaleRatio = 1f;
+        this.noiseScale = 20f;*/
+
+        this.waterLevel = 100f;
+
+        this.biomeNoise = new NoiseData[2];
+        this.biomeNoise[0] = new NoiseData() { noise = Resources.Load<SONoise>("Prefabs/Noise/_DEFAULT_BIAS") };
+        this.biomeNoise[1] = new NoiseData() { noise = Resources.Load<SONoise>("Prefabs/Noise/_DEFAULT_RANDOMNESS") };
 
         /*
          * As of yet, scaling the heightmap to something different then BASE_HEIGHTMAP_RESOLUTION causes problems with the noise-scaling and such.
@@ -73,38 +112,28 @@ public class WorldGenerator : MonoBehaviour
 
         //1.Prepare Args
         this.SortBiomeData();
-
         WorldGeneratorArgs args = WorldGeneratorArgs.CreateNew(
             this.terrain,
-            this.seed, 
+            this.seed,
             this.noiseScale,
             this.biomeNoise,
-            this.biomeData, 
-            this.slopeTerrainLayer, 
-            this.inWaterTerrainLayer, 
-            this.worldScaleRatio, 
-            this.toyScaleRatio, 
+            this.biomeData,
+            this.slopeTerrainLayer,
+            this.inWaterTerrainLayer,
+            this.worldScaleRatio,
+            this.toyScaleRatio,
             this.waterLevel
         );
 
-        //2.Generate biomes
-        BiomeGenerator.GenerateBiomemapData(args, 1, 1);
-
-        //3.Generate terrain
-        float[,] heightMap = this.CreateHeightMap(args);
-        args.Terrain.terrainData.SetHeights(0, 0, heightMap);
-        args.Terrain.transform.position = new Vector3(0, -args.WaterLevel, 0);
-
-        //4.Generate splatmap
-        args.Terrain.terrainData.terrainLayers = args.TerrainLayers;
-        float[,,] alphaMap = this.CreateAlphaMap(args, heightMap);
-        args.Terrain.terrainData.SetAlphamaps(0, 0, alphaMap);
-
-        //5.Places entities
-        EntityPlacer.Place(args);
+        return args;
     }
 
-    private float[,] CreateHeightMap(WorldGeneratorArgs args)
+    private static void CreateBiomes(WorldGeneratorArgs args)
+    {
+        BiomeGenerator.GenerateBiomemapData(args, 1, 1);
+    }
+
+    private static void CreateHeightMap(WorldGeneratorArgs args)
     {
         int size = args.Terrain.terrainData.heightmapResolution;
 
@@ -132,17 +161,21 @@ public class WorldGenerator : MonoBehaviour
             }
         }
 
-        return heightMap;
+        args.Terrain.terrainData.SetHeights(0, 0, heightMap);
+        args.Terrain.transform.position = new Vector3(0, -args.WaterLevel, 0);
     }
 
-    private float[,,] CreateAlphaMap(WorldGeneratorArgs args, float[,] heightMap)
+    private static void CreateAlphaMap(WorldGeneratorArgs args, TerrainLayer slope, TerrainLayer inWater)
     {
+        args.Terrain.terrainData.terrainLayers = args.TerrainLayers;
+
         int heightmapRes = args.Terrain.terrainData.heightmapResolution;
         int alphamapRes = args.Terrain.terrainData.alphamapResolution;
         float heightmapAlphamapRatio = heightmapRes / (float)alphamapRes;
 
+        float[,] heightMap = args.Terrain.terrainData.GetHeights(0, 0, heightmapRes, heightmapRes);
         float[,,] alphaMap = new float[alphamapRes, alphamapRes, args.TerrainLayerCount];
-        float waterLevel = this.waterLevel / args.Terrain.terrainData.heightmapScale.y;
+        float waterLevel = args.WaterLevel / args.Terrain.terrainData.heightmapScale.y;
 
         for (int y = 0; y < alphamapRes; y++)
         {
@@ -170,20 +203,20 @@ public class WorldGenerator : MonoBehaviour
                     {
                         isSteep = true;
                         steepnessValue = (float)(angle / 90.0);
-                        alphaMap[x, y, args.GetTerrainLayerIndex(this.slopeTerrainLayer)] = steepnessValue;
+                        alphaMap[x, y, args.GetTerrainLayerIndex(slope)] = steepnessValue;
                     }
                 }
                 //Set inWaterTerrainLayer if biome doesn't supress it.
                 if (!isSteep && !dominantBiome.biome.OverrideInWaterTerrainLayer && heightMap[xInHeightMap, yInHeightMap] < waterLevel)
                 {
-                    alphaMap[x, y, args.GetTerrainLayerIndex(this.inWaterTerrainLayer)] = 1f;
+                    alphaMap[x, y, args.GetTerrainLayerIndex(inWater)] = 1f;
                 }
                 //Set biome-specific terrainLayer.
                 if (!isUnderWater)
                 {
                     for (int i = 0; i < args.BiomeCount; i++)
                     {
-                        if (args.GetTerrainLayerIndex(args.GetBiome(i).biome.BaseTerrainLayer) != args.GetTerrainLayerIndex(this.slopeTerrainLayer))
+                        if (args.GetTerrainLayerIndex(args.GetBiome(i).biome.BaseTerrainLayer) != args.GetTerrainLayerIndex(slope))
                             alphaMap[x, y, args.GetTerrainLayerIndex(args.GetBiome(i).biome.BaseTerrainLayer)] += args.GetWeight(xInHeightMap, yInHeightMap, i) - steepnessValue;
                         else
                             alphaMap[x, y,args.GetTerrainLayerIndex(args.GetBiome(i).biome.BaseTerrainLayer)] += args.GetWeight(xInHeightMap, yInHeightMap, i);
@@ -192,7 +225,12 @@ public class WorldGenerator : MonoBehaviour
             }
         }
 
-        return alphaMap;
+        args.Terrain.terrainData.SetAlphamaps(0, 0, alphaMap);
+    }
+
+    private static void CreateEntities(WorldGeneratorArgs args)
+    {
+        EntityPlacer.Place(args);
     }
 
     private void Start()
@@ -200,12 +238,15 @@ public class WorldGenerator : MonoBehaviour
         Generate();
     }
 
+
     private void OnValidate()
     {
         /*
          * Terrain can go up to 1:100 worldScaleRatio, though generating that in one go is most likely going to crash unity.
          * Issue's the entity-placer doing BASE_ITERATIONS*100*100 iterations. Basically too many trees for one terrain I guess.
          */
+
+        /*
         this.worldScaleRatio = Mathf.Clamp(this.worldScaleRatio, 1, 20);
 
         this.toyScaleRatio = Mathf.Clamp(this.toyScaleRatio, 1, 20);
@@ -222,6 +263,6 @@ public class WorldGenerator : MonoBehaviour
                 if (i < this.biomeNoise.Length)
                     biomeNoise[i] = this.biomeNoise[i];
             }
-        }
+        }*/
     }
 }
