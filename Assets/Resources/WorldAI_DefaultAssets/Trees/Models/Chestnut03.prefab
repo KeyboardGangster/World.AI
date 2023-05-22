@@ -550,4 +550,4 @@ LODGroup:
     renderers:
     - renderer: {fileID: 1959177432}
     - renderer: {fileID: 71288443}
-  m_Enabled: 0
+  m_Enabled: 1
