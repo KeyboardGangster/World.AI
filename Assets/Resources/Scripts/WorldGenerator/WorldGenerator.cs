@@ -9,16 +9,6 @@ using UnityEngine.Rendering;
 [RequireComponent(typeof(Terrain), typeof(BiomeVolumesBlender))]
 public class WorldGenerator : MonoBehaviour
 {
-    private static int BASE_HEIGHTMAP_RESOLUTION = 1024;
-    private static int BASE_CONTROLMAP_RESOLUTION = 512;
-    private static int BASE_TEXTURE_RESOLUTION = 1024;
-    private static int BASE_DETAIL_RESOLUTION = 2048;
-    private static int BASE_DETAIL_RESOLUTION_PER_PATCH = 32;
-    private static int BASE_TERRAIN_WIDTH = 1000;
-    private static int BASE_TERRAIN_LENGTH = 1000;
-    private static int BASE_TERRAIN_HEIGHT = 600;
-    private static bool DRAW_INSTANCED = true;
-
     private WorldGeneratorArgs args;
 
     [SerializeField]
@@ -63,54 +53,77 @@ public class WorldGenerator : MonoBehaviour
         if (this.terrain == null)
             this.terrain = this.GetComponent<Terrain>();
 
-        this.slopeTerrainLayer = Resources.Load<TerrainLayer>("Materials/TerrainLayers/_DEFAULT_SLOPE");
-        this.inWaterTerrainLayer = Resources.Load<TerrainLayer>("Materials/TerrainLayers/_DEFAULT_IN_WATER");
+        this.slopeTerrainLayer = Resources.Load<TerrainLayer>("WorldAI_DefaultAssets/TerrainLayers/_DEFAULT_SLOPE");
+        this.inWaterTerrainLayer = Resources.Load<TerrainLayer>("WorldAI_DefaultAssets/TerrainLayers/_DEFAULT_IN_WATER");
+
+        int heightmapRes;
+        int alphamapRes;
+        int textureRes;
+        int detailRes;
+        int detailResPerPatch;
+        int terrainSize;
+        int terrainHeight = 600;
+        /*
+        private static int BASE_HEIGHTMAP_RESOLUTION = 1024;
+        private static int BASE_CONTROLMAP_RESOLUTION = 512;
+        private static int BASE_TEXTURE_RESOLUTION = 1024;
+        private static int BASE_DETAIL_RESOLUTION = 2048;
+        private static int BASE_DETAIL_RESOLUTION_PER_PATCH = 32;
+        private static int BASE_TERRAIN_SIZE = 1000;
+        private static int BASE_TERRAIN_HEIGHT = 600;*/
 
         switch(this.size)
         {
             case WorldSize.Small:
-                this.worldScaleRatio = 0.1f;
                 this.toyScaleRatio = 2f;
                 this.noiseScale = 4f;
+
+                heightmapRes = 129;
+                alphamapRes = 64;
+                textureRes = 512;
+                detailRes = 256;
+                detailResPerPatch = 16;
+                terrainSize = 100;
                 break;
             case WorldSize.Medium:
-                this.worldScaleRatio = 0.5f;
                 this.toyScaleRatio = 1f;
                 this.noiseScale = 10f;
+
+                heightmapRes = 513;
+                alphamapRes = 256;
+                textureRes = 512;
+                detailRes = 1024;
+                detailResPerPatch = 16;
+                terrainSize = 500;
                 break;
             case WorldSize.Large:
-                this.worldScaleRatio = 1f;
                 this.toyScaleRatio = 1f;
                 this.noiseScale = 20f;
+
+                heightmapRes = 1025;
+                alphamapRes = 512;
+                textureRes = 512;
+                detailRes = 2024;
+                detailResPerPatch = 32;
+                terrainSize = 1000;
                 break;
             default:
                 throw new System.NotImplementedException();
         }
 
-        /*this.worldScaleRatio = 1f;
-        this.toyScaleRatio = 1f;
-        this.noiseScale = 20f;*/
-
+        this.worldScaleRatio = (float)terrainSize / heightmapRes;
         this.waterLevel = 100f;
 
         this.biomeNoise = new NoiseData[2];
-        this.biomeNoise[0] = new NoiseData() { noise = Resources.Load<SONoise>("Prefabs/Noise/_DEFAULT_BIAS") };
-        this.biomeNoise[1] = new NoiseData() { noise = Resources.Load<SONoise>("Prefabs/Noise/_DEFAULT_RANDOMNESS") };
+        this.biomeNoise[0] = new NoiseData() { noise = Resources.Load<SONoise>("WorldAI_DefaultAssets/Prefabs/Noise/_DEFAULT_BIAS") };
+        this.biomeNoise[1] = new NoiseData() { noise = Resources.Load<SONoise>("WorldAI_DefaultAssets/Prefabs/Noise/_DEFAULT_RANDOMNESS") };
 
-        /*
-         * As of yet, scaling the heightmap to something different then BASE_HEIGHTMAP_RESOLUTION causes problems with the noise-scaling and such.
-         * Gotta fix that first before continuing with this.
-         * 
-        //this.terrain.terrainData.heightmapResolution = BASE_HEIGHTMAP_RESOLUTION * Mathf.Max(1, Mathf.FloorToInt(this.worldScaleRatio / 5f));
-        //this.terrain.terrainData.alphamapResolution = BASE_CONTROLMAP_RESOLUTION * Mathf.Max(1, Mathf.FloorToInt(this.worldScaleRatio / 5f));
-        //this.terrain.terrainData.baseMapResolution = BASE_TEXTURE_RESOLUTION * Mathf.Max(1, Mathf.FloorToInt(this.worldScaleRatio / 5f));
-        */
-        this.terrain.terrainData.heightmapResolution = BASE_HEIGHTMAP_RESOLUTION;
-        this.terrain.terrainData.alphamapResolution = BASE_CONTROLMAP_RESOLUTION;
-        this.terrain.terrainData.baseMapResolution = BASE_TEXTURE_RESOLUTION;
-        this.terrain.terrainData.size = new Vector3(BASE_TERRAIN_WIDTH * this.worldScaleRatio, BASE_TERRAIN_HEIGHT, BASE_TERRAIN_LENGTH * this.worldScaleRatio);
-        this.terrain.terrainData.SetDetailResolution(BASE_DETAIL_RESOLUTION, BASE_DETAIL_RESOLUTION_PER_PATCH);
-        this.terrain.drawInstanced = DRAW_INSTANCED;
+        this.terrain.terrainData.heightmapResolution = heightmapRes;
+        this.terrain.terrainData.alphamapResolution = alphamapRes;
+        this.terrain.terrainData.baseMapResolution = textureRes;
+        this.terrain.terrainData.size = new Vector3(terrainSize * this.worldScaleRatio, terrainHeight, terrainSize * this.worldScaleRatio);
+        this.terrain.terrainData.SetDetailResolution(detailRes, detailResPerPatch);
+        this.terrain.drawInstanced = true;
 
         //1.Prepare Args
         this.SortBiomeData();

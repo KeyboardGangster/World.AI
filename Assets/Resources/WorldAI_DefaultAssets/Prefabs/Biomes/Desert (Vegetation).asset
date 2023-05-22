@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3a5c988dc50e17499978d6435f77559, type: 3}
+  m_Name: Desert (Vegetation)
+  m_EditorClassIdentifier: 
+  description: Relatively flat desert with cacti and other dry vegetation.
+  biomeLighting: {fileID: 11400000, guid: a1c59483f6b6aa043b18d24980fd9d34, type: 2}
+  noiseData:
+    noise: {fileID: 11400000, guid: 37433f43f5a79224fa8dfa03a021f068, type: 2}
+    finalNoiseScale: 51.300003
+    finalHeightAddend: 100
+    finalHeightMultiplier: 20
+  falloffRate: 0.03
+  baseTerrainLayer: {fileID: 8574412962073106934, guid: 40b867aede49f1545aa2cd4ae394019a, type: 2}
+  overrideSteepTerrainLayer: 1
+  overrideInWaterTerrainLayer: 0
+  trees:
+  - tree: {fileID: 11400000, guid: 8d167c47679605442b9d9dd95557d846, type: 2}
+    spawnRate: 0.02
+  - tree: {fileID: 11400000, guid: 137bd8d6210adfc43a591f05c647032a, type: 2}
+    spawnRate: 0.02
+  - tree: {fileID: 11400000, guid: d58839526b092834db3e45760725cbfb, type: 2}
+    spawnRate: 0.02
+  forceRemoveTreesUnderwater: 0
+  grass:
+  - grass: {fileID: 11400000, guid: 1fd0eea214071cb438faddd90c957835, type: 2}
+    spawnRate: 0.04
+    density: 1
+    biased: 0
+  - grass: {fileID: 11400000, guid: 7d2ca1d4dcdf0cb429725270064ea61d, type: 2}
+    spawnRate: 0.07
+    density: 2
+    biased: 1
+  - grass: {fileID: 11400000, guid: e7c82d1c30ff25546b789728ced4e32b, type: 2}
+    spawnRate: 0.059
+    density: 2
+    biased: 0
+  grassNoiseScale: 2
+  propagationData:
+  - rocks:
+    - {fileID: 11400000, guid: 2aede799fca068f459cfd147e678ccca, type: 2}
+    - {fileID: 11400000, guid: 9a29884f4bc818740b5710e4b3aab6e1, type: 2}
+    - {fileID: 11400000, guid: 94863d204883bca4284a3edbbf36bdc8, type: 2}
+    - {fileID: 11400000, guid: 8c02beefa1ca54842b87e78acfa74216, type: 2}
+    - {fileID: 11400000, guid: 80d5497c4c943a24b906b428b34d7da9, type: 2}
+    spawnRate: 0.05
+    startingSize: 1
+    sizeDecrease: 0
+    minIterations: 1
+    maxIterations: 2

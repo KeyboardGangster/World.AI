@@ -194,6 +194,7 @@ public class WorldGeneratorArgs
     /// <param name="inWater">The TerrainLayer used for underwater.</param>
     /// <param name="worldScaleRatio">Worldscare-ratio used during generation. Scales terrain by stretching terrain.</param>
     /// <param name="toyScaleRatio">Toyscale-ratio used during generation. Scales world by shrinking everything.</param>
+    /// <param name="worldToHeightmapRatio">World- to heightmap-resolution-ratio. Used to adjust noise-scale to world-/ heightmap-resolution differences.</param>
     /// <param name="waterLevel">The waterlevel at which to consider terrain underwater.</param>
     /// <returns>A new instance of the WorldGeneratorArgs-class.</returns>
     public static WorldGeneratorArgs CreateNew(Terrain terrain, int seed, float biomeScale, NoiseData[] biomeNoise, BiomeData[] biomes, TerrainLayer slope, TerrainLayer inWater, float worldScaleRatio, float toyScaleRatio, float waterLevel)

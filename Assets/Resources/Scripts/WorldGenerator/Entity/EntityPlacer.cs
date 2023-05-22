@@ -7,9 +7,6 @@ using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class EntityPlacer : MonoBehaviour
 {
-    private static int BASE_ITERATIONS_TREES = 10000;
-    private static int BASE_ITERATIONS_ROCKS = 1000;
-
     public static void Place(WorldGeneratorArgs args)
     {
         Dictionary<ScriptableObject, int> treePrototypeIndices = PrepareTreePrototypes(args);
@@ -30,7 +27,9 @@ public class EntityPlacer : MonoBehaviour
         System.Random random = new System.Random(args.Seed);
 
         int heightmapRes = args.Terrain.terrainData.heightmapResolution - 1;
-        int iterations = Mathf.FloorToInt(BASE_ITERATIONS_TREES * args.WorldScaleRatio * args.WorldScaleRatio * args.ToyScaleRatio);
+
+        int iterations = Mathf.FloorToInt(args.ToyScaleRatio * (args.Terrain.terrainData.size.x * args.Terrain.terrainData.size.x) / 50f);
+        //int iterations = Mathf.FloorToInt(BASE_ITERATIONS_TREES * args.WorldScaleRatio * args.WorldScaleRatio * args.ToyScaleRatio);
 
         for (int i = 0; i < iterations; i++)
         {
@@ -87,7 +86,8 @@ public class EntityPlacer : MonoBehaviour
         System.Random random = new System.Random(args.Seed + 1);
 
         int heightmapRes = args.Terrain.terrainData.heightmapResolution - 1;
-        int iterations = Mathf.FloorToInt(BASE_ITERATIONS_ROCKS * args.WorldScaleRatio * args.WorldScaleRatio * args.ToyScaleRatio);
+        int iterations = Mathf.FloorToInt(args.ToyScaleRatio * (args.Terrain.terrainData.size.x * args.Terrain.terrainData.size.x) / 1000f);
+        //int iterations = Mathf.FloorToInt(BASE_ITERATIONS_ROCKS * args.WorldScaleRatio * args.WorldScaleRatio * args.ToyScaleRatio);
 
         for (int i = 0; i < iterations; i++)
         {
@@ -298,7 +298,7 @@ public class EntityPlacer : MonoBehaviour
                         if (!grass.grass.PlaceOnSlopes && angle > 30)
                             continue;
 
-                        detailMap[args.GetDetailPrototypeIndex(grass.grass)][i, j] = Mathf.FloorToInt(weight * (scaleMultiplier * grass.density + 1));
+                        detailMap[args.GetDetailPrototypeIndex(grass.grass)][i, j] = Mathf.Max(Mathf.FloorToInt(weight * (scaleMultiplier * grass.density + 1)), 1);
                     }
                 }
             }

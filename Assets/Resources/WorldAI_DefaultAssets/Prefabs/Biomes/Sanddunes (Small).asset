@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3a5c988dc50e17499978d6435f77559, type: 3}
+  m_Name: Sanddunes (Small)
+  m_EditorClassIdentifier: 
+  description: Desert full of small sanddunes up to one meter in size. Seldomly,
+    lone cacti can be found.
+  biomeLighting: {fileID: 11400000, guid: a1c59483f6b6aa043b18d24980fd9d34, type: 2}
+  noiseData:
+    noise: {fileID: 11400000, guid: 920d02e2511272047a67446e727348d9, type: 2}
+    finalNoiseScale: 49.620247
+    finalHeightAddend: 100
+    finalHeightMultiplier: 3.6
+  falloffRate: 0.03
+  baseTerrainLayer: {fileID: 8574412962073106934, guid: 5704c47654d85b34ab16417e4fbfe0d5, type: 2}
+  overrideSteepTerrainLayer: 1
+  overrideInWaterTerrainLayer: 0
+  trees:
+  - tree: {fileID: 11400000, guid: 8d167c47679605442b9d9dd95557d846, type: 2}
+    spawnRate: 0.001
+  - tree: {fileID: 11400000, guid: 137bd8d6210adfc43a591f05c647032a, type: 2}
+    spawnRate: 0.001
+  - tree: {fileID: 11400000, guid: d58839526b092834db3e45760725cbfb, type: 2}
+    spawnRate: 0.001
+  forceRemoveTreesUnderwater: 0
+  grass: []
+  grassNoiseScale: 0
+  propagationData: []

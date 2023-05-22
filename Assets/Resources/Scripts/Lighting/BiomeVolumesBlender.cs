@@ -12,23 +12,25 @@ public class BiomeVolumesBlender : MonoBehaviour
     private Light sun;
 
     private WorldGeneratorArgs args;
-    private Dictionary<BiomeData, Volume> volumes;
+    private Dictionary<VolumeProfile, Volume> volumes;
     private BiomeData blendTowards;
 
     public void Init(WorldGeneratorArgs args)
     {
         this.args = args;
-        this.volumes = new Dictionary<BiomeData, Volume>();
+        this.volumes = new Dictionary<VolumeProfile, Volume>();
 
         for(int i = 0; i < args.BiomeCount; i++) 
         {
             BiomeData biomeData = args.GetBiome(i);
-            //Volume v = Instantiate(biomeData.biome.Volume, this.transform);
-            Volume v = this.transform.gameObject.AddComponent<Volume>();
-            v.profile = biomeData.biome.Lighting.VolumeProfile;
 
-            if (!this.volumes.ContainsKey(biomeData))
-                this.volumes.Add(biomeData, v);
+            if (!this.volumes.ContainsKey(biomeData.biome.Lighting.VolumeProfile))
+            {
+                Volume v = this.transform.gameObject.AddComponent<Volume>();
+                v.profile = biomeData.biome.Lighting.VolumeProfile;
+                this.volumes.Add(biomeData.biome.Lighting.VolumeProfile, v);
+                v.weight = 0;
+            }
         }
 
         StartCoroutine(BlendControl());
@@ -40,9 +42,14 @@ public class BiomeVolumesBlender : MonoBehaviour
         WaitForSeconds wait = new WaitForSeconds(1f);
         float ratio = args.Terrain.terrainData.heightmapResolution / args.Terrain.terrainData.size.x;
 
+        Vector3Int posInHeightmap = Vector3Int.FloorToInt(this.target.transform.position * ratio);
+        this.blendTowards = args.GetDominantBiome(posInHeightmap.z, posInHeightmap.x);
+        Volume v = this.volumes[this.blendTowards.biome.Lighting.VolumeProfile];
+        v.weight = 1;
+        
         while(true)
         {
-            Vector3Int posInHeightmap = Vector3Int.FloorToInt(this.target.transform.position * ratio);
+            posInHeightmap = Vector3Int.FloorToInt(this.target.transform.position * ratio);
             float dominantWeight = this.args.GetDominantWeight(posInHeightmap.z, posInHeightmap.x);
 
             if (dominantWeight > 0.7f)
@@ -59,21 +66,17 @@ public class BiomeVolumesBlender : MonoBehaviour
 
         while(true)
         {
-            Vector3Int posInHeightmap = Vector3Int.FloorToInt(this.target.transform.position * ratio);
-
-            for (int i = 0; i < args.BiomeCount; i++)
+            foreach(KeyValuePair<VolumeProfile, Volume> kvp in this.volumes)
             {
-                BiomeData biomeData = args.GetBiome(i);
-                Volume v = this.volumes[biomeData];
-
-                if (biomeData == this.blendTowards)
-                    v.weight = Mathf.Min(v.weight + 0.002f, 1);
+                if (this.blendTowards.biome.Lighting.VolumeProfile == kvp.Key)
+                    kvp.Value.weight = Mathf.Min(kvp.Value.weight + 0.002f, 1);
                 else
-                    v.weight = Mathf.Max(v.weight - 0.002f, 0);
-
-                sun.colorTemperature = Mathf.Lerp(sun.colorTemperature, biomeData.biome.Lighting.LightTemperature, v.weight);
-                sun.color = Color.Lerp(sun.color, biomeData.biome.Lighting.LightFilter, v.weight);
+                    kvp.Value.weight = Mathf.Max(kvp.Value.weight - 0.002f, 0);
             }
+
+            Volume current = this.volumes[this.blendTowards.biome.Lighting.VolumeProfile];
+            sun.colorTemperature = Mathf.Lerp(sun.colorTemperature, this.blendTowards.biome.Lighting.LightTemperature, current.weight);
+            sun.color = Color.Lerp(sun.color, this.blendTowards.biome.Lighting.LightFilter, current.weight);
 
             yield return wait;
         }

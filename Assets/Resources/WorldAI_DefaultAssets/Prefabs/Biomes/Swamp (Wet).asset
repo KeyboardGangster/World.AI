@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3a5c988dc50e17499978d6435f77559, type: 3}
+  m_Name: Swamp (Wet)
+  m_EditorClassIdentifier: 
+  description: Savanna with occasional trees and rocks and dry grass.
+  biomeLighting: {fileID: 11400000, guid: c1c505e1a4d9ce3419a57cc21e725c54, type: 2}
+  noiseData:
+    noise: {fileID: 11400000, guid: 6f99bc23a237c91489f8ed7879afad36, type: 2}
+    finalNoiseScale: 32.25
+    finalHeightAddend: 98.5
+    finalHeightMultiplier: 3
+  falloffRate: 0.03
+  baseTerrainLayer: {fileID: 8574412962073106934, guid: 40b867aede49f1545aa2cd4ae394019a, type: 2}
+  overrideSteepTerrainLayer: 0
+  overrideInWaterTerrainLayer: 0
+  trees:
+  - tree: {fileID: 11400000, guid: bc56bff4f9636964aab0008f5eb065ba, type: 2}
+    spawnRate: 0.143
+  - tree: {fileID: 11400000, guid: e5a40d18f25b28049986f51921c57939, type: 2}
+    spawnRate: 0.137
+  - tree: {fileID: 11400000, guid: ac41d6b9013d5ad45a17accf2283e0d1, type: 2}
+    spawnRate: 0.083
+  - tree: {fileID: 11400000, guid: f03f6605507e2594b9baa61ab03e0569, type: 2}
+    spawnRate: 0.096
+  - tree: {fileID: 11400000, guid: c0f0a7f1344fd834bae2c406eeb961ff, type: 2}
+    spawnRate: 0.112
+  - tree: {fileID: 11400000, guid: 5649871095ba7dd42ad342a2fb22c0a4, type: 2}
+    spawnRate: 0.01
+  - tree: {fileID: 11400000, guid: bbd2b4aa67ed3d546a7fc01c344d8abe, type: 2}
+    spawnRate: 0.012
+  forceRemoveTreesUnderwater: 0
+  grass:
+  - grass: {fileID: 11400000, guid: 1e5b35dafc46bb94c918695d19302741, type: 2}
+    spawnRate: 0.024
+    density: 1
+    biased: 0
+  grassNoiseScale: 0
+  propagationData:
+  - rocks:
+    - {fileID: 11400000, guid: 2aede799fca068f459cfd147e678ccca, type: 2}
+    - {fileID: 11400000, guid: 9a29884f4bc818740b5710e4b3aab6e1, type: 2}
+    - {fileID: 11400000, guid: 94863d204883bca4284a3edbbf36bdc8, type: 2}
+    - {fileID: 11400000, guid: 8c02beefa1ca54842b87e78acfa74216, type: 2}
+    - {fileID: 11400000, guid: 80d5497c4c943a24b906b428b34d7da9, type: 2}
+    spawnRate: 0.1
+    startingSize: 1
+    sizeDecrease: 0
+    minIterations: 1
+    maxIterations: 2

@@ -31,10 +31,12 @@ namespace Player_Controller
         protected LayerMask mask;
 
         protected CharacterController controller;
+
         protected Vector3 velocity;
         protected float velocityY;
         protected bool hasJumped = false;
         protected bool shift = false;
+        protected bool noClip = false;
         
         protected bool IsGrounded
         {
@@ -65,8 +67,16 @@ namespace Player_Controller
             }
         }
 
+        public void OnToggleNoClip(InputAction.CallbackContext context)
+        {
+            this.noClip = !this.noClip;
+            //this.controller.enabled = !this.noClip;
+            this.runningspeed = this.noClip ? this.runningspeed * 4f : this.runningspeed / 4f;
+            this.walkingspeed = this.noClip ? this.walkingspeed * 4f : this.walkingspeed / 4f;
+        }
+
         // Start is called before the first frame update
-        protected virtual void Start()
+        protected virtual void Awake()
         {
             this.BindEvents();
 
@@ -105,7 +115,9 @@ namespace Player_Controller
 
             if (input.x != 0 || input.y != 0)
             {
-                forward.y = 0;
+                if (!this.noClip)
+                    forward.y = 0;
+
                 Vector3 right = new Vector3(forward.z, 0, -forward.x);
 
                 Vector3 direction = (input.y * forward + input.x * right).normalized;
@@ -125,10 +137,16 @@ namespace Player_Controller
 
             this.velocity.x = v.x;
             this.velocity.z = v.z;
+
+            if (this.noClip)
+                this.velocity.y = v.y;
         }
 
         protected void UpdateJump()
         {
+            if (this.noClip)
+                return;
+
             if (!this.IsGrounded)
             {
                 this.velocityY -= 9.81f * 4 * Time.fixedDeltaTime;
@@ -149,7 +167,9 @@ namespace Player_Controller
 
         protected void Accept()
         {
-            if (this.velocity != Vector3.zero)
+            if (this.noClip)
+                this.transform.position += this.velocity;
+            else if (this.velocity != Vector3.zero)
                 this.controller.Move(this.velocity);
 
             this.hasJumped = false;
@@ -161,6 +181,7 @@ namespace Player_Controller
             this.inputListener.input.Default.ToggleRun.started += c => OnToggleRunning(c);
             this.inputListener.input.Default.ToggleRun.performed += c => OnToggleRunning(c);
             this.inputListener.input.Default.ToggleRun.canceled += c => OnToggleRunning(c);
+            this.inputListener.input.Default.NoClip.performed += c => OnToggleNoClip(c);
         }
     }
 }
