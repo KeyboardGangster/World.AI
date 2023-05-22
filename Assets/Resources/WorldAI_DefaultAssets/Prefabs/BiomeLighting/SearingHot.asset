@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ea5eae68e0755a4893df2f7106f59e1, type: 3}
+  m_Name: SearingHot
+  m_EditorClassIdentifier: 
+  volumeProfile: {fileID: 11400000, guid: 21c6b3fc42e606d43b1988997c9cb78b, type: 2}
+  lightTemperature: 4900
+  lightFilter: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}

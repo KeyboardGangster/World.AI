@@ -6,7 +6,7 @@ using UnityEngine;
 using static UnityEngine.Mesh;
 using UnityEngine.Rendering;
 
-[RequireComponent(typeof(Terrain), typeof(BiomeVolumesBlender))]
+[RequireComponent(typeof(Terrain), typeof(AthmosphereControl))]
 public class WorldGenerator : MonoBehaviour
 {
     private WorldGeneratorArgs args;
@@ -249,7 +249,7 @@ public class WorldGenerator : MonoBehaviour
     private void Start()
     {
         Generate();
-        BiomeVolumesBlender volBlender = this.GetComponent<BiomeVolumesBlender>();
+        AthmosphereControl volBlender = this.GetComponent<AthmosphereControl>();
         volBlender.Init(this.args);
     }
 
