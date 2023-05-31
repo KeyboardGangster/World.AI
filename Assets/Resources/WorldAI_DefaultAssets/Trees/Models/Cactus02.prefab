@@ -244,6 +244,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4817310918706359277}
   - component: {fileID: 7988432346839313443}
+  - component: {fileID: 7395970090841395846}
+  - component: {fileID: 8407398897423301765}
+  - component: {fileID: 3006965396516761654}
+  - component: {fileID: 2311227611950376824}
   m_Layer: 0
   m_Name: Cactus02
   m_TagString: Untagged
@@ -299,6 +303,62 @@ LODGroup:
     - renderer: {fileID: 1283262461}
     - renderer: {fileID: 508601935}
   m_Enabled: 1
+--- !u!136 &7395970090841395846
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2577732351102670419}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.19996181
+  m_Height: 3.7032876
+  m_Direction: 1
+  m_Center: {x: 0.01615706, y: 1.3516438, z: 0.00576967}
+--- !u!136 &8407398897423301765
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2577732351102670419}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.15368435
+  m_Height: 1.1294963
+  m_Direction: 1
+  m_Center: {x: -0.40443197, y: 1.9140555, z: -0.14412048}
+--- !u!136 &3006965396516761654
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2577732351102670419}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.16595632
+  m_Height: 0.8373158
+  m_Direction: 1
+  m_Center: {x: 0.47999996, y: 1.1269308, z: 0.32988328}
+--- !u!136 &2311227611950376824
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2577732351102670419}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.11682063
+  m_Height: 1.0183249
+  m_Direction: 1
+  m_Center: {x: 0.2144866, y: 2.167985, z: -0.3526188}
 --- !u!1 &6666896623698049691
 GameObject:
   m_ObjectHideFlags: 0

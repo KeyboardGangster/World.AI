@@ -18,9 +18,9 @@ public class SOBiome : ScriptableObject
 
     [Header("Biome Type")]
     [SerializeField]
-    private NoiseData noiseData;
+    private SOHeight height;
     [SerializeField]
-    private float falloffRate;
+    private float falloffRate = 0.03f;
 
     [Header("Texturing")]
     [SerializeField]
@@ -41,7 +41,7 @@ public class SOBiome : ScriptableObject
     private GrassData[] grass;
     [Range(0f, 2f)]
     [SerializeField]
-    private float grassNoiseScale;
+    private float grassNoiseScale = 1;
 
     [Header("Rock-Settings")]
     [SerializeField]
@@ -49,7 +49,7 @@ public class SOBiome : ScriptableObject
 
     public string Description => this.description;
     public SOBiomeLighting Lighting => this.biomeLighting;
-    public NoiseData NoiseData => this.noiseData;
+    public SOHeight Height => this.height;
     public float FalloffRate => this.falloffRate;
     public TerrainLayer BaseTerrainLayer => this.baseTerrainLayer;
     public bool OverrideSteepTerrainLayer => this.overrideSteepTerrainLayer;
@@ -68,5 +68,8 @@ public class SOBiome : ScriptableObject
             this.description = this.description.Remove(149);
             Debug.LogWarning("Your description is too long, please shorten it to max 150 words.");
         }
+
+        if (this.falloffRate <= 0.005f)
+            this.falloffRate = 0.005f;
     }
 }

@@ -293,6 +293,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3722163796463134302}
   - component: {fileID: 4724315291963256142}
+  - component: {fileID: 7179097874368603444}
+  - component: {fileID: 119371537426786994}
   m_Layer: 0
   m_Name: SwampTree02
   m_TagString: Untagged
@@ -348,6 +350,34 @@ LODGroup:
     - renderer: {fileID: 1891199071}
     - renderer: {fileID: 1524475473}
   m_Enabled: 1
+--- !u!136 &7179097874368603444
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 763898507279234539}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.24876106
+  m_Height: 9.945349
+  m_Direction: 1
+  m_Center: {x: 0.012896001, y: 8.1543665, z: 0.00576967}
+--- !u!136 &119371537426786994
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 763898507279234539}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.68003476
+  m_Height: 3.6018293
+  m_Direction: 1
+  m_Center: {x: 0.027764678, y: 1.3009146, z: 0.052021503}
 --- !u!1 &5585106527833597171
 GameObject:
   m_ObjectHideFlags: 0

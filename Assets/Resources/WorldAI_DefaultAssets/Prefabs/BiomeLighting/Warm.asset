@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: Warm
   m_EditorClassIdentifier: 
   volumeProfile: {fileID: 11400000, guid: 78fd0af6f6991d948a855cb8e9b2d263, type: 2}
+  volumeProfileRain: {fileID: 11400000, guid: c9ee13ba3497b8d4588d8646d9e781c2, type: 2}
   lightTemperature: 5500
   lightFilter: {r: 1, g: 0.9529412, b: 0.8392157, a: 1}
+  lightTempreratureRain: 10000
+  lightFilterRain: {r: 0.7686275, g: 0.9529412, b: 1, a: 1}

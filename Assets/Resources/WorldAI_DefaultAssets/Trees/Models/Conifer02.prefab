@@ -496,6 +496,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9101681323702664949}
   - component: {fileID: 9101681323702664950}
+  - component: {fileID: 3643629773127127507}
   m_Layer: 0
   m_Name: Conifer02
   m_TagString: Untagged
@@ -551,3 +552,17 @@ LODGroup:
     - renderer: {fileID: 816563873}
     - renderer: {fileID: 1419623634}
   m_Enabled: 1
+--- !u!136 &3643629773127127507
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9101681323702664948}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.42013615
+  m_Height: 24.643826
+  m_Direction: 1
+  m_Center: {x: -0.025200188, y: 11.821913, z: 0.017783463}

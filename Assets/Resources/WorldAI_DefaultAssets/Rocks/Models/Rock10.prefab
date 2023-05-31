@@ -176,6 +176,7 @@ GameObject:
   m_Component:
   - component: {fileID: 429876537185990057}
   - component: {fileID: 4317394036171129903}
+  - component: {fileID: -2996758343639323506}
   m_Layer: 0
   m_Name: Rock10
   m_TagString: Untagged
@@ -226,6 +227,20 @@ LODGroup:
     renderers:
     - renderer: {fileID: 7904673956301065569}
   m_Enabled: 1
+--- !u!136 &-2996758343639323506
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6793589879508296240}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.42007777
+  m_Height: 1.5357014
+  m_Direction: 0
+  m_Center: {x: -0.07999951, y: 0, z: -0.0135914385}
 --- !u!1 &6877297259117791953
 GameObject:
   m_ObjectHideFlags: 0

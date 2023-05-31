@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
@@ -9,7 +10,10 @@ public class AthmosphereControl : MonoBehaviour
     [Header("Components")]
     [SerializeField] private Transform target;
     [SerializeField] private Transform volumes;
-    [SerializeField] private Volume fogAndSkyVolume;
+    //CloudOverride is only here to force the blend-effect between clouds.
+    //Once Unity fixes blending between cloudPresets when using multiple
+    //VolumeProfile-weights, this cloudOverride can be deleted.
+    [SerializeField] private Volume cloudOverride;
     [SerializeField] private Light sun;
     [SerializeField] private Light moon;
 
@@ -26,33 +30,24 @@ public class AthmosphereControl : MonoBehaviour
 
     [Header("Rain Toggle")]
     [SerializeField] private bool isRaining;
-    [SerializeField] private float lerpTime;
     [SerializeField] private ParticleSystem rainEffect;
-    [SerializeField] private LightingValues weatherClear, weatherRain;
-    private Fog fog;
-    private VolumetricClouds clouds;
+    private Vector3 rainEffectOffset;
 
     private void Awake()
     {
         this.orbitSpeed = 24 / (this.dayDurationSeconds > 0 ? this.dayDurationSeconds : 1);
-
-        this.fogAndSkyVolume.profile.TryGet(out this.fog);
-        this.fogAndSkyVolume.profile.TryGet(out this.clouds);
+        this.rainEffectOffset = this.rainEffect.transform.localPosition;
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
-        {
             this.isRaining = !this.isRaining;
-        }
 
         if (!this.fixedTimeOfDay)
-        {
             this.UpdateDayCycle();
-        }
 
-        this.UpdateWeather();
+        this.rainEffect.transform.position = this.target.transform.position + this.rainEffectOffset;
     }
 
     private void OnValidate()
@@ -63,30 +58,6 @@ public class AthmosphereControl : MonoBehaviour
         this.orbitSpeed = 24 / (this.dayDurationSeconds > 0 ? this.dayDurationSeconds : 1);
 
         this.SetDayCycle();
-
-        this.fogAndSkyVolume.profile.TryGet(out this.fog);
-        this.fogAndSkyVolume.profile.TryGet(out this.clouds);
-
-        if (this.isRaining)
-        {
-            this.SetWeather(
-                this.weatherRain.sunTemperature,
-                this.weatherRain.filterColor,
-                this.weatherRain.attenuation,
-                this.weatherRain.tintColor,
-                this.weatherRain.cloudPreset
-            );
-        }
-        else
-        {
-            this.SetWeather(
-                this.weatherClear.sunTemperature,
-                this.weatherClear.filterColor,
-                this.weatherClear.attenuation,
-                this.weatherClear.tintColor,
-                this.weatherClear.cloudPreset
-            );
-        }
     }
 
     private void Reset()
@@ -109,10 +80,16 @@ public class AthmosphereControl : MonoBehaviour
             this.volumes = Instantiate<Transform>(volumes, this.transform);
         }
 
-        if (this.fogAndSkyVolume == null)
+        if (this.cloudOverride == null)
         {
-            Volume fogAndSkyVolume = Resources.Load<Volume>("WorldAI_DefaultAssets/Prefabs/_DEFAULT_SKY_FOG_VOLUME");
-            this.fogAndSkyVolume = Instantiate(fogAndSkyVolume, this.transform);
+            Volume cloudOverride = Resources.Load<Volume>("WorldAI_DefaultAssets/Prefabs/_DEFAULT_CLOUD_OVERRIDE");
+            this.cloudOverride = Instantiate<Volume>(cloudOverride, this.transform);
+        }
+
+        if (this.rainEffect == null)
+        {
+            ParticleSystem rainEffect = Resources.Load<ParticleSystem>("WorldAI_DefaultAssets/Prefabs/_DEFAULT_RAIN_EFFECT");
+            this.rainEffect = Instantiate(rainEffect, this.transform);
         }
     }
 
@@ -134,8 +111,18 @@ public class AthmosphereControl : MonoBehaviour
             {
                 Volume v = this.volumes.gameObject.AddComponent<Volume>();
                 v.profile = biomeData.biome.Lighting.VolumeProfile;
-                this.volumesDictionary.Add(biomeData.biome.Lighting.VolumeProfile, v);
+                v.priority = 0;
                 v.weight = 0;
+                this.volumesDictionary.Add(biomeData.biome.Lighting.VolumeProfile, v);
+
+                if (biomeData.biome.Lighting.VolumeProfileRain != null)
+                {
+                    Volume vRain = this.volumes.gameObject.AddComponent<Volume>();
+                    vRain.profile = biomeData.biome.Lighting.VolumeProfileRain;
+                    vRain.priority = 1;
+                    vRain.weight = 0;
+                    this.volumesDictionary.Add(biomeData.biome.Lighting.VolumeProfileRain, vRain);
+                }
             }
         }
 
@@ -170,15 +157,50 @@ public class AthmosphereControl : MonoBehaviour
         WaitForSeconds wait = new WaitForSeconds(0.01f);
         float ratio = args.Terrain.terrainData.heightmapResolution / args.Terrain.terrainData.size.x;
 
+        this.cloudOverride.profile.TryGet(out VolumetricClouds currentClouds);
+
         while (true)
         {
             foreach (KeyValuePair<VolumeProfile, Volume> kvp in this.volumesDictionary)
             {
                 if (this.blendTowards.biome.Lighting.VolumeProfile == kvp.Key)
                     kvp.Value.weight = Mathf.Min(kvp.Value.weight + 0.002f, 1);
+                else if (this.isRaining && this.blendTowards.biome.Lighting.VolumeProfileRain == kvp.Key)
+                    kvp.Value.weight = Mathf.Min(kvp.Value.weight + 0.002f, 1);
                 else
                     kvp.Value.weight = Mathf.Max(kvp.Value.weight - 0.002f, 0);
             }
+
+            Volume biomeVolumeRain = this.GetVolumeRain(this.blendTowards);
+            Volume biomeVolume = this.GetVolume(this.blendTowards);
+
+            //It should rain
+            if (this.isRaining && biomeVolumeRain != null)
+            {
+                this.sun.colorTemperature = Mathf.Lerp(this.sun.colorTemperature, this.blendTowards.biome.Lighting.LightTemperatureRain, biomeVolumeRain.weight);
+                this.sun.color = Color.Lerp(this.sun.color, this.blendTowards.biome.Lighting.LightFilterRain, biomeVolumeRain.weight);
+
+                if (biomeVolumeRain.weight > 0.6f && !this.rainEffect.isPlaying)
+                    this.rainEffect.Play(true);
+
+                if (biomeVolumeRain.profile.TryGet(out VolumetricClouds biomeCloudsRain) && currentClouds.cloudPreset.value != biomeCloudsRain.cloudPreset.value)
+                    currentClouds.cloudPreset.value = biomeCloudsRain.cloudPreset.value;
+            }
+            //It should not rain
+            else
+            {
+                this.sun.colorTemperature = Mathf.Lerp(this.sun.colorTemperature, this.blendTowards.biome.Lighting.LightTemperature, biomeVolume.weight);
+                this.sun.color = Color.Lerp(this.sun.color, this.blendTowards.biome.Lighting.LightFilter, biomeVolume.weight);
+
+                if (this.rainEffect.isPlaying)
+                    this.rainEffect.Stop(true);
+
+                if (biomeVolume.profile.TryGet(out VolumetricClouds biomeClouds) && currentClouds.cloudPreset.value != biomeClouds.cloudPreset.value)
+                    currentClouds.cloudPreset.value = biomeClouds.cloudPreset.value;
+            }
+
+            this.moon.colorTemperature = Mathf.Min(sun.colorTemperature * 2f, 20000);
+            this.moon.color = this.sun.color;
 
             yield return wait;
         }
@@ -239,62 +261,16 @@ public class AthmosphereControl : MonoBehaviour
     }
 
     /// <summary>
-    /// Transitions between the two weather statea (raining and clear)
+    /// Returns Volume for given biomeData.
     /// </summary>
-    private void UpdateWeather()
-    {
-        if (this.isRaining)
-        {
-            this.SetWeather(
-                Mathf.Lerp(this.sun.colorTemperature, this.weatherRain.sunTemperature, this.lerpTime * Time.deltaTime),
-                Color.Lerp(this.sun.color, this.weatherRain.filterColor, this.lerpTime * Time.deltaTime),
-                Mathf.Lerp(this.fog.meanFreePath.value, this.weatherRain.attenuation, this.lerpTime * Time.deltaTime),
-                Color.Lerp(this.sun.color, this.weatherRain.tintColor, this.lerpTime * Time.deltaTime),
-                this.weatherRain.cloudPreset
-            );
-
-            // Rain
-            if (!this.rainEffect.isPlaying)
-            {
-                this.rainEffect.Play(true);
-            }
-            return;
-        }
-
-        this.SetWeather(
-            Mathf.Lerp(this.sun.colorTemperature, this.weatherClear.sunTemperature, this.lerpTime * Time.deltaTime),
-            Color.Lerp(this.sun.color, this.weatherClear.filterColor, this.lerpTime * Time.deltaTime),
-            Mathf.Lerp(this.fog.meanFreePath.value, this.weatherClear.attenuation, this.lerpTime * Time.deltaTime),
-            Color.Lerp(this.sun.color, this.weatherClear.tintColor, this.lerpTime * Time.deltaTime),
-            this.weatherClear.cloudPreset
-        );
-
-        // Rain
-        if (this.rainEffect.isPlaying)
-        {
-            this.rainEffect.Stop(true);
-        }
-    }
+    /// <param name="biomeData">The biomedata.</param>
+    /// <returns>Volume of biomedata.</returns>
+    private Volume GetVolume(BiomeData biomeData) => this.volumesDictionary[biomeData.biome.Lighting.VolumeProfile];
 
     /// <summary>
-    /// Sets the values of the weather (sun, fog and clouds) to the given parameters
+    /// Returns Rain-Volume for given biomeData or null if none was specified.
     /// </summary>
-    /// <param name="colorTemperature"></param>
-    /// <param name="filterColor"></param>
-    /// <param name="attenuation"></param>
-    /// <param name="tintColor"></param>
-    /// <param name="cloudPreset"></param>
-    private void SetWeather(float colorTemperature, Color filterColor, float attenuation, Color tintColor, VolumetricClouds.CloudPresets cloudPreset)
-    {
-        // Sun
-        this.sun.colorTemperature = colorTemperature;
-        this.sun.color = filterColor;
-
-        // Fog
-        this.fog.meanFreePath.value = attenuation;
-        this.fog.tint.value = tintColor;
-
-        // Clouds
-        this.clouds.cloudPreset.value = cloudPreset;
-    }
+    /// <param name="biomeData">The biomedata.</param>
+    /// <returns>Rain-Volume for biomedata or null if none was specified.</returns>
+    private Volume GetVolumeRain(BiomeData biomeData) => biomeData.biome.Lighting.VolumeProfileRain != null? this.volumesDictionary[biomeData.biome.Lighting.VolumeProfileRain]: null;
 }

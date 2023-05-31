@@ -328,6 +328,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5919158663270983896}
   - component: {fileID: 5919158663270983899}
+  - component: {fileID: 774243910983323556}
   m_Layer: 0
   m_Name: Maple01
   m_TagString: Untagged
@@ -383,6 +384,20 @@ LODGroup:
     - renderer: {fileID: 1973691859}
     - renderer: {fileID: 175923895}
   m_Enabled: 1
+--- !u!136 &774243910983323556
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5919158663270983898}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.3031403
+  m_Height: 3.0728276
+  m_Direction: 1
+  m_Center: {x: -0.027792245, y: 1.5271078, z: 0.03638029}
 --- !u!1 &7862742664851972903
 GameObject:
   m_ObjectHideFlags: 0

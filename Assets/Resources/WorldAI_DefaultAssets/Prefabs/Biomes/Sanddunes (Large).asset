@@ -14,11 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   description: Desert full of large sanddunes several 10s of meters in size.
   biomeLighting: {fileID: 11400000, guid: a1c59483f6b6aa043b18d24980fd9d34, type: 2}
-  noiseData:
-    noise: {fileID: 11400000, guid: 7c3ac35d92d9e184eb7011c6f861270d, type: 2}
-    finalNoiseScale: 100
-    finalHeightAddend: 100
-    finalHeightMultiplier: 31.05
+  height: {fileID: 11400000, guid: 7c3ac35d92d9e184eb7011c6f861270d, type: 2}
   falloffRate: 0.01
   baseTerrainLayer: {fileID: 8574412962073106934, guid: 5704c47654d85b34ab16417e4fbfe0d5, type: 2}
   overrideSteepTerrainLayer: 1

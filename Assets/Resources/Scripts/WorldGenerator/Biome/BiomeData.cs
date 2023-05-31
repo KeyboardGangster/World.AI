@@ -18,8 +18,15 @@ public class BiomeData : System.IComparable<BiomeData>
     [HideInInspector]
     public float finalGrassNoiseScale;
 
+    public HeightData HeightData
+    {
+        get;
+        private set;
+    }
+
     public void Prepare(float worldScaleRatio, float toyScaleRatio)
     {
+        this.HeightData = this.biome.Height.GetHeightData();
         this.finalFalloffRate = this.biome.FalloffRate;
         this.finalFalloffRate *= worldScaleRatio * toyScaleRatio;
         this.finalGrassNoiseScale = this.biome.GrassNoiseScale;

@@ -45,7 +45,6 @@ public class BiomeGenerator
         int size = args.Terrain.terrainData.heightmapResolution;
 
         float[,][] weights = new float[horChunks * size, verChunks * size][]; //weights per biome in worldspace (no chunking)
-        //dominantBiomes = new int[horChunks * width, verChunks * height]; //Caching dominant biomes per point.
         PointsToBlend toBlend = new PointsToBlend(); //points in worldspace to still blend (no chunking)
 
         //Generate entire biome-map (without blending)
@@ -56,8 +55,8 @@ public class BiomeGenerator
                 int chunkOffsetX = chunkX * size;
                 int chunkOffsetY = chunkY * size;
 
-                Vector2[] octaveOffsetsBias = Synthesizer.CalculateOctaveOffsets(chunkOffsetX, chunkOffsetY, args.Seed, args.Bias, out float maxValueBias);
-                Vector2[] octaveOffsetsRandomness = Synthesizer.CalculateOctaveOffsets(chunkOffsetX, chunkOffsetY, args.Seed, args.Randomness, out float maxValueRandomness);
+                args.Bias.Prepare(args, chunkOffsetX, chunkOffsetY);
+                args.Randomness.Prepare(args, chunkOffsetX, chunkOffsetY);
 
                 //Generate weights.
                 for (int y = 0; y < size; y++)
@@ -68,14 +67,10 @@ public class BiomeGenerator
                         int yInWorldSpace = chunkOffsetY + y;
 
                         //Select dominant biome from given noiseDatas
-                        float biasValue = Synthesizer.CalculateNoiseValue(x, y, octaveOffsetsBias, args.Bias, maxValueBias);
-                        float randomnessValue = Synthesizer.CalculateNoiseValue(x, y, octaveOffsetsRandomness, args.Randomness, maxValueRandomness);
-
-                        if (biasValue < 0)
-                            Debug.Log("!!");
-
+                        float biasValue = args.Bias.GetHeight(args, x, y);
+                        float randomnessValue = args.Randomness.GetHeight(args, x, y);
                         int biomeIndex = WorldGeneratorArgs.GetDominantBiomeIndex(args, biasValue, randomnessValue);
-                       // dominantBiomes[xInWorldSpace, yInWorldSpace] = biomeIndex;
+
                         weights[xInWorldSpace, yInWorldSpace] = new float[args.BiomeCount];
                         weights[xInWorldSpace, yInWorldSpace][biomeIndex] = 1f;
 
@@ -94,7 +89,7 @@ public class BiomeGenerator
 
     
     /// <summary>
-    /// Makes sure that the sum of all weights for a single position is 1. Also sorts first two most dominant biomes for easier blending.
+    /// Makes sure that the sum of all weights for a single position is 1. Also marks most dominant biome per position.
     /// </summary>
     /// <param name="args">The WorldGeneratorArgs to use.</param>
     /// <param name="weights">The unnormalized weights.</param>

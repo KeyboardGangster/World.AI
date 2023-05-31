@@ -9,136 +9,33 @@ using UnityEngine.Rendering;
 [RequireComponent(typeof(Terrain), typeof(AthmosphereControl))]
 public class WorldGenerator : MonoBehaviour
 {
-    private WorldGeneratorArgs args;
-
-    [SerializeField]
-    private BiomeData[] biomeData = new BiomeData[]
-    {
-        new BiomeData() { bias = new Vector2(0.0f, 0.5f), random = new Vector2(0.0f, 0.5f) },
-        new BiomeData() { bias = new Vector2(0.0f, 0.5f), random = new Vector2(0.5f, 1.0f) },
-        new BiomeData() { bias = new Vector2(0.5f, 1.0f), random = new Vector2(0.0f, 1.0f) }
-    };
-    [SerializeField]
-    private WorldSize size = WorldSize.Large;
-    [SerializeField]
-    private int seed = 1;
-
-    private NoiseData[] biomeNoise;
     private Terrain terrain;
-    private TerrainLayer slopeTerrainLayer;
-    private TerrainLayer inWaterTerrainLayer;
 
-    //Bigger Worlds, less detail. (1:x scale)
-    private float worldScaleRatio;
-    //Bigger Worlds by downsizing everything. (1:x scale)
-    private float toyScaleRatio;
-    //Biome-scale
-    private float noiseScale;
-    //At which height to draw with in-water-texture. Terrain-height adjusts automatically to this.
-    private float waterLevel;
-
-    public void SortBiomeData() => System.Array.Sort(this.biomeData);
-
-    public void Generate()
-    {
-        this.Prepare();
-        CreateBiomes(this.args);
-        CreateHeightMap(this.args);
-        CreateAlphaMap(this.args, this.slopeTerrainLayer, this.inWaterTerrainLayer);
-        CreateEntities(this.args);
-    }
-
-    private void Prepare()
+    public void Generate(WorldGeneratorArgs args, bool preview = false)
     {
         if (this.terrain == null)
             this.terrain = this.GetComponent<Terrain>();
 
-        this.slopeTerrainLayer = Resources.Load<TerrainLayer>("WorldAI_DefaultAssets/TerrainLayers/_DEFAULT_SLOPE");
-        this.inWaterTerrainLayer = Resources.Load<TerrainLayer>("WorldAI_DefaultAssets/TerrainLayers/_DEFAULT_IN_WATER");
+        CreateBiomes(args);
+        CreateHeightMap(args);
+        CreateAlphaMap(args);
+        CreateEntities(args);
+        this.terrain.Flush();
 
-        int heightmapRes;
-        int alphamapRes;
-        int textureRes;
-        int detailRes;
-        int detailResPerPatch;
-        int terrainSize;
-        int terrainHeight = 600;
-        /*
-        private static int BASE_HEIGHTMAP_RESOLUTION = 1024;
-        private static int BASE_CONTROLMAP_RESOLUTION = 512;
-        private static int BASE_TEXTURE_RESOLUTION = 1024;
-        private static int BASE_DETAIL_RESOLUTION = 2048;
-        private static int BASE_DETAIL_RESOLUTION_PER_PATCH = 32;
-        private static int BASE_TERRAIN_SIZE = 1000;
-        private static int BASE_TERRAIN_HEIGHT = 600;*/
-
-        switch(this.size)
+        if (!preview)
         {
-            case WorldSize.Small:
-                this.toyScaleRatio = 2f;
-                this.noiseScale = 4f;
+            TerrainCollider collider = this.GetComponent<TerrainCollider>();
 
-                heightmapRes = 129;
-                alphamapRes = 64;
-                textureRes = 512;
-                detailRes = 256;
-                detailResPerPatch = 16;
-                terrainSize = 100;
-                break;
-            case WorldSize.Medium:
-                this.toyScaleRatio = 1f;
-                this.noiseScale = 10f;
+            if (collider != null)
+            {
+                //Don't mind this garbage, collider didn't update for placed entities.
+                collider.enabled = false;
+                collider.enabled = true;
+            }
 
-                heightmapRes = 513;
-                alphamapRes = 256;
-                textureRes = 512;
-                detailRes = 1024;
-                detailResPerPatch = 16;
-                terrainSize = 500;
-                break;
-            case WorldSize.Large:
-                this.toyScaleRatio = 1f;
-                this.noiseScale = 20f;
-
-                heightmapRes = 1025;
-                alphamapRes = 512;
-                textureRes = 512;
-                detailRes = 2024;
-                detailResPerPatch = 32;
-                terrainSize = 1000;
-                break;
-            default:
-                throw new System.NotImplementedException();
+            AthmosphereControl volBlender = this.GetComponent<AthmosphereControl>();
+            volBlender.Init(args);
         }
-
-        this.worldScaleRatio = (float)terrainSize / heightmapRes;
-        this.waterLevel = 100f;
-
-        this.biomeNoise = new NoiseData[2];
-        this.biomeNoise[0] = new NoiseData() { noise = Resources.Load<SONoise>("WorldAI_DefaultAssets/Prefabs/Noise/_DEFAULT_BIAS") };
-        this.biomeNoise[1] = new NoiseData() { noise = Resources.Load<SONoise>("WorldAI_DefaultAssets/Prefabs/Noise/_DEFAULT_RANDOMNESS") };
-
-        this.terrain.terrainData.heightmapResolution = heightmapRes;
-        this.terrain.terrainData.alphamapResolution = alphamapRes;
-        this.terrain.terrainData.baseMapResolution = textureRes;
-        this.terrain.terrainData.size = new Vector3(terrainSize * this.worldScaleRatio, terrainHeight, terrainSize * this.worldScaleRatio);
-        this.terrain.terrainData.SetDetailResolution(detailRes, detailResPerPatch);
-        this.terrain.drawInstanced = true;
-
-        //1.Prepare Args
-        this.SortBiomeData();
-        this.args = WorldGeneratorArgs.CreateNew(
-            this.terrain,
-            this.seed,
-            this.noiseScale,
-            this.biomeNoise,
-            this.biomeData,
-            this.slopeTerrainLayer,
-            this.inWaterTerrainLayer,
-            this.worldScaleRatio,
-            this.toyScaleRatio,
-            this.waterLevel
-        );
     }
 
     private static void CreateBiomes(WorldGeneratorArgs args)
@@ -151,25 +48,23 @@ public class WorldGenerator : MonoBehaviour
         int size = args.Terrain.terrainData.heightmapResolution;
 
         float[,] heightMap = new float[size, size];
-
-        Vector2[][] octaveOffsets = new Vector2[args.BiomeCount][];
-        float[] maxValues = new float[args.BiomeCount];
-
         float maxTerrainHeight = args.Terrain.terrainData.heightmapScale.y;
 
         //int chunkOffsetX = chunkPos.x * (WIDTH - 1);
         //int chunkOffsetY = chunkPos.y * (HEIGHT - 1);
 
         for (int i = 0; i < args.BiomeCount; i++)
-            //octaveOffsets[i] = Synthesizer.CalculateOctaveOffsets(chunkOffsetX, chunkOffsetY, biomes[i].noiseData, out maxValues[i]);
-            octaveOffsets[i] = Synthesizer.CalculateOctaveOffsets(0, 0, args.Seed, args.GetBiome(i).biome.NoiseData, out maxValues[i]);
+            args.GetBiome(i).HeightData.Prepare(args, 0, 0);
 
         for (int y = 0; y < size; y++)
         {
             for (int x = 0; x < size; x++)
             {
-                //float terrainHeight = Synthesizer.CalculateCompoundNoiseValue(x, y, octaveOffsets, biomes, maxValues, weights[chunkOffsetX + x, chunkOffsetY + y]);
-                float terrainHeight = Synthesizer.CalculateCompoundNoiseValue(args, x, y, octaveOffsets, maxValues);
+                float terrainHeight = 0;
+
+                for(int i = 0; i < args.BiomeCount; i++)
+                    terrainHeight += args.GetBiome(i).HeightData.GetHeight(args, x, y) * args.GetWeight(x, y, i);
+
                 heightMap[x, y] = terrainHeight / maxTerrainHeight;
             }
         }
@@ -178,8 +73,10 @@ public class WorldGenerator : MonoBehaviour
         args.Terrain.transform.position = new Vector3(0, -args.WaterLevel, 0);
     }
 
-    private static void CreateAlphaMap(WorldGeneratorArgs args, TerrainLayer slope, TerrainLayer inWater)
+    private static void CreateAlphaMap(WorldGeneratorArgs args)
     {
+        TerrainLayer slope = args.Slope;
+        TerrainLayer inWater = args.InWater;
         args.Terrain.terrainData.terrainLayers = args.TerrainLayers;
 
         int heightmapRes = args.Terrain.terrainData.heightmapResolution;
@@ -244,40 +141,5 @@ public class WorldGenerator : MonoBehaviour
     private static void CreateEntities(WorldGeneratorArgs args)
     {
         EntityPlacer.Place(args);
-    }
-
-    private void Start()
-    {
-        Generate();
-        AthmosphereControl volBlender = this.GetComponent<AthmosphereControl>();
-        volBlender.Init(this.args);
-    }
-
-
-    private void OnValidate()
-    {
-        /*
-         * Terrain can go up to 1:100 worldScaleRatio, though generating that in one go is most likely going to crash unity.
-         * Issue's the entity-placer doing BASE_ITERATIONS*100*100 iterations. Basically too many trees for one terrain I guess.
-         */
-
-        /*
-        this.worldScaleRatio = Mathf.Clamp(this.worldScaleRatio, 1, 20);
-
-        this.toyScaleRatio = Mathf.Clamp(this.toyScaleRatio, 1, 20);
-
-        this.noiseScale = Mathf.Max(0.01f, this.noiseScale);
-
-        if (this.biomeNoise.Length != 2)
-        {
-            Debug.LogError("There must be exactly 2 noise-data references for biomenoise: (0=bias, 1=randomness). Different values are not yet supported.");
-            NoiseData[] biomeNoise = new NoiseData[2];
-
-            for(int i = 0; i < biomeNoise.Length; i++)
-            {
-                if (i < this.biomeNoise.Length)
-                    biomeNoise[i] = this.biomeNoise[i];
-            }
-        }*/
     }
 }

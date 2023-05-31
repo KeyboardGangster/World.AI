@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 425205049184791270}
   - component: {fileID: 8995791323044136864}
+  - component: {fileID: 371599906971466107}
   m_Layer: 0
   m_Name: Rock06
   m_TagString: Untagged
@@ -60,6 +61,20 @@ LODGroup:
     renderers:
     - renderer: {fileID: 4944106997881663254}
   m_Enabled: 1
+--- !u!136 &371599906971466107
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1033432231821205079}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.83122015
+  m_Height: 3.4176917
+  m_Direction: 2
+  m_Center: {x: 0.05999732, y: 0, z: -0.16524434}
 --- !u!1 &1990022832071674442
 GameObject:
   m_ObjectHideFlags: 0

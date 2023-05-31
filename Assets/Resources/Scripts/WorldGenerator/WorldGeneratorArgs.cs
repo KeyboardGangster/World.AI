@@ -57,7 +57,7 @@ public class WorldGeneratorArgs
     /// <summary>
     /// Bias used during biomemap-generation.
     /// </summary>
-    public NoiseData Bias
+    public HeightData Bias
     {
         get;
         private set;
@@ -66,7 +66,13 @@ public class WorldGeneratorArgs
     /// <summary>
     /// Randomness used during biomemap-generation.
     /// </summary>
-    public NoiseData Randomness
+    public HeightData Randomness
+    {
+        get;
+        private set;
+    }
+
+    public float BiomeScale
     {
         get;
         private set;
@@ -103,6 +109,18 @@ public class WorldGeneratorArgs
     /// The TerrainLayers that were added.
     /// </summary>
     public TerrainLayer[] TerrainLayers
+    {
+        get;
+        private set;
+    }
+
+    public TerrainLayer Slope
+    {
+        get;
+        private set;
+    }
+
+    public TerrainLayer InWater
     {
         get;
         private set;
@@ -189,15 +207,15 @@ public class WorldGeneratorArgs
     /// <param name="terrain">The Terrain that holds the generated information.</param>
     /// <param name="seed">The seed used for generation.</param>
     /// <param name="biomeScale">The scale of biomes used during biomemap-generation.</param>
+    /// <param name="biomeDistributionData">Heightmap-data used for biomemap-generation.</param>
     /// <param name="biomes">The biomes to use for generation.</param>
     /// <param name="slope">The TerrainLayer used for slopes.</param>
     /// <param name="inWater">The TerrainLayer used for underwater.</param>
     /// <param name="worldScaleRatio">Worldscare-ratio used during generation. Scales terrain by stretching terrain.</param>
     /// <param name="toyScaleRatio">Toyscale-ratio used during generation. Scales world by shrinking everything.</param>
-    /// <param name="worldToHeightmapRatio">World- to heightmap-resolution-ratio. Used to adjust noise-scale to world-/ heightmap-resolution differences.</param>
     /// <param name="waterLevel">The waterlevel at which to consider terrain underwater.</param>
     /// <returns>A new instance of the WorldGeneratorArgs-class.</returns>
-    public static WorldGeneratorArgs CreateNew(Terrain terrain, int seed, float biomeScale, NoiseData[] biomeNoise, BiomeData[] biomes, TerrainLayer slope, TerrainLayer inWater, float worldScaleRatio, float toyScaleRatio, float waterLevel)
+    public static WorldGeneratorArgs CreateNew(Terrain terrain, int seed, float biomeScale, SOHeight[] biomeDistributionData, BiomeData[] biomes, TerrainLayer slope, TerrainLayer inWater, float worldScaleRatio, float toyScaleRatio, float waterLevel)
     {
         WorldGeneratorArgs args = new WorldGeneratorArgs();
         args.availableBiomes = biomes;
@@ -205,9 +223,12 @@ public class WorldGeneratorArgs
 
         args.Terrain = terrain;
         args.Seed = seed;
+        args.BiomeScale = biomeScale;
         args.WorldScaleRatio = worldScaleRatio;
         args.ToyScaleRatio = toyScaleRatio;
         args.WaterLevel = waterLevel;
+        args.Slope = slope;
+        args.InWater = inWater;
 
         //Prepare Biomes and TerrainLayers
         List<TerrainLayer> terrainLayers = new List<TerrainLayer>();
@@ -216,28 +237,17 @@ public class WorldGeneratorArgs
 
         for (int i = 0; i < args.availableBiomes.Length; i++)
         {
-            //args.availableBiomes[i].noiseData = BiomeGenerator.GetBiomeNoiseData(biomes[i].so.biome);
             args.availableBiomes[i].Prepare(worldScaleRatio, toyScaleRatio);
-            args.availableBiomes[i].biome.NoiseData.Prepare(worldScaleRatio, toyScaleRatio, waterLevel);
             AddTerrainLayer(args, terrainLayers, args.availableBiomes[i].biome.BaseTerrainLayer);
         }
 
         args.TerrainLayers = terrainLayers.ToArray();
 
         //Prepare Biomemap-generation
-        NoiseData biasData = biomeNoise[0];
-        NoiseData randomnessData = biomeNoise[1];
-        //biasData.Prepare(worldScaleRatio / biomeScale, toyScaleRatio, 0);
-        //randomnessData.Prepare(worldScaleRatio / biomeScale, toyScaleRatio, 0);
-        biasData.Prepare(1, 1, 0);
-        biasData.finalNoiseScale *= biomeScale;
-        biasData.finalNoiseScale /= worldScaleRatio * toyScaleRatio;
-        randomnessData.Prepare(1, 1, 0);
-        randomnessData.finalNoiseScale *= biomeScale;
-        randomnessData.finalNoiseScale /= worldScaleRatio * toyScaleRatio;
-
-        args.Bias = biasData;
-        args.Randomness = randomnessData;
+        args.Bias = biomeDistributionData[0].GetHeightData();
+        args.Randomness = biomeDistributionData[1].GetHeightData();
+        args.Bias.isBiomeDistribution = true;
+        args.Randomness.isBiomeDistribution = true;
 
         return args;
     }

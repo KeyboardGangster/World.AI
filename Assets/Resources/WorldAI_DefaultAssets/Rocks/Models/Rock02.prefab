@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4712125653198866797}
   - component: {fileID: 5092114280898168295}
+  - component: {fileID: 4627475833826238012}
   m_Layer: 0
   m_Name: Rock02
   m_TagString: Untagged
@@ -60,6 +61,20 @@ LODGroup:
     renderers:
     - renderer: {fileID: 8538018486117151924}
   m_Enabled: 1
+--- !u!136 &4627475833826238012
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3108694752043408977}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.850364
+  m_Height: 4.146446
+  m_Direction: 2
+  m_Center: {x: 0.0791412, y: 0, z: 0.026798248}
 --- !u!1 &4680868533748411941
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,7 +347,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8289029554086139035}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.34906274, z: 0, w: 0.9370994}
   m_LocalPosition: {x: 0.05, y: 0, z: -0.25}
   m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
   m_ConstrainProportionsScale: 0
@@ -342,4 +357,4 @@ Transform:
   - {fileID: 6593012597493147889}
   m_Father: {fileID: 4712125653198866797}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 40.86, z: 0}

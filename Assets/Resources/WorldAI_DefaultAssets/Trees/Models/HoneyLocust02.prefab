@@ -244,6 +244,7 @@ GameObject:
   m_Component:
   - component: {fileID: 201437231005665849}
   - component: {fileID: 5584193317861233324}
+  - component: {fileID: 7461389024463989555}
   m_Layer: 0
   m_Name: HoneyLocust02
   m_TagString: Untagged
@@ -299,6 +300,20 @@ LODGroup:
     - renderer: {fileID: 797106011888541896}
     - renderer: {fileID: 4014048568165382055}
   m_Enabled: 1
+--- !u!136 &7461389024463989555
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4195720844763870682}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.21895653
+  m_Height: 5.347818
+  m_Direction: 1
+  m_Center: {x: 0.019500107, y: 2.173909, z: 0.013498843}
 --- !u!1 &6420830319780016847
 GameObject:
   m_ObjectHideFlags: 0

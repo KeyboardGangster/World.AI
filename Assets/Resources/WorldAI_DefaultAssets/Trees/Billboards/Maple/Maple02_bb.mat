@@ -180,7 +180,7 @@ Material:
     - _AddPrecomputedVelocity: 0
     - _AlbedoAffectEmissive: 0
     - _AlphaClipThreshold: 0.792
-    - _AlphaCutoff: 0.822
+    - _AlphaCutoff: 1
     - _AlphaCutoffEnable: 1
     - _AlphaCutoffPostpass: 0.5
     - _AlphaCutoffPrepass: 0.5
@@ -195,7 +195,7 @@ Material:
     - _ConservativeDepthOffsetEnable: 0
     - _CullMode: 0
     - _CullModeForward: 0
-    - _Cutoff: 0.822
+    - _Cutoff: 1
     - _DepthOffsetEnable: 0
     - _DetailAlbedoScale: 1
     - _DetailNormalScale: 1
@@ -299,10 +299,10 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - Diffusion_Profile_Asset: {r: 4.1765235e-22, g: 2.7468226e-36, b: -1.040354e-24, a: 1.3769199e+13}
-    - _BaseColor: {r: 0.7887148, g: 0.7924528, b: 0.7887839, a: 1}
+    - _BaseColor: {r: 0.93728906, g: 1, b: 0.8915094, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
     - _BaseColorMap_TO: {r: 1, g: 1, b: 0, a: 0}
-    - _Color: {r: 0.7887148, g: 0.7924528, b: 0.7887839, a: 1}
+    - _Color: {r: 0.937289, g: 1, b: 0.8915094, a: 1}
     - _DetailMap_TO: {r: 1, g: 1, b: 0, a: 0}
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}

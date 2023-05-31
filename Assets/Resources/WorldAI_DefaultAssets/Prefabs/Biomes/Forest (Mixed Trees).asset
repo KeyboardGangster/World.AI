@@ -12,33 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a5c988dc50e17499978d6435f77559, type: 3}
   m_Name: Forest (Mixed Trees)
   m_EditorClassIdentifier: 
-  description: mixed-trees-forest containing maple-, chestnut- and various other
-    trees on a relatively flat terrain with ocasional boulder formations.
+  description: mixed-trees-forest (thick foliage, medium tree-size) on a relatively
+    flat terrain with ocasional boulder formations.
   biomeLighting: {fileID: 11400000, guid: c1c505e1a4d9ce3419a57cc21e725c54, type: 2}
-  noiseData:
-    noise: {fileID: 11400000, guid: 942b8a6152e0ef549bc7b877fedb23ea, type: 2}
-    finalNoiseScale: 19.35
-    finalHeightAddend: 100
-    finalHeightMultiplier: 3.045
+  height: {fileID: 11400000, guid: 942b8a6152e0ef549bc7b877fedb23ea, type: 2}
   falloffRate: 0.03
   baseTerrainLayer: {fileID: 8574412962073106934, guid: 18fd1d6cae2dfc24a9de83f370617606, type: 2}
   overrideSteepTerrainLayer: 0
   overrideInWaterTerrainLayer: 0
   trees:
   - tree: {fileID: 11400000, guid: 6fc5b70681e4b34469e263db700e2c82, type: 2}
-    spawnRate: 0.474
+    spawnRate: 0.091
   - tree: {fileID: 11400000, guid: bfe5771346d503144a967ac281f1ae27, type: 2}
-    spawnRate: 0.292
+    spawnRate: 0.454
   - tree: {fileID: 11400000, guid: dd8defac6d42a9e4480ad55f6b5ad121, type: 2}
-    spawnRate: 0.299
+    spawnRate: 0.448
   - tree: {fileID: 11400000, guid: 680b8a37a7c9fe7429e37dc723556831, type: 2}
     spawnRate: 0.036
   - tree: {fileID: 11400000, guid: ac41d6b9013d5ad45a17accf2283e0d1, type: 2}
-    spawnRate: 0.412
+    spawnRate: 0.152
   - tree: {fileID: 11400000, guid: f03f6605507e2594b9baa61ab03e0569, type: 2}
-    spawnRate: 0.401
+    spawnRate: 0.135
   - tree: {fileID: 11400000, guid: c0f0a7f1344fd834bae2c406eeb961ff, type: 2}
-    spawnRate: 0.419
+    spawnRate: 0.127
   - tree: {fileID: 11400000, guid: 6df375420db7dcd4f8f336dcbfbed35e, type: 2}
     spawnRate: 0.125
   - tree: {fileID: 11400000, guid: babed15392aa4ba479cc6ea615f65796, type: 2}
@@ -57,6 +53,14 @@ MonoBehaviour:
     biased: 1
   - grass: {fileID: 11400000, guid: 05fed8dc9c8799f4b8f87a3af8a2cf85, type: 2}
     spawnRate: 0.016
+    density: 1
+    biased: 1
+  - grass: {fileID: 11400000, guid: 231c7f55d7b3b2a4d9f7d9c2f2e07fc1, type: 2}
+    spawnRate: 0.107
+    density: 0
+    biased: 1
+  - grass: {fileID: 11400000, guid: 231c7f55d7b3b2a4d9f7d9c2f2e07fc1, type: 2}
+    spawnRate: 0.259
     density: 1
     biased: 1
   grassNoiseScale: 1

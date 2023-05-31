@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: Temperate
   m_EditorClassIdentifier: 
   volumeProfile: {fileID: 11400000, guid: eac6b39b51222a640b57ce0c21305881, type: 2}
+  volumeProfileRain: {fileID: 11400000, guid: c9ee13ba3497b8d4588d8646d9e781c2, type: 2}
   lightTemperature: 6500
   lightFilter: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  lightTempreratureRain: 10000
+  lightFilterRain: {r: 0.7686275, g: 0.9529412, b: 1, a: 1}

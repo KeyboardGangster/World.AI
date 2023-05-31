@@ -12,26 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a5c988dc50e17499978d6435f77559, type: 3}
   m_Name: Mountain Forest (Conifer)
   m_EditorClassIdentifier: 
-  description: Forest with coniferous trees on top of a mountain.
+  description: Forest with coniferous trees (tall trees, dense forest) on top of
+    a mountain.
   biomeLighting: {fileID: 11400000, guid: c1c505e1a4d9ce3419a57cc21e725c54, type: 2}
-  noiseData:
-    noise: {fileID: 11400000, guid: 205fa387cc97f5e48942dba3af143570, type: 2}
-    finalNoiseScale: 150
-    finalHeightAddend: 175
-    finalHeightMultiplier: 110
+  height: {fileID: 11400000, guid: 205fa387cc97f5e48942dba3af143570, type: 2}
   falloffRate: 0.01
   baseTerrainLayer: {fileID: 8574412962073106934, guid: 40b867aede49f1545aa2cd4ae394019a, type: 2}
   overrideSteepTerrainLayer: 0
   overrideInWaterTerrainLayer: 0
   trees:
   - tree: {fileID: 11400000, guid: 79a1f6fd8387f1d419f3d1b782e5e740, type: 2}
-    spawnRate: 0.698
+    spawnRate: 0.3
   - tree: {fileID: 11400000, guid: 6facc607cea61d5439650163d226fc23, type: 2}
-    spawnRate: 0.698
+    spawnRate: 0.3
   - tree: {fileID: 11400000, guid: c0f83fb29e6d0b6468edaf6ff7740cd1, type: 2}
-    spawnRate: 0.698
+    spawnRate: 0.3
   - tree: {fileID: 11400000, guid: fa2f54d0ba7daf646a518b7bb7089f60, type: 2}
-    spawnRate: 0.756
+    spawnRate: 0.05
   forceRemoveTreesUnderwater: 0
   grass:
   - grass: {fileID: 11400000, guid: 1e5b35dafc46bb94c918695d19302741, type: 2}

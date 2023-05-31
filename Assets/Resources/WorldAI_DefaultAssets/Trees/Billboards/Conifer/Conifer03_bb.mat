@@ -299,10 +299,10 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - Diffusion_Profile_Asset: {r: 4.1765235e-22, g: 2.7468226e-36, b: -1.040354e-24, a: 1.3769199e+13}
-    - _BaseColor: {r: 0.8962264, g: 0.85973036, b: 0.8243592, a: 1}
+    - _BaseColor: {r: 0.754717, g: 0.7228645, b: 0.69419724, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
     - _BaseColorMap_TO: {r: 1, g: 1, b: 0, a: 0}
-    - _Color: {r: 0.8962264, g: 0.8597303, b: 0.8243592, a: 1}
+    - _Color: {r: 0.75471693, g: 0.7228645, b: 0.6941973, a: 1}
     - _DetailMap_TO: {r: 1, g: 1, b: 0, a: 0}
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}

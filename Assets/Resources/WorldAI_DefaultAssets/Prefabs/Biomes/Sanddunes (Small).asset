@@ -15,11 +15,7 @@ MonoBehaviour:
   description: Desert full of small sanddunes up to one meter in size. Seldomly,
     lone cacti can be found.
   biomeLighting: {fileID: 11400000, guid: a1c59483f6b6aa043b18d24980fd9d34, type: 2}
-  noiseData:
-    noise: {fileID: 11400000, guid: 920d02e2511272047a67446e727348d9, type: 2}
-    finalNoiseScale: 49.620247
-    finalHeightAddend: 100
-    finalHeightMultiplier: 3.6
+  height: {fileID: 11400000, guid: 920d02e2511272047a67446e727348d9, type: 2}
   falloffRate: 0.03
   baseTerrainLayer: {fileID: 8574412962073106934, guid: 5704c47654d85b34ab16417e4fbfe0d5, type: 2}
   overrideSteepTerrainLayer: 1

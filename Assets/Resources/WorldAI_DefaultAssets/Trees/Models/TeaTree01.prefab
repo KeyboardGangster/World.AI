@@ -293,6 +293,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1645713130367663863}
   - component: {fileID: 7655794562982353711}
+  - component: {fileID: 3673428432529087987}
   m_Layer: 0
   m_Name: TeaTree01
   m_TagString: Untagged
@@ -348,6 +349,20 @@ LODGroup:
     - renderer: {fileID: 1091183880}
     - renderer: {fileID: 1932129567}
   m_Enabled: 1
+--- !u!136 &3673428432529087987
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5501697579301720908}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.82873464
+  m_Height: 3.9940972
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.9569342, z: -0.07889199}
 --- !u!1 &5750697242233195820
 GameObject:
   m_ObjectHideFlags: 0

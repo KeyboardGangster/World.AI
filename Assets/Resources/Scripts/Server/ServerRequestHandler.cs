@@ -54,22 +54,22 @@ public class ServerRequestHandler : MonoBehaviour
 
         byte[] bytes = Encoding.ASCII.GetBytes(toWrite);
         stream.Write(bytes, 0, bytes.Length);
+        stream.Flush();
     }
 
     private static byte[] ReadBytes(NetworkStream stream, int bufferSize, int bytesToRead)
     {
         byte[] data = new byte[bytesToRead];
-        int pointer = 0;
 
         int bytesRead;
         int bytesReadTotal = 0;
 
         do
         {
-            bytesRead = stream.Read(data, pointer, Math.Min(bufferSize, bytesToRead - bytesReadTotal));
+            bytesRead = stream.Read(data, bytesReadTotal, Math.Min(bufferSize, bytesToRead - bytesReadTotal));
             bytesReadTotal += bytesRead;
         }
-        while (bytesRead != 0 && data.Length != bytesToRead);
+        while (bytesRead != 0 && bytesReadTotal != bytesToRead);
 
         return data;
     }

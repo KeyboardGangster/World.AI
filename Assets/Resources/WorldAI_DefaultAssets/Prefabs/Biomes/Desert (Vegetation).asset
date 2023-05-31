@@ -14,11 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   description: Relatively flat desert with cacti and other dry vegetation.
   biomeLighting: {fileID: 11400000, guid: a1c59483f6b6aa043b18d24980fd9d34, type: 2}
-  noiseData:
-    noise: {fileID: 11400000, guid: 37433f43f5a79224fa8dfa03a021f068, type: 2}
-    finalNoiseScale: 51.300003
-    finalHeightAddend: 100
-    finalHeightMultiplier: 20
+  height: {fileID: 11400000, guid: 37433f43f5a79224fa8dfa03a021f068, type: 2}
   falloffRate: 0.03
   baseTerrainLayer: {fileID: 8574412962073106934, guid: 40b867aede49f1545aa2cd4ae394019a, type: 2}
   overrideSteepTerrainLayer: 1

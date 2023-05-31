@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: SearingHot
   m_EditorClassIdentifier: 
   volumeProfile: {fileID: 11400000, guid: 21c6b3fc42e606d43b1988997c9cb78b, type: 2}
+  volumeProfileRain: {fileID: 0}
   lightTemperature: 4900
   lightFilter: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  lightTempreratureRain: 10000
+  lightFilterRain: {r: 0.7686275, g: 0.9529412, b: 1, a: 1}

@@ -36,7 +36,10 @@ public class Snapshot : MonoBehaviour
 
     private IEnumerator CoroutineCapture()
     {
-        while(true)
+        yield return new WaitForSeconds(3);
+        Capture();
+
+        while (true)
         {
             lock (this.threadLock)
             {
@@ -69,6 +72,7 @@ public class Snapshot : MonoBehaviour
 
         Texture2D image = new Texture2D(cam.targetTexture.width, cam.targetTexture.height);
         image.ReadPixels(new Rect(0, 0, cam.targetTexture.width, cam.targetTexture.height), 0, 0);
+        FixColorSpace(image);
         image.Apply();
         RenderTexture.active = activeRenderTexture;
 
@@ -80,5 +84,21 @@ public class Snapshot : MonoBehaviour
 
         File.WriteAllBytes(Application.dataPath + "/snapshots/" + Random.Range(0, 99999999) + ".jpg", bytes);
         return bytes;
+    }
+
+    private void FixColorSpace(Texture2D image)
+    {
+        for (int y = 0; y < image.height; y++)
+        {
+            for (int x = 0; x < image.width; x++)
+            {
+                image.SetPixel(x, y, new Color(
+                    Mathf.Pow(image.GetPixel(x, y).r, 1f / 2.2f),
+                    Mathf.Pow(image.GetPixel(x, y).g, 1f / 2.2f),
+                    Mathf.Pow(image.GetPixel(x, y).b, 1f / 2.2f),
+                    Mathf.Pow(image.GetPixel(x, y).a, 1f / 2.2f)
+                ));
+            }
+        }
     }
 }

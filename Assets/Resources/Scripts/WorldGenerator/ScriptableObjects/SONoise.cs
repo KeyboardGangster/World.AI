@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "WorldAI/Noise")]
-public class SONoise : ScriptableObject
+[CreateAssetMenu(menuName = "WorldAI/Height/From noise")]
+public class SONoise : SOHeight
 {
     [Range(1, 6)]
     [SerializeField]
@@ -15,10 +15,6 @@ public class SONoise : ScriptableObject
     [SerializeField]
     private float persistance;
 
-    [SerializeField]
-    private float heightAddend;
-    [SerializeField]
-    private float heightMultiplier;
     [Range(10f, 1000f)]
     [SerializeField]
     private float noiseScale;
@@ -48,14 +44,13 @@ public class SONoise : ScriptableObject
     public int Octaves => this.octaves;
     public float Lacunarity => this.lacunarity;
     public float Persistance => this.persistance;
-
-    public float HeightAddend => this.heightAddend;
-    public float HeightMultiplier => this.heightMultiplier;
     public float NoiseScale => this.noiseScale;
 
     public Vector2 Offset => this.offset;
 
     public NoisePattern[] Pattern => this.pattern;
+
+    public override HeightData GetHeightData() => new NoiseData(this);
 
     public void OnValidate()
     {

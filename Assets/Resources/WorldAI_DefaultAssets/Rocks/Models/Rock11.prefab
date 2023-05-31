@@ -210,6 +210,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8863530012057944163}
   - component: {fileID: 6576994434110869527}
+  - component: {fileID: 8414722942566709085}
   m_Layer: 0
   m_Name: Rock11
   m_TagString: Untagged
@@ -260,6 +261,19 @@ LODGroup:
     renderers:
     - renderer: {fileID: 6406360602765671747}
   m_Enabled: 1
+--- !u!135 &8414722942566709085
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4266063822646797203}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.8376508
+  m_Center: {x: -0.05634761, y: 0.2813028, z: 0}
 --- !u!1 &7719621881555883191
 GameObject:
   m_ObjectHideFlags: 0

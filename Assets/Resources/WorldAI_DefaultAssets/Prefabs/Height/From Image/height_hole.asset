@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f162d4a7c0cfb934bbbcbc38839514e5, type: 3}
+  m_Name: height_hole
+  m_EditorClassIdentifier: 
+  description: A surrounded by B.
+  heightAddend: 0
+  heightMultiplier: 1
+  scale: 1
+  texture: {fileID: 2800000, guid: b5f25ae7cec05384c9a8efb4fafa0ea6, type: 3}
+  invertXAxis: 0
+  invertYAxis: 0
+  invertHeight: 0

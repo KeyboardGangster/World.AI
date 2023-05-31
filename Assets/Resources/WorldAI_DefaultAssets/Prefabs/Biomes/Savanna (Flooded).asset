@@ -14,11 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   description: Savanna near a pond with occasional trees, rocks and dry grass.
   biomeLighting: {fileID: 11400000, guid: e3d3546341bb55a4b9196089b8929a58, type: 2}
-  noiseData:
-    noise: {fileID: 11400000, guid: 6f99bc23a237c91489f8ed7879afad36, type: 2}
-    finalNoiseScale: 51.25
-    finalHeightAddend: 97
-    finalHeightMultiplier: 6
+  height: {fileID: 11400000, guid: 6f99bc23a237c91489f8ed7879afad36, type: 2}
   falloffRate: 0.03
   baseTerrainLayer: {fileID: 8574412962073106934, guid: 1d6b735f83dc0f04099c251541119bb8, type: 2}
   overrideSteepTerrainLayer: 0

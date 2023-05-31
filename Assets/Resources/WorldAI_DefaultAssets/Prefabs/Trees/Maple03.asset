@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Maple03
   m_EditorClassIdentifier: 
   prefab: {fileID: 9175738993934162804, guid: 6bdb7c6ee4534be4daf7fa6437cbaef0, type: 3}
-  width: {x: 1, y: 1.45}
-  height: {x: 1, y: 1.45}
+  width: {x: 0.85, y: 1}
+  height: {x: 0.85, y: 1}
