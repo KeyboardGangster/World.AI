@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a5c988dc50e17499978d6435f77559, type: 3}
   m_Name: Swamp (Dry)
   m_EditorClassIdentifier: 
-  description: Savanna with occasional trees and rocks and dry grass.
+  description: A Swamp that is relatively dry with some trees.
   biomeLighting: {fileID: 11400000, guid: c1c505e1a4d9ce3419a57cc21e725c54, type: 2}
   noiseData:
     noise: {fileID: 11400000, guid: e063956321936f247958cf48b0e53b55, type: 2}
