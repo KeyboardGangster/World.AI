@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a5c988dc50e17499978d6435f77559, type: 3}
   m_Name: Savanna
   m_EditorClassIdentifier: 
-  description: Savanna with occasional trees and rocks and dry grass.
+  description: Savanna on flat terrain with occasional trees and rocks and dry grass.
   biomeLighting: {fileID: 11400000, guid: e3d3546341bb55a4b9196089b8929a58, type: 2}
   height: {fileID: 11400000, guid: 8c0547a6cf7acca41ad5ae3b5ae40d74, type: 2}
   falloffRate: 0.03

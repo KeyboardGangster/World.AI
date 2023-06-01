@@ -1,5 +1,9 @@
+using OpenAI_API.Chat;
+using OpenAI_API.Models;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 
 [RequireComponent(typeof(WorldGenerator))]
@@ -15,19 +19,252 @@ public class WorldGeneratorInterface_AI : WorldGeneratorInterface
     private WorldSize size;
     [SerializeField]
     private int seed = 1;
+    [SerializeField]
+    private bool fixedSeed = false;
+    [SerializeField]
+    [Tooltip("Always ask ChatGPT, even if the prompt didn't change. (Not recommended)")]
+    private bool alwaysAskChatGPT = false;
+    [SerializeField]
+    [Tooltip("Prints progress to console.")]
+    private bool showProgressLogs = false;
+
+    private string prevPrompt;
+    private BiomeData[] prevBiomeData;
 
     //private SOHeight[] biomeDistributionData; //Currently replaced by Bias and Randomness.
 
-    public override void GenerateWorld(bool preview = false)
+    public override async void GenerateWorld(bool preview = false)
     {
+        if (string.IsNullOrEmpty(this.prompt))
+        {
+            Debug.LogError("Your prompt is empty, please write a prompt so ChatGPT can help you out.");
+            return;
+        }
+
         if (this.worldGenerator == null)
             this.worldGenerator = this.GetComponent<WorldGenerator>();
 
-        WorldGeneratorArgs args = this.Prepare();
-        this.worldGenerator.Generate(args, preview);
+        //User prompt changed (or alwaysAskChatGPT set to true), OpenAI communication necessary.
+        if (this.alwaysAskChatGPT || this.prevPrompt != this.prompt)
+        {
+            BiomeData[] biomeData = await FetchWorldsFromOpenAI();
+
+            if (this.showProgressLogs)
+                Debug.Log("Generating world from processed answer...");
+            if (!this.fixedSeed)
+                this.seed = Random.Range(0, 9999999);
+
+            this.prevBiomeData = biomeData;
+            WorldGeneratorArgs args = this.Prepare(biomeData);
+            this.worldGenerator.Generate(args, preview);
+        }
+        //User prompt did not change, just regenerate.
+        else
+        {
+            if (this.showProgressLogs)
+            {
+                Debug.Log("Prompt didn't change, using previous ChatGPT-answer...");
+                Debug.Log("Generating world...");
+            }
+            if(!this.fixedSeed)
+                this.seed = Random.Range(0, 9999999);
+
+            WorldGeneratorArgs args = this.Prepare(this.prevBiomeData);
+            this.worldGenerator.Generate(args, preview);
+        }
+
+        this.prevPrompt = prompt;
     }
 
-    private WorldGeneratorArgs Prepare()
+    private async Task<BiomeData[]> FetchWorldsFromOpenAI()
+    {
+        if (this.showProgressLogs)
+            Debug.Log("Preparing Prompt...");
+        SOBiome[] biomes = Resources.LoadAll<SOBiome>("WorldAI_DefaultAssets/Prefabs/Biomes/");
+        string fullPrompt = GetFullPrompt(biomes, this.prompt);
+
+        if (this.showProgressLogs)
+            Debug.Log("Waiting for OpenAI answer...");
+        ChatResult result = await GetAnswerFromOpenAIAsync(fullPrompt);
+
+        if (this.showProgressLogs)
+        {
+            Debug.Log($"Answer received! Prompt needed {result.Usage.PromptTokens} tokens and result used up {result.Usage.CompletionTokens} tokens.");
+            Debug.Log($"Result: {result.ToString()}");
+        }
+
+        if (this.showProgressLogs)
+            Debug.Log("Converting answer to BiomeData[]...");
+        return ConvertToBiomes(biomes, result.ToString());
+    }
+
+    private static string GetFullPrompt(SOBiome[] biomes, string userInput)
+    {
+        StringBuilder fullPrompt = new StringBuilder();
+        fullPrompt.Append("Given is an array of possible biomes to choose from with their names and descriptions: ");
+
+        foreach (SOBiome b in biomes)
+        {
+            fullPrompt.Append($"[name: {b.name}, description: {b.Description}], ");
+        }
+
+        fullPrompt.Append("Based on the array above please pick one to five biomes which would be the best choice (please keep it to a single theme/ climate unless stated otherwise) to use for the following prompt and please use following format for the answer: FORMAT: '[Biome1], [Biome2], [Biome3], etc...' ");
+        fullPrompt.Append($"PROMPT: '{userInput}'");
+        return fullPrompt.ToString();
+    }
+
+    private static async Task<ChatResult> GetAnswerFromOpenAIAsync(string prompt)
+    {
+        var api = new OpenAI_API.OpenAIAPI("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");
+        var result = await api.Chat.CreateChatCompletionAsync(new ChatRequest()
+        {
+            Model = Model.ChatGPTTurbo,
+            Temperature = 0.2,
+            MaxTokens = 100,
+            Messages = new ChatMessage[] {
+            new ChatMessage(ChatMessageRole.User, prompt)
+        }
+        });
+
+        return result;
+    }
+
+    private static BiomeData[] ConvertToBiomes(SOBiome[] biomes, string answer)
+    {
+        List<SOBiome> result = new List<SOBiome>();
+
+        for(int i = 0; i < biomes.Length; i++)
+        {
+            if (answer.Contains(biomes[i].name))
+                result.Add(biomes[i]);
+        }
+
+        //Fallback
+        if (result.Count == 0)
+        {
+            Debug.LogError("It seems like OpenAI had a hard time working with your prompt. Instead choosing 3 biomes randomly...");
+            result.Add(biomes[Random.Range(0, result.Count)]);
+            result.Add(biomes[Random.Range(0, result.Count)]);
+            result.Add(biomes[Random.Range(0, result.Count)]);
+        }
+
+        //Randomly remove excess biomes.
+        while (result.Count > 5)
+            result.RemoveAt(Random.Range(0, result.Count));
+
+        BiomeData[] biomeData = new BiomeData[result.Count];
+
+        //Hardcoded biome-distribution.
+        switch (result.Count)
+        {
+            case 1:
+                biomeData[0] = new BiomeData()
+                {
+                    bias =      new Vector2(0, 1),
+                    random =    new Vector2(0, 1),
+                    biome = result[0]
+                };
+                break;
+            case 2:
+                biomeData[0] = new BiomeData()
+                {
+                    bias =      new Vector2(0f, 0.5f),
+                    random =    new Vector2(0f, 1f),
+                    biome = result[0]
+                };
+                biomeData[1] = new BiomeData()
+                {
+                    bias =      new Vector2(0.5f, 1f),
+                    random =    new Vector2(0f, 1f),
+                    biome = result[1]
+                };
+                break;
+            case 3:
+                biomeData[0] = new BiomeData()
+                {
+                    bias =      new Vector2(0, 0.5f),
+                    random =    new Vector2(0, 0.5f),
+                    biome = result[0]
+                };
+                biomeData[1] = new BiomeData()
+                {
+                    bias =      new Vector2(0, 0.5f),
+                    random =    new Vector2(0.5f, 1f),
+                    biome = result[1]
+                };
+                biomeData[2] = new BiomeData()
+                {
+                    bias =      new Vector2(0.5f, 1),
+                    random =    new Vector2(0, 1),
+                    biome = result[2]
+                };
+                break;
+            case 4:
+                biomeData[0] = new BiomeData()
+                {
+                    bias =      new Vector2(0, 0.5f),
+                    random =    new Vector2(0, 0.5f),
+                    biome = result[0]
+                };
+                biomeData[1] = new BiomeData()
+                {
+                    bias =      new Vector2(0, 0.5f),
+                    random =    new Vector2(0.5f, 1f),
+                    biome = result[1]
+                };
+                biomeData[2] = new BiomeData()
+                {
+                    bias =      new Vector2(0.5f, 1),
+                    random =    new Vector2(0, 0.5f),
+                    biome = result[2]
+                }; 
+                biomeData[3] = new BiomeData()
+                {
+                    bias =      new Vector2(0.5f, 1),
+                    random =    new Vector2(0.5f, 1f),
+                    biome = result[3]
+                };
+                break;
+            case 5:
+                biomeData[0] = new BiomeData()
+                {
+                    bias =      new Vector2(0, 0.33f),
+                    random =    new Vector2(0, 0.5f),
+                    biome = result[0]
+                };
+                biomeData[1] = new BiomeData()
+                {
+                    bias =      new Vector2(0, 0.33f),
+                    random =    new Vector2(0.5f, 1f),
+                    biome = result[1]
+                };
+                biomeData[2] = new BiomeData()
+                {
+                    bias =      new Vector2(0.33f, 0.5f),
+                    random =    new Vector2(0, 0.5f),
+                    biome = result[2]
+                };
+                biomeData[3] = new BiomeData()
+                {
+                    bias =      new Vector2(0.33f, 0.5f),
+                    random =    new Vector2(0.5f, 1f),
+                    biome = result[3]
+                };
+                biomeData[4] = new BiomeData()
+                {
+                    bias =      new Vector2(0.5f, 1f),
+                    random =    new Vector2(0, 1f),
+                    biome = result[4]
+                };
+                break;
+            default:
+                throw new System.NotImplementedException();
+        }
+
+        return biomeData;
+    }
+
+    private WorldGeneratorArgs Prepare(BiomeData[] biomeData)
     {
         if (this.terrain == null)
             this.terrain = this.GetComponent<Terrain>();
@@ -106,16 +343,6 @@ public class WorldGeneratorInterface_AI : WorldGeneratorInterface
         SOHeight bias = Resources.Load<SOHeight>("WorldAI_DefaultAssets/Prefabs/Height/_DEFAULT_BIAS");
         SOHeight randomness = Resources.Load<SOHeight>("WorldAI_DefaultAssets/Prefabs/Height/_DEFAULT_RANDOMNESS");
 
-        BiomeData[] biomeData = new BiomeData[]
-        {
-            new BiomeData() { bias = new Vector2(0.0f, 0.5f), random = new Vector2(0.0f, 0.5f) },
-            new BiomeData() { bias = new Vector2(0.0f, 0.5f), random = new Vector2(0.5f, 1.0f) },
-            new BiomeData() { bias = new Vector2(0.5f, 1.0f), random = new Vector2(0.0f, 1.0f) }
-        };
-        biomeData[0].biome = Resources.Load<SOBiome>("WorldAI_DefaultAssets/Prefabs/Biomes/Field (Flowers, Pattern)");
-        biomeData[1].biome = Resources.Load<SOBiome>("WorldAI_DefaultAssets/Prefabs/Biomes/Forest (Birch)");
-        biomeData[2].biome = Resources.Load<SOBiome>("WorldAI_DefaultAssets/Prefabs/Biomes/Forest (Young Maple)");
-
         //1.Prepare Args
         //System.Array.Sort(biomeData);
         return WorldGeneratorArgs.CreateNew(
@@ -145,10 +372,6 @@ public class WorldGeneratorInterface_AI : WorldGeneratorInterface
 
     private void Reset()
     {
-        
-
-        
-
         this.size = WorldSize.Medium;
     }
 
