@@ -127,7 +127,7 @@ public class WorldGenerator : MonoBehaviour
                 int xInHeightMap = Mathf.FloorToInt(x * heightmapAlphamapRatio);
                 int yInHeightMap = Mathf.FloorToInt(y * heightmapAlphamapRatio);
 
-                BiomeData dominantBiome = args.GetDominantBiome(xInHeightMap, yInHeightMap);
+                BiomeData dominantBiome = args._GetDominantBiome(xInHeightMap, yInHeightMap);
 
                 bool isSteep = false;
                 float steepnessValue = 0;

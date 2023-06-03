@@ -155,8 +155,6 @@ public class AthmosphereControl : MonoBehaviour
             //if (dominantWeight > 0.7f)
             this.blendTowards = this.worldGenerator.Args.GetDominantBiome(posInHeightmap.z, posInHeightmap.x);
 
-            Debug.Log(this.blendTowards.biome.name);
-
             yield return wait;
         }
     }

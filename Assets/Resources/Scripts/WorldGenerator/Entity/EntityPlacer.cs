@@ -43,7 +43,7 @@ public class EntityPlacer : MonoBehaviour
 
             //Don't ask me why normalizedPos is inverted in there, I have no idea haha.
             //I think the normalized positions are inverted to the actual heightmap-positions but idk...
-            BiomeData dominantBiome = args.GetDominantBiome(
+            BiomeData dominantBiome = args._GetDominantBiome(
                 Mathf.FloorToInt(normalizedPos.z * heightmapRes), 
                 Mathf.FloorToInt(normalizedPos.x * heightmapRes)
             );
@@ -99,7 +99,7 @@ public class EntityPlacer : MonoBehaviour
 
             //Don't ask me why normalizedPos is inverted in there, I have no idea haha.
             //I think the normalized positions are inverted to the actual heightmap-positions but idk...
-            BiomeData dominantBiome = args.GetDominantBiome(
+            BiomeData dominantBiome = args._GetDominantBiome(
                 Mathf.FloorToInt(normalizedPos.z * heightmapRes),
                 Mathf.FloorToInt(normalizedPos.x * heightmapRes)
             );

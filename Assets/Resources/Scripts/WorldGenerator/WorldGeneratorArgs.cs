@@ -7,7 +7,8 @@ using UnityEngine;
 /// <summary>
 /// Holds information about WorldGenerator arguments.
 /// <para />
-/// <b>Note:</b><br/> Properties and methods starting with _ are using non-serializable data and will cause reference-exceptions if used outside of world-generation. Do not use at runtime!<br/>
+/// <b>Note:</b><br/> Properties and methods starting with _ are using non-serializable data and will cause reference-exceptions if used outside of world-generation.<br/>
+/// Do not use at runtime, unless you're generating worlds at runtime!<br/>
 /// Static declarations are used during initialization of this class, use with caution.
 /// </summary>
 [CreateAssetMenu(fileName = "WorldGeneratorArgs", menuName = "GoFuckYourself", order = 0)]
@@ -149,6 +150,13 @@ public class WorldGeneratorArgs : ScriptableObject
     /// <returns>The most dominant biome at given position in biomemap-resolution.</returns>
     public BiomeData GetDominantBiome(int x, int z) => this.GetBiome(GetDominantBiomeIndex(this, this.bias.GetHeight(this, x, z), this.randomness.GetHeight(this, x, z)));
 
+    /// <summary>
+    /// Returns the most dominant biome at given position in biomemap-resolution (currently biomemapRes = heightmapRes, still WIP)
+    /// </summary>
+    /// <param name="x">The x-ccordinate in biomemap.</param>
+    /// <param name="z">The y-coordinate in biomemap.</param>
+    /// <returns>The most dominant biome at given position in biomemap-resolution.</returns>
+    public BiomeData _GetDominantBiome(int x, int z) => this.availableBiomes[this._dominantBiomeIndices[x, z]];
 
     /// <summary>
     /// Returns true if given biome-index corresponds to the most dominant biome at given position in biomemap-resolution.
@@ -294,6 +302,9 @@ public class WorldGeneratorArgs : ScriptableObject
         }
     }
 
+    /// <summary>
+    /// Clears all saved data from this instance.
+    /// </summary>
     public void Clear()
     {
         this._weightsPerBiome = null;
@@ -315,5 +326,4 @@ public class WorldGeneratorArgs : ScriptableObject
         this._InWater = null;
 
     }
-
 }
