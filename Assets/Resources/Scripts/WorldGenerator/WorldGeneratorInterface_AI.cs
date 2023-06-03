@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(WorldGenerator))]
@@ -15,6 +16,8 @@ public class WorldGeneratorInterface_AI : WorldGeneratorInterface
     [SerializeField]
     [TextArea(3, 10)]
     private string prompt;
+    [SerializeField]
+    private string key;
     [SerializeField]
     private WorldSize size;
     [SerializeField]
@@ -33,7 +36,7 @@ public class WorldGeneratorInterface_AI : WorldGeneratorInterface
 
     //private SOHeight[] biomeDistributionData; //Currently replaced by Bias and Randomness.
 
-    public override async void GenerateWorld(bool preview = false)
+    public override async void GenerateWorld()
     {
         if (string.IsNullOrEmpty(this.prompt))
         {
@@ -49,28 +52,36 @@ public class WorldGeneratorInterface_AI : WorldGeneratorInterface
         {
             BiomeData[] biomeData = await FetchWorldsFromOpenAI();
 
-            if (this.showProgressLogs)
-                Debug.Log("Generating world from processed answer...");
+            //Disabled, cos' it triggers some Unity-bug that causes ultrabright night when switching directly from day to night.
+            //Didn't want the world to be generated in such a state so it's disabled for now, but it works.
+            /*AthmosphereControl athmosphereControl = this.GetComponent<AthmosphereControl>();
+            if (athmosphereControl != null)
+            {
+                ShowProgressMsg("Found AthmosphereControl, asking ChatGPT for time of day...");
+                int hourOfDay = await FetchTimeFromOpenAI();
+                ShowProgressMsg($"Done! It's {hourOfDay} o'clock.");
+                athmosphereControl.SetTimeOfDay(hourOfDay);
+            }*/
+
+            ShowProgressMsg("Generating world from processed answer...");
             if (!this.fixedSeed)
                 this.seed = Random.Range(0, 9999999);
 
             this.prevBiomeData = biomeData;
-            WorldGeneratorArgs args = this.Prepare(biomeData);
-            this.worldGenerator.Generate(args, preview);
+            this.Prepare(biomeData);
+            this.worldGenerator.Generate();
         }
         //User prompt did not change, just regenerate.
         else
         {
-            if (this.showProgressLogs)
-            {
-                Debug.Log("Prompt didn't change, using previous ChatGPT-answer...");
-                Debug.Log("Generating world...");
-            }
+            ShowProgressMsg("Prompt didn't change, using previous ChatGPT-answer...");
+            ShowProgressMsg("Generating world...");
+
             if(!this.fixedSeed)
                 this.seed = Random.Range(0, 9999999);
 
-            WorldGeneratorArgs args = this.Prepare(this.prevBiomeData);
-            this.worldGenerator.Generate(args, preview);
+            this.Prepare(this.prevBiomeData);
+            this.worldGenerator.Generate();
         }
 
         this.prevPrompt = prompt;
@@ -78,27 +89,37 @@ public class WorldGeneratorInterface_AI : WorldGeneratorInterface
 
     private async Task<BiomeData[]> FetchWorldsFromOpenAI()
     {
-        if (this.showProgressLogs)
-            Debug.Log("Preparing Prompt...");
+        ShowProgressMsg("Preparing Prompt...");
         SOBiome[] biomes = Resources.LoadAll<SOBiome>("WorldAI_DefaultAssets/Prefabs/Biomes/");
-        string fullPrompt = GetFullPrompt(biomes, this.prompt);
+        string fullPrompt = GetFullPromptForBiomes(biomes, this.prompt);
 
-        if (this.showProgressLogs)
-            Debug.Log("Waiting for OpenAI answer...");
-        ChatResult result = await GetAnswerFromOpenAIAsync(fullPrompt);
+        ShowProgressMsg("Waiting for OpenAI answer...");
+        ChatResult result = await GetAnswerFromOpenAIAsync(fullPrompt, this.key);
 
-        if (this.showProgressLogs)
-        {
-            Debug.Log($"Answer received! Prompt needed {result.Usage.PromptTokens} tokens and result used up {result.Usage.CompletionTokens} tokens.");
-            Debug.Log($"Result: {result.ToString()}");
-        }
+        ShowProgressMsg($"Answer received! Prompt needed {result.Usage.PromptTokens} tokens and result used up {result.Usage.CompletionTokens} tokens.");
+        ShowProgressMsg($"Result: {result.ToString()}");
 
-        if (this.showProgressLogs)
-            Debug.Log("Converting answer to BiomeData[]...");
+        ShowProgressMsg("Converting answer to BiomeData[]...");
         return ConvertToBiomes(biomes, result.ToString());
     }
 
-    private static string GetFullPrompt(SOBiome[] biomes, string userInput)
+    private async Task<int> FetchTimeFromOpenAI()
+    {
+        string fullPrompt = $"Given a prompt, please pick one hour of the day (as an integer in the range 0 to 24) that fits best (or pick randomly if in doubt). PROMPT: {this.prompt}";
+        ChatResult result = await GetAnswerFromOpenAIAsync(fullPrompt, this.key);
+
+        ShowProgressMsg($"Answer received! Prompt needed {result.Usage.PromptTokens} tokens and result used up {result.Usage.CompletionTokens} tokens.");
+        ShowProgressMsg($"Result: {result.ToString()}");
+
+        if (!int.TryParse(result.ToString(), out int hourOfDay))
+        {
+            hourOfDay = Random.Range(1, 25); //Fallback
+        }
+
+        return hourOfDay;
+    }
+
+    private static string GetFullPromptForBiomes(SOBiome[] biomes, string userInput)
     {
         StringBuilder fullPrompt = new StringBuilder();
         fullPrompt.Append("Given is an array of possible biomes to choose from with their names and descriptions: ");
@@ -108,14 +129,16 @@ public class WorldGeneratorInterface_AI : WorldGeneratorInterface
             fullPrompt.Append($"[name: {b.name}, description: {b.Description}], ");
         }
 
-        fullPrompt.Append("Based on the array above please pick one to five biomes which would be the best choice (please keep it to a single theme/ climate unless stated otherwise) to use for the following prompt and please use following format for the answer: FORMAT: '[Biome1], [Biome2], [Biome3], etc...' ");
+        fullPrompt.Append("Based on the array above please pick one to five of the provided biomes " +
+            "which would be the best choice (please keep it to a single theme/ climate unless stated otherwise) to use for the following prompt and please use following " +
+            "format for the answer: FORMAT: '[Biome1], [Biome2], [Biome3], etc...' ");
         fullPrompt.Append($"PROMPT: '{userInput}'");
         return fullPrompt.ToString();
     }
 
-    private static async Task<ChatResult> GetAnswerFromOpenAIAsync(string prompt)
+    private static async Task<ChatResult> GetAnswerFromOpenAIAsync(string prompt, string key)
     {
-        var api = new OpenAI_API.OpenAIAPI("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");
+        var api = new OpenAI_API.OpenAIAPI(key);
         var result = await api.Chat.CreateChatCompletionAsync(new ChatRequest()
         {
             Model = Model.ChatGPTTurbo,
@@ -143,9 +166,9 @@ public class WorldGeneratorInterface_AI : WorldGeneratorInterface
         if (result.Count == 0)
         {
             Debug.LogError("It seems like OpenAI had a hard time working with your prompt. Instead choosing 3 biomes randomly...");
-            result.Add(biomes[Random.Range(0, result.Count)]);
-            result.Add(biomes[Random.Range(0, result.Count)]);
-            result.Add(biomes[Random.Range(0, result.Count)]);
+            result.Add(biomes[Random.Range(0, biomes.Length)]);
+            result.Add(biomes[Random.Range(0, biomes.Length)]);
+            result.Add(biomes[Random.Range(0, biomes.Length)]);
         }
 
         //Randomly remove excess biomes.
@@ -264,7 +287,13 @@ public class WorldGeneratorInterface_AI : WorldGeneratorInterface
         return biomeData;
     }
 
-    private WorldGeneratorArgs Prepare(BiomeData[] biomeData)
+    private void ShowProgressMsg(string msg)
+    {
+        if (this.showProgressLogs)
+            Debug.Log(msg);
+    }
+
+    private void Prepare(BiomeData[] biomeData)
     {
         if (this.terrain == null)
             this.terrain = this.GetComponent<Terrain>();
@@ -345,8 +374,8 @@ public class WorldGeneratorInterface_AI : WorldGeneratorInterface
 
         //1.Prepare Args
         //System.Array.Sort(biomeData);
-        return WorldGeneratorArgs.CreateNew(
-            this.terrain,
+        this.GetComponent<WorldGenerator>().Args.CreateNew(
+            this.terrain.terrainData,
             this.seed,
             biomeScale,
             new SOHeight[] { bias, randomness },
@@ -363,11 +392,6 @@ public class WorldGeneratorInterface_AI : WorldGeneratorInterface
     {
         this.terrain = this.GetComponent<Terrain>();
         this.worldGenerator = this.GetComponent<WorldGenerator>();
-    }
-
-    private void Start()
-    {
-        this.GenerateWorld();
     }
 
     private void Reset()
@@ -400,5 +424,15 @@ public class WorldGeneratorInterface_AI : WorldGeneratorInterface
                     biomeNoise[i] = this.biomeNoise[i];
             }
         }*/
+    }
+
+    [MenuItem("GameObject/3D Object/WorldAI/World (ChatGPT)", false, 1)]
+    public static void CreateNew()
+    {
+        GameObject go = new GameObject("World");
+        go.AddComponent<WorldGeneratorInterface_AI>();
+        go.AddComponent<AthmosphereControl>();
+        WorldGenerator wg = go.GetComponent<WorldGenerator>();
+        WorldGenerator.CreateNew(wg);
     }
 }

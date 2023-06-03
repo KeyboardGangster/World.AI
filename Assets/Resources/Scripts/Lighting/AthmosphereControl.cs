@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Rendering;
+using UnityEditor.TerrainTools;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 
+[RequireComponent(typeof(WorldGenerator))]
 public class AthmosphereControl : MonoBehaviour
 {
+    private WorldGenerator worldGenerator;
+
     [Header("Components")]
     [SerializeField] private Transform target;
     [SerializeField] private Transform volumes;
@@ -17,16 +21,14 @@ public class AthmosphereControl : MonoBehaviour
     [SerializeField] private Light sun;
     [SerializeField] private Light moon;
 
-    private WorldGeneratorArgs args;
     private Dictionary<VolumeProfile, Volume> volumesDictionary;
     private BiomeData blendTowards;
 
     [Header("Day Cycle")]
     [Range(0, 24)] [SerializeField] private float timeOfDay = 13f;
-    [SerializeField] private bool fixedTimeOfDay = false;
-    [SerializeField] private float dayDurationSeconds = 60f;
+    [SerializeField] private bool fixedTimeOfDay = true;
+    [SerializeField] private float dayDurationSeconds = 1200f;
     private float orbitSpeed;
-    private bool isDay;
 
     [Header("Rain Toggle")]
     [SerializeField] private bool isRaining;
@@ -35,8 +37,51 @@ public class AthmosphereControl : MonoBehaviour
 
     private void Awake()
     {
+        this.worldGenerator = this.GetComponent<WorldGenerator>();
+        
         this.orbitSpeed = 24 / (this.dayDurationSeconds > 0 ? this.dayDurationSeconds : 1);
         this.rainEffectOffset = this.rainEffect.transform.localPosition;
+    }
+
+    private void Start()
+    {
+        if (this.worldGenerator.Args == null)
+        {
+            Debug.LogError("No WorldGeneratorArgs found in WorldGenerator. Either your world is not generated or you're missing a reference.");
+        }
+
+        this.volumesDictionary = new Dictionary<VolumeProfile, Volume>();
+
+        Volume defaultVolume = this.volumes.GetComponent<Volume>();
+
+        if (defaultVolume != null)
+            defaultVolume.enabled = false;
+
+        for (int i = 0; i < this.worldGenerator.Args.BiomeCount; i++)
+        {
+            BiomeData biomeData = this.worldGenerator.Args.GetBiome(i);
+
+            if (!this.volumesDictionary.ContainsKey(biomeData.biome.Lighting.VolumeProfile))
+            {
+                Volume v = this.volumes.gameObject.AddComponent<Volume>();
+                v.profile = biomeData.biome.Lighting.VolumeProfile;
+                v.priority = 0;
+                v.weight = 0;
+                this.volumesDictionary.Add(biomeData.biome.Lighting.VolumeProfile, v);
+
+                if (biomeData.biome.Lighting.VolumeProfileRain != null)
+                {
+                    Volume vRain = this.volumes.gameObject.AddComponent<Volume>();
+                    vRain.profile = biomeData.biome.Lighting.VolumeProfileRain;
+                    vRain.priority = 1;
+                    vRain.weight = 0;
+                    this.volumesDictionary.Add(biomeData.biome.Lighting.VolumeProfileRain, vRain);
+                }
+            }
+        }
+
+        StartCoroutine(BlendControl());
+        StartCoroutine(BlendingCoroutine());
     }
 
     private void Update()
@@ -93,60 +138,24 @@ public class AthmosphereControl : MonoBehaviour
         }
     }
 
-    public void Init(WorldGeneratorArgs args)
-    {
-        this.args = args;
-        this.volumesDictionary = new Dictionary<VolumeProfile, Volume>();
-
-        Volume defaultVolume = this.volumes.GetComponent<Volume>();
-
-        if (defaultVolume != null)
-            defaultVolume.enabled = false;
-
-        for (int i = 0; i < args.BiomeCount; i++)
-        {
-            BiomeData biomeData = args.GetBiome(i);
-
-            if (!this.volumesDictionary.ContainsKey(biomeData.biome.Lighting.VolumeProfile))
-            {
-                Volume v = this.volumes.gameObject.AddComponent<Volume>();
-                v.profile = biomeData.biome.Lighting.VolumeProfile;
-                v.priority = 0;
-                v.weight = 0;
-                this.volumesDictionary.Add(biomeData.biome.Lighting.VolumeProfile, v);
-
-                if (biomeData.biome.Lighting.VolumeProfileRain != null)
-                {
-                    Volume vRain = this.volumes.gameObject.AddComponent<Volume>();
-                    vRain.profile = biomeData.biome.Lighting.VolumeProfileRain;
-                    vRain.priority = 1;
-                    vRain.weight = 0;
-                    this.volumesDictionary.Add(biomeData.biome.Lighting.VolumeProfileRain, vRain);
-                }
-            }
-        }
-
-        StartCoroutine(BlendControl());
-        StartCoroutine(BlendingCoroutine());
-    }
-
     private IEnumerator BlendControl()
     {
         WaitForSeconds wait = new WaitForSeconds(1f);
-        float ratio = args.Terrain.terrainData.heightmapResolution / args.Terrain.terrainData.size.x;
+        float ratio = this.worldGenerator.Args.TerrainData.heightmapResolution / this.worldGenerator.Args.TerrainData.size.x;
 
         Vector3Int posInHeightmap = Vector3Int.FloorToInt(this.target.transform.position * ratio);
-        this.blendTowards = args.GetDominantBiome(posInHeightmap.z, posInHeightmap.x);
+        this.blendTowards = this.worldGenerator.Args.GetDominantBiome(posInHeightmap.z, posInHeightmap.x);
         Volume v = this.volumesDictionary[this.blendTowards.biome.Lighting.VolumeProfile];
         v.weight = 1;
 
         while (true)
         {
             posInHeightmap = Vector3Int.FloorToInt(this.target.transform.position * ratio);
-            float dominantWeight = this.args.GetDominantWeight(posInHeightmap.z, posInHeightmap.x);
+            //float dominantWeight = this.worldGenerator.Args.GetDominantWeight(posInHeightmap.z, posInHeightmap.x);
+            //if (dominantWeight > 0.7f)
+            this.blendTowards = this.worldGenerator.Args.GetDominantBiome(posInHeightmap.z, posInHeightmap.x);
 
-            if (dominantWeight > 0.7f)
-                this.blendTowards = this.args.GetDominantBiome(posInHeightmap.z, posInHeightmap.x);
+            Debug.Log(this.blendTowards.biome.name);
 
             yield return wait;
         }
@@ -155,7 +164,7 @@ public class AthmosphereControl : MonoBehaviour
     private IEnumerator BlendingCoroutine()
     {
         WaitForSeconds wait = new WaitForSeconds(0.01f);
-        float ratio = args.Terrain.terrainData.heightmapResolution / args.Terrain.terrainData.size.x;
+        float ratio = this.worldGenerator.Args.TerrainData.heightmapResolution / this.worldGenerator.Args.TerrainData.size.x;
 
         this.cloudOverride.profile.TryGet(out VolumetricClouds currentClouds);
 
@@ -168,7 +177,7 @@ public class AthmosphereControl : MonoBehaviour
                 else if (this.isRaining && this.blendTowards.biome.Lighting.VolumeProfileRain == kvp.Key)
                     kvp.Value.weight = Mathf.Min(kvp.Value.weight + 0.002f, 1);
                 else
-                    kvp.Value.weight = Mathf.Max(kvp.Value.weight - 0.002f, 0);
+                    kvp.Value.weight = Mathf.Max(kvp.Value.weight - 0.002f, 0.002f);
             }
 
             Volume biomeVolumeRain = this.GetVolumeRain(this.blendTowards);
@@ -193,7 +202,9 @@ public class AthmosphereControl : MonoBehaviour
                 this.sun.color = Color.Lerp(this.sun.color, this.blendTowards.biome.Lighting.LightFilter, biomeVolume.weight);
 
                 if (this.rainEffect.isPlaying)
+                {
                     this.rainEffect.Stop(true);
+                }
 
                 if (biomeVolume.profile.TryGet(out VolumetricClouds biomeClouds) && currentClouds.cloudPreset.value != biomeClouds.cloudPreset.value)
                     currentClouds.cloudPreset.value = biomeClouds.cloudPreset.value;
@@ -226,14 +237,14 @@ public class AthmosphereControl : MonoBehaviour
     /// </summary>
     private void SetDayCycle()
     {
+        this.DayTransition();
+
         float normal = this.timeOfDay / 24;
         float sunRotation = Mathf.Lerp(-90, 270, normal);
         float moonRotation = sunRotation - 180;
 
         this.sun.transform.rotation = Quaternion.Euler(sunRotation, -150, 0);
         this.moon.transform.rotation = Quaternion.Euler(moonRotation, -150, 0);
-
-        this.DayTransition();
     }
 
     /// <summary>
@@ -241,22 +252,21 @@ public class AthmosphereControl : MonoBehaviour
     /// </summary>
     private void DayTransition()
     {
-        if (this.isDay)
+        if (this.timeOfDay > 6 && this.timeOfDay <= 18)
         {
-            if (this.sun.transform.rotation.eulerAngles.x > 180)
+            if (this.moon.shadows != LightShadows.None)
             {
-                this.isDay = false;
+                this.moon.shadows = LightShadows.None;
+                this.sun.shadows = LightShadows.Soft;
+            }
+        }
+        else
+        {
+            if (this.sun.shadows != LightShadows.None)
+            {
                 this.sun.shadows = LightShadows.None;
                 this.moon.shadows = LightShadows.Soft;
             }
-            return;
-        }
-
-        if (this.moon.transform.rotation.eulerAngles.x > 180)
-        {
-            this.isDay = true;
-            this.sun.shadows = LightShadows.Soft;
-            this.moon.shadows = LightShadows.None;
         }
     }
 
@@ -273,4 +283,11 @@ public class AthmosphereControl : MonoBehaviour
     /// <param name="biomeData">The biomedata.</param>
     /// <returns>Rain-Volume for biomedata or null if none was specified.</returns>
     private Volume GetVolumeRain(BiomeData biomeData) => biomeData.biome.Lighting.VolumeProfileRain != null? this.volumesDictionary[biomeData.biome.Lighting.VolumeProfileRain]: null;
+
+    public void SetTimeOfDay(float timeInHours)
+    {
+        this.orbitSpeed = 24 / (this.dayDurationSeconds > 0 ? this.dayDurationSeconds : 1);
+        this.timeOfDay = ((timeInHours % 24) + 24) % timeInHours;
+        this.SetDayCycle();
+    }
 }

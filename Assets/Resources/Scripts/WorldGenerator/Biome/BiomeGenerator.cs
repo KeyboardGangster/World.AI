@@ -42,9 +42,10 @@ public class BiomeGenerator
     /// <returns>Weights for each vertex-position. (Not sepparated into chunks.)</returns>
     public static void GenerateBiomemapData(WorldGeneratorArgs args, int horChunks, int verChunks)
     {
-        int size = args.Terrain.terrainData.heightmapResolution;
+        int size = args.TerrainData.heightmapResolution;
 
-        float[,][] weights = new float[horChunks * size, verChunks * size][]; //weights per biome in worldspace (no chunking)
+        //float[,][] weights = new float[horChunks * size, verChunks * size][]; //weights per biome in worldspace (no chunking)
+        float[,,] weights = new float[horChunks * size, verChunks * size, args.BiomeCount];
         PointsToBlend toBlend = new PointsToBlend(); //points in worldspace to still blend (no chunking)
 
         //Generate entire biome-map (without blending)
@@ -71,8 +72,9 @@ public class BiomeGenerator
                         float randomnessValue = args.Randomness.GetHeight(args, x, y);
                         int biomeIndex = WorldGeneratorArgs.GetDominantBiomeIndex(args, biasValue, randomnessValue);
 
-                        weights[xInWorldSpace, yInWorldSpace] = new float[args.BiomeCount];
-                        weights[xInWorldSpace, yInWorldSpace][biomeIndex] = 1f;
+                        //weights[xInWorldSpace, yInWorldSpace] = new float[args.BiomeCount];
+                        //weights[xInWorldSpace, yInWorldSpace][biomeIndex] = 1f;
+                        weights[xInWorldSpace, yInWorldSpace, biomeIndex] = 1f;
 
                         //Prepare for blending
                         AddBlendPoints(weights, toBlend, xInWorldSpace, yInWorldSpace, biomeIndex);
@@ -94,33 +96,34 @@ public class BiomeGenerator
     /// <param name="args">The WorldGeneratorArgs to use.</param>
     /// <param name="weights">The unnormalized weights.</param>
     /// <returns>Normalized weights.</returns>
-    private static void Finalize(WorldGeneratorArgs args, float[,][] weights)
+    private static void Finalize(WorldGeneratorArgs args, float[,,] weights)
     {
+        //int[,] dominantBiomesIndices = new int[weights.GetLength(0), weights.GetLength(1)];
         int[,] dominantBiomesIndices = new int[weights.GetLength(0), weights.GetLength(1)];
-        
+
         for(int i = 0; i < weights.GetLength(0); i++)
         {
             for(int j = 0; j < weights.GetLength(1); j++)
             {
                 float sum = 0;
 
-                for (int biomeIndex = 0; biomeIndex < weights[i, j].Length; biomeIndex++)
+                for (int biomeIndex = 0; biomeIndex < args.BiomeCount; biomeIndex++)
                 {
-                    float biomeWeight = weights[i, j][biomeIndex];
+                    float biomeWeight = weights[i, j, biomeIndex];
                     //Get sum of weights
                     sum += biomeWeight;
 
                     //Write index of biome with highest weight at dominantBiomesIndices[i, j]
-                    if (biomeWeight >= weights[i, j][dominantBiomesIndices[i, j]])
+                    if (biomeWeight >= weights[i, j, dominantBiomesIndices[i, j]])
                     {
                         dominantBiomesIndices[i, j] = biomeIndex;
                     }
                 }
 
-                for (int biomeIndex = 0; biomeIndex < weights[i, j].Length; biomeIndex++)
+                for (int biomeIndex = 0; biomeIndex < args.BiomeCount; biomeIndex++)
                 {
                     //Normalize weights
-                    weights[i, j][biomeIndex] /= sum;
+                    weights[i, j, biomeIndex] /= sum;
                 }
             }
         }
@@ -141,7 +144,7 @@ public class BiomeGenerator
     /// <param name="x">X-coordinate in world-space.</param>
     /// <param name="y">Y-coordinate in world-space.</param>
     /// <param name="biomeIndex">Index of dominant biome for these coordinates.</param>
-    private static void AddBlendPoints(float[,][] weightMapNotBlended, PointsToBlend toBlend, int x, int y, int biomeIndex)
+    private static void AddBlendPoints(float[,,] weightMapNotBlended, PointsToBlend toBlend, int x, int y, int biomeIndex)
     {
         if (x == 0 && y == 0)
             return;
@@ -149,13 +152,13 @@ public class BiomeGenerator
         bool needsBlending = false;
 
         if (y > 0 &&
-            weightMapNotBlended[x, y][biomeIndex] != weightMapNotBlended[x, y - 1][biomeIndex])
+            weightMapNotBlended[x, y, biomeIndex] != weightMapNotBlended[x, y - 1, biomeIndex])
         {
             needsBlending = true;
             toBlend.Enqueue(new Vector2Int(x, y - 1));
         }
         if (x > 0 &&
-            weightMapNotBlended[x, y][biomeIndex] != weightMapNotBlended[x - 1, y][biomeIndex])
+            weightMapNotBlended[x, y, biomeIndex] != weightMapNotBlended[x - 1, y, biomeIndex])
         {
             needsBlending = true;
             toBlend.Enqueue(new Vector2Int(x - 1, y));
@@ -170,7 +173,7 @@ public class BiomeGenerator
     /// <param name="args">The WorldGeneratorArgs to use.</param>
     /// <param name="weights">Weight-map to blend.</param>
     /// <param name="toBlend">Reference to starting points for blending.</param>
-    private static void BlendBiomeBorders(WorldGeneratorArgs args, float[,][] weights, PointsToBlend toBlend)
+    private static void BlendBiomeBorders(WorldGeneratorArgs args, float[,,] weights, PointsToBlend toBlend)
     {
         /*  
          *  Blending using this approach looks really bad, leaving line-like blending-fragments everywhere.
@@ -195,7 +198,7 @@ public class BiomeGenerator
     /// <param name="toBlend">Reference to starting points for blending.</param>
     /// <param name="x">X-coordinate in world-space.</param>
     /// <param name="y">Y-coordinate in world-space.</param>
-    private static void BlendOneStep(WorldGeneratorArgs args, float[,][] weights, PointsToBlend toBlend, int x, int y)
+    private static void BlendOneStep(WorldGeneratorArgs args, float[,,] weights, PointsToBlend toBlend, int x, int y)
     {
         int totalWidth = weights.GetLength(0);
         int totalHeight = weights.GetLength(1);
@@ -206,35 +209,35 @@ public class BiomeGenerator
             Vector2Int down = new Vector2Int(x, y - 1);
             Vector2Int right = new Vector2Int(x + 1, y);
             Vector2Int left = new Vector2Int(x - 1, y);
-            float nextWeight = Mathf.Max(0, weights[x, y][biomeIndex] - args.GetBiome(biomeIndex).finalFalloffRate);
+            float nextWeight = Mathf.Max(0, weights[x, y, biomeIndex] - args.GetBiome(biomeIndex).finalFalloffRate);
 
-            if (y < totalHeight - 1 && weights[up.x, up.y][biomeIndex] < nextWeight)
+            if (y < totalHeight - 1 && weights[up.x, up.y, biomeIndex] < nextWeight)
             {
                 if (!toBlend.Contains(up))
                     toBlend.Enqueue(up);
 
-                weights[up.x, up.y][biomeIndex] = nextWeight;
+                weights[up.x, up.y, biomeIndex] = nextWeight;
             }
-            if (y > 0 && weights[down.x, down.y][biomeIndex] < nextWeight)
+            if (y > 0 && weights[down.x, down.y, biomeIndex] < nextWeight)
             {
                 if (!toBlend.Contains(down))
                     toBlend.Enqueue(down);
 
-                weights[down.x, down.y][biomeIndex] = nextWeight;
+                weights[down.x, down.y, biomeIndex] = nextWeight;
             }
-            if (x < totalWidth - 1 && weights[right.x, right.y][biomeIndex] < nextWeight)
+            if (x < totalWidth - 1 && weights[right.x, right.y, biomeIndex] < nextWeight)
             {
                 if (!toBlend.Contains(right))
                     toBlend.Enqueue(right);
 
-                weights[right.x, right.y][biomeIndex] = nextWeight;
+                weights[right.x, right.y, biomeIndex] = nextWeight;
             }
-            if (x > 0 && weights[left.x, left.y][biomeIndex] < nextWeight)
+            if (x > 0 && weights[left.x, left.y, biomeIndex] < nextWeight)
             {
                 if (!toBlend.Contains(left))
                     toBlend.Enqueue(left);
 
-                weights[left.x, left.y][biomeIndex] = nextWeight;
+                weights[left.x, left.y, biomeIndex] = nextWeight;
             }
         }
     }

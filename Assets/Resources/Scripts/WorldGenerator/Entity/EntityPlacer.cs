@@ -9,6 +9,8 @@ public class EntityPlacer : MonoBehaviour
 {
     public static void Place(WorldGeneratorArgs args)
     {
+        ClearPrototypes(args);
+
         Dictionary<ScriptableObject, int> treePrototypeIndices = PrepareTreePrototypes(args);
         Dictionary<ScriptableObject, int> detaillPrototypeIndices = PrepareDetailPrototypes(args);
         WorldGeneratorArgs.ReceiveEntityData(args, treePrototypeIndices, detaillPrototypeIndices);
@@ -19,22 +21,22 @@ public class EntityPlacer : MonoBehaviour
 
         PlaceGrass(args);
 
-        args.Terrain.terrainData.SetTreeInstances(instances.ToArray(), true);
+        args.TerrainData.SetTreeInstances(instances.ToArray(), true);
     }
 
     private static void PlaceTrees(WorldGeneratorArgs args, List<TreeInstance> instances)
     {
         System.Random random = new System.Random(args.Seed);
 
-        int heightmapRes = args.Terrain.terrainData.heightmapResolution - 1;
+        int heightmapRes = args.TerrainData.heightmapResolution - 1;
 
-        int iterations = Mathf.FloorToInt(args.ToyScaleRatio * (args.Terrain.terrainData.size.x * args.Terrain.terrainData.size.x) / 50f);
+        int iterations = Mathf.FloorToInt(args.ToyScaleRatio * (args.TerrainData.size.x * args.TerrainData.size.x) / 50f);
         //int iterations = Mathf.FloorToInt(BASE_ITERATIONS_TREES * args.WorldScaleRatio * args.WorldScaleRatio * args.ToyScaleRatio);
 
         for (int i = 0; i < iterations; i++)
         {
             Vector3 normalizedPos = new Vector3((float)random.NextDouble(), 0, (float)random.NextDouble());
-            var angle = args.Terrain.terrainData.GetSteepness(normalizedPos.x, normalizedPos.z);
+            var angle = args.TerrainData.GetSteepness(normalizedPos.x, normalizedPos.z);
 
             if (angle > 30)
                 continue;
@@ -50,9 +52,9 @@ public class EntityPlacer : MonoBehaviour
                 continue;
 
             if (dominantBiome.biome.ForceRemoveTreesUnderwater &&
-                args.Terrain.terrainData.GetHeight(
-                    Mathf.FloorToInt(normalizedPos.x * args.Terrain.terrainData.heightmapResolution),
-                    Mathf.FloorToInt(normalizedPos.z * args.Terrain.terrainData.heightmapResolution)
+                args.TerrainData.GetHeight(
+                    Mathf.FloorToInt(normalizedPos.x * args.TerrainData.heightmapResolution),
+                    Mathf.FloorToInt(normalizedPos.z * args.TerrainData.heightmapResolution)
                 ) <= args.WaterLevel)
                 continue;
 
@@ -67,12 +69,10 @@ public class EntityPlacer : MonoBehaviour
                     continue;
 
                 TreeInstance instance = new TreeInstance();
-                //instance.heightScale = ((float)random.NextDouble() * (1.25f - 0.75f) + 0.75f) / args.ToyScaleRatio;
-                //instance.widthScale = ((float)random.NextDouble() * (1.15f - 0.85f) + 0.85f) / args.ToyScaleRatio;
                 instance.heightScale = ((float)random.NextDouble() * (treeData.tree.Height.y - treeData.tree.Height.x) + treeData.tree.Height.x) / args.ToyScaleRatio;
                 instance.widthScale = ((float)random.NextDouble() * (treeData.tree.Width.y - treeData.tree.Width.x) + treeData.tree.Width.x) / args.ToyScaleRatio;
                 instance.position = normalizedPos;
-                instance.prototypeIndex = args.GetTreePrototypeIndex(dominantBiome.biome.Trees[treeIndex].tree);
+                instance.prototypeIndex = args._GetTreePrototypeIndex(dominantBiome.biome.Trees[treeIndex].tree);
                 instance.rotation = Mathf.Deg2Rad * random.Next(0, 360);
 
                 instances.Add(instance);
@@ -85,14 +85,14 @@ public class EntityPlacer : MonoBehaviour
     {
         System.Random random = new System.Random(args.Seed + 1);
 
-        int heightmapRes = args.Terrain.terrainData.heightmapResolution - 1;
-        int iterations = Mathf.FloorToInt(args.ToyScaleRatio * (args.Terrain.terrainData.size.x * args.Terrain.terrainData.size.x) / 1000f);
+        int heightmapRes = args.TerrainData.heightmapResolution - 1;
+        int iterations = Mathf.FloorToInt(args.ToyScaleRatio * (args.TerrainData.size.x * args.TerrainData.size.x) / 1000f);
         //int iterations = Mathf.FloorToInt(BASE_ITERATIONS_ROCKS * args.WorldScaleRatio * args.WorldScaleRatio * args.ToyScaleRatio);
 
         for (int i = 0; i < iterations; i++)
         {
             Vector3 normalizedPos = new Vector3((float)random.NextDouble(), 0, (float)random.NextDouble());
-            var angle = args.Terrain.terrainData.GetSteepness(normalizedPos.x, normalizedPos.z);
+            var angle = args.TerrainData.GetSteepness(normalizedPos.x, normalizedPos.z);
 
             if (angle > 30)
                 continue;
@@ -107,13 +107,6 @@ public class EntityPlacer : MonoBehaviour
             if (dominantBiome.biome.PropagationData.Length == 0)
                 continue;
 
-            /*if (dominantBiome.biome.ForceRemoveTreesUnderwater &&
-                args.Terrain.terrainData.GetHeight(
-                    Mathf.FloorToInt(normalizedPos.x * args.Terrain.terrainData.heightmapResolution),
-                    Mathf.FloorToInt(normalizedPos.z * args.Terrain.terrainData.heightmapResolution)
-                ) <= args.WaterLevel)
-                continue;*/
-
             int rockIndex = random.Next(0, dominantBiome.biome.PropagationData.Length);
 
             for (int j = 0; j < dominantBiome.biome.PropagationData.Length; j++)
@@ -125,18 +118,6 @@ public class EntityPlacer : MonoBehaviour
                     continue;
 
                 PropagateRocks(args, instances, normalizedPos, propagationData);
-                //Do propagation stuff here...
-                /*
-                TreeInstance instance = new TreeInstance();
-                //instance.heightScale = ((float)random.NextDouble() * (1.25f - 0.75f) + 0.75f) / args.ToyScaleRatio;
-                //instance.widthScale = ((float)random.NextDouble() * (1.15f - 0.85f) + 0.85f) / args.ToyScaleRatio;
-                instance.heightScale = ((float)random.NextDouble() * (rockData.rocks[0].Height.y - rockData.rocks[0].Height.x) + rockData.rocks[0].Height.x) / args.ToyScaleRatio;
-                instance.widthScale = ((float)random.NextDouble() * (rockData.rocks[0].Width.y - rockData.rocks[0].Width.x) + rockData.rocks[0].Width.x) / args.ToyScaleRatio;
-                instance.position = normalizedPos;
-                instance.prototypeIndex = args.GetTreePrototypeIndex(dominantBiome.biome.Trees[rockIndex].tree);
-                instance.rotation = Mathf.Deg2Rad * random.Next(0, 360);
-
-                instances.Add(instance);*/
                 break;
             }
         }
@@ -190,7 +171,7 @@ public class EntityPlacer : MonoBehaviour
                     //float sizeRatio = 1f / nextRock.CollisionRadius; //size in relation to radius=1
 
                     float distance = parentSize + 1 * newSize;
-                    float distanceInNormalizedSpace = distance / args.Terrain.terrainData.heightmapResolution;
+                    float distanceInNormalizedSpace = distance / args.TerrainData.heightmapResolution;
 
                     Vector3 newNormalizedPos = normalizedParentPos + dir * distanceInNormalizedSpace;
 
@@ -216,7 +197,7 @@ public class EntityPlacer : MonoBehaviour
         instance.heightScale = sizeRatio * size / args.ToyScaleRatio;
         instance.widthScale = sizeRatio * size / args.ToyScaleRatio;
         instance.position = normalizedPos;
-        instance.prototypeIndex = args.GetTreePrototypeIndex(rock);
+        instance.prototypeIndex = args._GetTreePrototypeIndex(rock);
         instance.rotation = Mathf.Deg2Rad * random.Next(0, 360);
 
         instances.Add(instance);
@@ -229,10 +210,10 @@ public class EntityPlacer : MonoBehaviour
     {
         System.Random random = new System.Random(args.Seed);
 
-        int heightmapRes = args.Terrain.terrainData.heightmapResolution - 1;
-        int detailRes = args.Terrain.terrainData.detailResolution;
+        int heightmapRes = args.TerrainData.heightmapResolution - 1;
+        int detailRes = args.TerrainData.detailResolution;
         float ratio = (float)heightmapRes / detailRes;
-        int[][,] detailMap = new int[args.Terrain.terrainData.detailPrototypes.Length][,];
+        int[][,] detailMap = new int[args.TerrainData.detailPrototypes.Length][,];
         float scaleMultiplier = args.WorldScaleRatio * args.ToyScaleRatio;
         Vector2 seedOffset = new Vector2(random.Next(-10000, 10000), random.Next(-10000, 10000));
 
@@ -247,13 +228,13 @@ public class EntityPlacer : MonoBehaviour
             {
                 Vector3Int posInHeightmap = new Vector3Int(Mathf.FloorToInt(i * ratio), 0, Mathf.FloorToInt(j * ratio));
                 Vector3 normalizedPos = (Vector3)posInHeightmap / heightmapRes;
-                var angle = args.Terrain.terrainData.GetSteepness(normalizedPos.z, normalizedPos.x);
-                float height = args.Terrain.terrainData.GetHeight(posInHeightmap.z, posInHeightmap.x);
+                var angle = args.TerrainData.GetSteepness(normalizedPos.z, normalizedPos.x);
+                float height = args.TerrainData.GetHeight(posInHeightmap.z, posInHeightmap.x);
 
                 for (int biomeIndex = 0; biomeIndex < args.BiomeCount; biomeIndex++)
                 {
                     BiomeData biomeData = args.GetBiome(biomeIndex); 
-                    float weight = args.GetWeight(posInHeightmap.x, posInHeightmap.z, biomeIndex);
+                    float weight = args._GetWeight(posInHeightmap.x, posInHeightmap.z, biomeIndex);
 
                     if (weight < 0.1f)
                         continue;
@@ -287,7 +268,7 @@ public class EntityPlacer : MonoBehaviour
                             continue;
 
                         //Biome-blending
-                        if (!args.IsDominantBiome(posInHeightmap.x, posInHeightmap.z, biomeIndex) && random.NextDouble() > weight)
+                        if (!args._IsDominantBiome(posInHeightmap.x, posInHeightmap.z, biomeIndex) && random.NextDouble() > weight)
                             continue;
 
                         //Underwater
@@ -298,7 +279,7 @@ public class EntityPlacer : MonoBehaviour
                         if (!grass.grass.PlaceOnSlopes && angle > 30)
                             continue;
 
-                        detailMap[args.GetDetailPrototypeIndex(grass.grass)][i, j] = Mathf.Max(Mathf.FloorToInt(weight * (scaleMultiplier * grass.density + 1)), 1);
+                        detailMap[args._GetDetailPrototypeIndex(grass.grass)][i, j] = Mathf.Max(Mathf.FloorToInt(weight * (scaleMultiplier * grass.density + 1)), 1);
                     }
                 }
             }
@@ -306,7 +287,7 @@ public class EntityPlacer : MonoBehaviour
 
         for (int i = 0; i < detailMap.Length; i++)
         {
-            args.Terrain.terrainData.SetDetailLayer(0, 0, i, detailMap[i]);
+            args.TerrainData.SetDetailLayer(0, 0, i, detailMap[i]);
         }
     }
 
@@ -344,7 +325,7 @@ public class EntityPlacer : MonoBehaviour
                 prototypes[prototype.Value] = new TreePrototype() { prefab = ((SORock)prototype.Key).Prefab };
         }
 
-        args.Terrain.terrainData.treePrototypes = prototypes;
+        args.TerrainData.treePrototypes = prototypes;
         return indices;
     }
 
@@ -386,7 +367,19 @@ public class EntityPlacer : MonoBehaviour
             };
         }
 
-        args.Terrain.terrainData.detailPrototypes = prototypes;
+        args.TerrainData.detailPrototypes = prototypes;
         return indices;
+    }
+
+    private static void ClearPrototypes(WorldGeneratorArgs args)
+    {
+        for (int i = 0; i < args.TerrainData.detailPrototypes.Length; i++)
+            args.TerrainData.SetDetailLayer(0, 0, i, new int[args.TerrainData.detailResolution, args.TerrainData.detailResolution]);
+
+        args.TerrainData.detailPrototypes = new DetailPrototype[0];
+
+        args.TerrainData.treeInstances = new TreeInstance[0];
+        args.TerrainData.treePrototypes = new TreePrototype[0];
+        args.TerrainData.RefreshPrototypes();
     }
 }

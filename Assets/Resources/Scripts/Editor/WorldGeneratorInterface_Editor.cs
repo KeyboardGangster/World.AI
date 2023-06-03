@@ -14,6 +14,6 @@ public class WorldGeneratorInterface_Editor : Editor
         }
 
         if (GUILayout.Button("Generate"))
-            worldGen.GenerateWorld(true);
+            worldGen.GenerateWorld();
     }
 }

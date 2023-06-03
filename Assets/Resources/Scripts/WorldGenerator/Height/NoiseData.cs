@@ -3,12 +3,14 @@ using UnityEngine;
 /// <summary>
 /// Used during generation. Holds the data needed to create a noise-map.
 /// </summary>
-[System.Serializable]
 public class NoiseData : HeightData
 {
+    [SerializeField]
     private SONoise noise;
 
+    [SerializeField]
     private Vector2[] octaveOffsets;
+    [SerializeField]
     private float maxValue;
 
     public NoiseData(SOHeight so) : base(so)

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(WorldGenerator))]
@@ -23,16 +24,16 @@ public class WorldGeneratorInterface_Default : WorldGeneratorInterface
 
     public void SortBiomeData() => System.Array.Sort(this.biomeData);
 
-    public override void GenerateWorld(bool preview = false)
+    public override void GenerateWorld()
     {
         if (this.worldGenerator == null)
             this.worldGenerator = this.GetComponent<WorldGenerator>();
 
-        WorldGeneratorArgs args = this.Prepare();
-        this.worldGenerator.Generate(args, preview);
+        this.Prepare();
+        this.worldGenerator.Generate();
     }
 
-    private WorldGeneratorArgs Prepare()
+    private void Prepare()
     {
         if (this.terrain == null)
             this.terrain = this.GetComponent<Terrain>();
@@ -110,8 +111,8 @@ public class WorldGeneratorInterface_Default : WorldGeneratorInterface
 
         //1.Prepare Args
         this.SortBiomeData();
-        return WorldGeneratorArgs.CreateNew(
-            this.terrain,
+        this.GetComponent<WorldGenerator>().Args.CreateNew(
+            this.terrain.terrainData,
             this.seed,
             biomeScale,
             new SOHeight[] { this.Bias, this.Randomness },
@@ -122,17 +123,6 @@ public class WorldGeneratorInterface_Default : WorldGeneratorInterface
             toyScaleRatio,
             waterLevel
         );
-    }
-
-    private void Awake()
-    {
-        this.terrain = this.GetComponent<Terrain>();
-        this.worldGenerator = this.GetComponent<WorldGenerator>();
-    }
-
-    private void Start()
-    {
-        this.GenerateWorld();
     }
 
     private void Reset()
@@ -175,5 +165,15 @@ public class WorldGeneratorInterface_Default : WorldGeneratorInterface
                     biomeNoise[i] = this.biomeNoise[i];
             }
         }*/
+    }
+
+    [MenuItem("GameObject/3D Object/WorldAI/World (Default)", false, 0)]
+    public static void CreateNew()
+    {
+        GameObject go = new GameObject("World");
+        go.AddComponent<WorldGeneratorInterface_Default>();
+        go.AddComponent<AthmosphereControl>();
+        WorldGenerator wg = go.GetComponent<WorldGenerator>();
+        WorldGenerator.CreateNew(wg);
     }
 }

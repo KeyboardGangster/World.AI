@@ -14,7 +14,7 @@ public class CurveData : HeightData
 
     public override void Prepare(WorldGeneratorArgs args, int x, int y)
     {
-        this.ratio = 1f / args.Terrain.terrainData.heightmapResolution;
+        this.ratio = 1f / args.TerrainData.heightmapResolution;
         base.Prepare(args, x, y);
     }
 

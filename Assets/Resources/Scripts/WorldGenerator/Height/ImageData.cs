@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class ImageData : HeightData
 {
+    [SerializeField]
     private SOImage image;
+    [SerializeField]
     private Vector2 imageToHeightmapRatio;
 
     public ImageData(SOHeight so) : base(so)
@@ -15,8 +17,8 @@ public class ImageData : HeightData
     public override void Prepare(WorldGeneratorArgs args, int x, int y)
     {
         this.imageToHeightmapRatio = new Vector2(
-            (float)this.image.Texture.width / args.Terrain.terrainData.heightmapResolution,
-            (float)this.image.Texture.height / args.Terrain.terrainData.heightmapResolution
+            (float)this.image.Texture.width / args.TerrainData.heightmapResolution,
+            (float)this.image.Texture.height / args.TerrainData.heightmapResolution
         );
 
         base.Prepare(args, x, y);
