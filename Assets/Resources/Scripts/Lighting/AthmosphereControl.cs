@@ -35,8 +35,18 @@ public class AthmosphereControl : MonoBehaviour
     [SerializeField] private ParticleSystem rainEffect;
     private Vector3 rainEffectOffset;
 
+    [Header("Lightning Strikes")]
+    [SerializeField] private bool isStriking;
+    [SerializeField] private float lightningPeriod;
+    [SerializeField] private float strikeDistanceMin;
+    [SerializeField] private float strikeDistanceMax;
+    [SerializeField] private ParticleSystem lightningEffect;
+    private float strikeTime;
+    private Camera mainCam;
+
     private void Awake()
     {
+        this.mainCam = Camera.main;
         this.worldGenerator = this.GetComponent<WorldGenerator>();
         
         this.orbitSpeed = 24 / (this.dayDurationSeconds > 0 ? this.dayDurationSeconds : 1);
@@ -92,6 +102,10 @@ public class AthmosphereControl : MonoBehaviour
         if (!this.fixedTimeOfDay)
             this.UpdateDayCycle();
 
+
+        if (this.isStriking)
+            this.UpdateLightning();
+
         this.rainEffect.transform.position = this.target.transform.position + this.rainEffectOffset;
     }
 
@@ -99,6 +113,9 @@ public class AthmosphereControl : MonoBehaviour
     {
         if (this.dayDurationSeconds < 1)
             this.dayDurationSeconds = 1;
+        /*if (this.mainCam == null)
+            this.mainCam = Camera.main;*/
+
 
         this.orbitSpeed = 24 / (this.dayDurationSeconds > 0 ? this.dayDurationSeconds : 1);
 
@@ -135,6 +152,12 @@ public class AthmosphereControl : MonoBehaviour
         {
             ParticleSystem rainEffect = Resources.Load<ParticleSystem>("WorldAI_DefaultAssets/Prefabs/_DEFAULT_RAIN_EFFECT");
             this.rainEffect = Instantiate(rainEffect, this.transform);
+        }
+
+        if (this.lightningEffect == null)
+        {
+            ParticleSystem lightningEffect = Resources.Load<ParticleSystem>("WorldAI_DefaultAssets/Prefabs/_DEFAULT_LIGHTNING_EFFECT");
+            this.lightningEffect = Instantiate(lightningEffect, this.transform);
         }
     }
 
@@ -188,7 +211,9 @@ public class AthmosphereControl : MonoBehaviour
                 this.sun.color = Color.Lerp(this.sun.color, this.blendTowards.biome.Lighting.LightFilterRain, biomeVolumeRain.weight);
 
                 if (biomeVolumeRain.weight > 0.6f && !this.rainEffect.isPlaying)
+                {
                     this.rainEffect.Play(true);
+                }
 
                 if (biomeVolumeRain.profile.TryGet(out VolumetricClouds biomeCloudsRain) && currentClouds.cloudPreset.value != biomeCloudsRain.cloudPreset.value)
                     currentClouds.cloudPreset.value = biomeCloudsRain.cloudPreset.value;
@@ -287,5 +312,32 @@ public class AthmosphereControl : MonoBehaviour
         this.orbitSpeed = 24 / (this.dayDurationSeconds > 0 ? this.dayDurationSeconds : 1);
         this.timeOfDay = ((timeInHours % 24) + 24) % timeInHours;
         this.SetDayCycle();
+    }
+
+    /// <summary>
+    /// Initiates a lightning strike in front of the player after each striking period.
+    /// </summary>
+    private void UpdateLightning()
+    {
+        this.strikeTime -= Time.deltaTime;
+
+        if (this.strikeTime > 0)
+        {
+            return;
+        }
+
+        Vector3 strikePosition = new Vector3(
+            this.target.position.x + Random.Range(-this.strikeDistanceMax, this.strikeDistanceMax),
+            100,
+            this.target.position.z + Random.Range(-this.strikeDistanceMax, this.strikeDistanceMax)
+        );
+
+        Vector3 optimizedStrikePosition = new Vector3(this.target.position.x, 100, this.target.position.z);
+        optimizedStrikePosition += this.mainCam.transform.forward * Random.Range(this.strikeDistanceMin, this.strikeDistanceMax);
+
+        this.lightningEffect.transform.position = optimizedStrikePosition;
+        this.lightningEffect.Play(true);
+
+        this.strikeTime = this.lightningPeriod;
     }
 }
