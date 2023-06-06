@@ -52,17 +52,6 @@ public class WorldGeneratorInterface_AI : WorldGeneratorInterface
         {
             BiomeData[] biomeData = await FetchWorldsFromOpenAI();
 
-            //Disabled, cos' it triggers some Unity-bug that causes ultrabright night when switching directly from day to night.
-            //Didn't want the world to be generated in such a state so it's disabled for now, but it works.
-            /*AthmosphereControl athmosphereControl = this.GetComponent<AthmosphereControl>();
-            if (athmosphereControl != null)
-            {
-                ShowProgressMsg("Found AthmosphereControl, asking ChatGPT for time of day...");
-                int hourOfDay = await FetchTimeFromOpenAI();
-                ShowProgressMsg($"Done! It's {hourOfDay} o'clock.");
-                athmosphereControl.SetTimeOfDay(hourOfDay);
-            }*/
-
             ShowProgressMsg("Generating world from processed answer...");
             if (!this.fixedSeed)
                 this.seed = Random.Range(0, 9999999);
@@ -70,6 +59,15 @@ public class WorldGeneratorInterface_AI : WorldGeneratorInterface
             this.prevBiomeData = biomeData;
             this.Prepare(biomeData);
             this.worldGenerator.Generate();
+
+            AthmosphereControl athmosphereControl = this.GetComponent<AthmosphereControl>();
+            if (athmosphereControl != null)
+            {
+                ShowProgressMsg("Found AthmosphereControl, asking ChatGPT for time of day...");
+                int hourOfDay = await FetchTimeFromOpenAI();
+                ShowProgressMsg($"Done! It's {hourOfDay} o'clock.");
+                athmosphereControl.SetTimeOfDay(hourOfDay);
+            }
         }
         //User prompt did not change, just regenerate.
         else
@@ -111,12 +109,26 @@ public class WorldGeneratorInterface_AI : WorldGeneratorInterface
         ShowProgressMsg($"Answer received! Prompt needed {result.Usage.PromptTokens} tokens and result used up {result.Usage.CompletionTokens} tokens.");
         ShowProgressMsg($"Result: {result.ToString()}");
 
-        if (!int.TryParse(result.ToString(), out int hourOfDay))
+        if (!this.TryParseHour(result.ToString(), out int hourOfDay))
         {
             hourOfDay = Random.Range(1, 25); //Fallback
         }
 
         return hourOfDay;
+    }
+
+    private bool TryParseHour(string result, out int hour)
+    {
+        string[] tryParse = result.Split(' ');
+
+        foreach(string str in tryParse)
+        {
+            if (int.TryParse(str, out hour))
+                return true;
+        }
+
+        hour = 0;
+        return false;
     }
 
     private static string GetFullPromptForBiomes(SOBiome[] biomes, string userInput)

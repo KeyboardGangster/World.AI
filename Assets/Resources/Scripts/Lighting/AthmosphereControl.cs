@@ -5,6 +5,7 @@ using UnityEditor.TerrainTools;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
+using static UnityEngine.Rendering.HighDefinition.VolumetricClouds;
 
 [RequireComponent(typeof(WorldGenerator))]
 public class AthmosphereControl : MonoBehaviour
@@ -38,15 +39,14 @@ public class AthmosphereControl : MonoBehaviour
     [Header("Lightning Strikes")]
     [SerializeField] private bool isStriking;
     [SerializeField] private float lightningPeriod;
-    [SerializeField] private float strikeDistanceMin;
-    [SerializeField] private float strikeDistanceMax;
+    //[SerializeField] private float strikeDistanceMin;
+    //[SerializeField] private float strikeDistanceMax;
     [SerializeField] private ParticleSystem lightningEffect;
-    private float strikeTime;
-    private Camera mainCam;
+    //private Camera mainCam;
 
     private void Awake()
     {
-        this.mainCam = Camera.main;
+        //this.mainCam = Camera.main;
         this.worldGenerator = this.GetComponent<WorldGenerator>();
         
         this.orbitSpeed = 24 / (this.dayDurationSeconds > 0 ? this.dayDurationSeconds : 1);
@@ -92,6 +92,7 @@ public class AthmosphereControl : MonoBehaviour
 
         StartCoroutine(BlendControl());
         StartCoroutine(BlendingCoroutine());
+        StartCoroutine(UpdateLightning());
     }
 
     private void Update()
@@ -101,10 +102,6 @@ public class AthmosphereControl : MonoBehaviour
 
         if (!this.fixedTimeOfDay)
             this.UpdateDayCycle();
-
-
-        if (this.isStriking)
-            this.UpdateLightning();
 
         this.rainEffect.transform.position = this.target.transform.position + this.rainEffectOffset;
     }
@@ -246,12 +243,7 @@ public class AthmosphereControl : MonoBehaviour
     private void UpdateDayCycle()
     {
         this.timeOfDay += this.orbitSpeed * Time.deltaTime;
-
-        if (this.timeOfDay > 24)
-        {
-            this.timeOfDay = 0 + this.timeOfDay % 24;
-        }
-
+        this.timeOfDay = ((this.timeOfDay % 24) + 24) % this.timeOfDay;
         this.SetDayCycle();
     }
 
@@ -260,18 +252,17 @@ public class AthmosphereControl : MonoBehaviour
     /// </summary>
     private void SetDayCycle()
     {
-        this.DayTransition();
-
         float normal = this.timeOfDay / 24;
         float sunRotation = Mathf.Lerp(-90, 270, normal);
         float moonRotation = sunRotation - 180;
 
         this.sun.transform.rotation = Quaternion.Euler(sunRotation, -150, 0);
         this.moon.transform.rotation = Quaternion.Euler(moonRotation, -150, 0);
+        this.DayTransition();
     }
 
     /// <summary>
-    /// Manages the transition of moon and sun parameters
+    /// Manages the transition of shadow-casting from moon and sun.
     /// </summary>
     private void DayTransition()
     {
@@ -289,8 +280,32 @@ public class AthmosphereControl : MonoBehaviour
             {
                 this.sun.shadows = LightShadows.None;
                 this.moon.shadows = LightShadows.Soft;
+
+                //Quickfix to avoid lighting-bug
+                if ((Application.isPlaying && this.fixedTimeOfDay) || !Application.isPlaying)
+                    this.Invoke("LightingBugQuickfix", 0.2f); //Forgive me for I have sinned.
             }
         }
+    }
+
+    /// <summary>
+    /// Moving Lightsources forces lighting-recalculation which conveniently fixes a bug when switching shadowcaster from sun to moon. It's not pretty, but it's better then a buggy lit scene.
+    /// </summary>
+    private void LightingBugQuickfix()
+    {
+        float timeOfDay;
+
+        if (this.timeOfDay + 0.1f <= 6)
+            timeOfDay = this.timeOfDay + 0.05f;
+        else
+            timeOfDay = this.timeOfDay - 0.05f;
+
+        float normal = timeOfDay / 24;
+        float sunRotation = Mathf.Lerp(-90, 270, normal);
+        float moonRotation = sunRotation - 180;
+
+        this.sun.transform.rotation = Quaternion.Euler(sunRotation, -150, 0);
+        this.moon.transform.rotation = Quaternion.Euler(moonRotation, -150, 0);
     }
 
     /// <summary>
@@ -309,35 +324,54 @@ public class AthmosphereControl : MonoBehaviour
 
     public void SetTimeOfDay(float timeInHours)
     {
+        if (timeInHours == 6) //Since there's a bug when setting it from this time to something darker, time cannot be set to these values for now. I blame Unity.
+            timeInHours = 6.1f;
+
         this.orbitSpeed = 24 / (this.dayDurationSeconds > 0 ? this.dayDurationSeconds : 1);
         this.timeOfDay = ((timeInHours % 24) + 24) % timeInHours;
         this.SetDayCycle();
     }
 
-    /// <summary>
-    /// Initiates a lightning strike in front of the player after each striking period.
-    /// </summary>
-    private void UpdateLightning()
+    private IEnumerator UpdateLightning()
     {
-        this.strikeTime -= Time.deltaTime;
+        WorldGeneratorArgs args = this.worldGenerator.Args;
+        Vector2 min = new Vector2(-args.TerrainData.size.x + 1, -args.TerrainData.size.z + 1);
+        Vector2 max = new Vector2(args.TerrainData.size.x - 1, args.TerrainData.size.z - 1) * 2;
 
-        if (this.strikeTime > 0)
+        while (true)
         {
-            return;
+            if (!this.isStriking)
+            {
+                yield return new WaitForSeconds(1f);
+                continue;
+            }
+
+            /*Vector3 strikePosition = new Vector3(
+                this.target.position.x + Random.Range(-this.strikeDistanceMax, this.strikeDistanceMax),
+                100,
+                this.target.position.z + Random.Range(-this.strikeDistanceMax, this.strikeDistanceMax)
+            );
+
+            Vector3 optimizedStrikePosition = new Vector3(this.target.position.x, 100, this.target.position.z);
+            optimizedStrikePosition += this.mainCam.transform.forward * Random.Range(this.strikeDistanceMin, this.strikeDistanceMax);
+
+            this.lightningEffect.transform.position = optimizedStrikePosition;
+            this.lightningEffect.Play(true);*/
+
+            Vector3 strikePos = new Vector3(Random.Range(min.x, max.x), 100, Random.Range(min.y, max.y));
+
+            //If is within terrain-range, get terrain-height at pos.
+            if (strikePos.x >= 0 && strikePos.x < args.TerrainData.size.x && strikePos.z >= 0 && strikePos.z < args.TerrainData.size.z)
+                strikePos.y += Mathf.Max(args.TerrainData.GetHeight(Mathf.FloorToInt(strikePos.x), Mathf.FloorToInt(strikePos.z)), 0); //Mathf.Max to keep it above water-lvl.
+            //otherwise assign random height
+            else
+                strikePos.y += Random.Range(0, 50f);
+
+
+            this.lightningEffect.transform.position = strikePos;
+            this.lightningEffect.Play(true);
+
+            yield return new WaitForSeconds(this.lightningPeriod);
         }
-
-        Vector3 strikePosition = new Vector3(
-            this.target.position.x + Random.Range(-this.strikeDistanceMax, this.strikeDistanceMax),
-            100,
-            this.target.position.z + Random.Range(-this.strikeDistanceMax, this.strikeDistanceMax)
-        );
-
-        Vector3 optimizedStrikePosition = new Vector3(this.target.position.x, 100, this.target.position.z);
-        optimizedStrikePosition += this.mainCam.transform.forward * Random.Range(this.strikeDistanceMin, this.strikeDistanceMax);
-
-        this.lightningEffect.transform.position = optimizedStrikePosition;
-        this.lightningEffect.Play(true);
-
-        this.strikeTime = this.lightningPeriod;
     }
 }

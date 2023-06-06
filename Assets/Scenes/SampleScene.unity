@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 5856.7344, g: 3596.1094, b: 2464.2969, a: 1}
+  m_IndirectSpecularColor: {r: 5996.121, g: 3674.996, b: 2526.4336, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5201,14 +5201,12 @@ MonoBehaviour:
   sun: {fileID: 259358470}
   moon: {fileID: 164426726}
   timeOfDay: 12
-  fixedTimeOfDay: 1
+  fixedTimeOfDay: 0
   dayDurationSeconds: 1200
   isRaining: 0
   rainEffect: {fileID: 685509929}
   isStriking: 0
   lightningPeriod: 10
-  strikeDistanceMin: 100
-  strikeDistanceMax: 200
   lightningEffect: {fileID: 632064489}
 --- !u!114 &130416401
 MonoBehaviour:
@@ -5826,7 +5824,7 @@ GameObject:
   - component: {fileID: 458234379}
   - component: {fileID: 458234378}
   m_Layer: 0
-  m_Name: Plane
+  m_Name: Water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -55,7 +55,7 @@ public class WorldGenerator : MonoBehaviour
             this.waterPlane = GameObject.CreatePrimitive(PrimitiveType.Plane).transform;
             this.waterPlane.name = "Water";
             this.waterPlane.GetComponent<MeshRenderer>().sharedMaterial = Resources.Load<Material>("WorldAI_DefaultAssets/Water/_DEFAULT_WATER");
-            Destroy(this.waterPlane.GetComponent<MeshCollider>());
+            DestroyImmediate(this.waterPlane.GetComponent<MeshCollider>());
         }
 
         float size = terrain.terrainData.size.x;
