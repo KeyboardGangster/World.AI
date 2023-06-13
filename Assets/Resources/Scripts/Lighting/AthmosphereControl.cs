@@ -243,7 +243,7 @@ public class AthmosphereControl : MonoBehaviour
     private void UpdateDayCycle()
     {
         this.timeOfDay += this.orbitSpeed * Time.deltaTime;
-        this.timeOfDay = ((this.timeOfDay % 24) + 24) % this.timeOfDay;
+        this.timeOfDay = ((this.timeOfDay % 24) + 24) % 24;
         this.SetDayCycle();
     }
 
@@ -328,9 +328,11 @@ public class AthmosphereControl : MonoBehaviour
             timeInHours = 6.1f;
 
         this.orbitSpeed = 24 / (this.dayDurationSeconds > 0 ? this.dayDurationSeconds : 1);
-        this.timeOfDay = ((timeInHours % 24) + 24) % timeInHours;
+        this.timeOfDay = ((timeInHours % 24) + 24) % 24;
         this.SetDayCycle();
     }
+
+    public float GetTimeOfDay() => this.timeOfDay;
 
     private IEnumerator UpdateLightning()
     {

@@ -11,7 +11,6 @@ using UnityEngine;
 /// Do not use at runtime, unless you're generating worlds at runtime!<br/>
 /// Static declarations are used during initialization of this class, use with caution.
 /// </summary>
-[CreateAssetMenu(fileName = "WorldGeneratorArgs", menuName = "GoFuckYourself", order = 0)]
 public class WorldGeneratorArgs : ScriptableObject
 {
     [SerializeField]
@@ -125,6 +124,19 @@ public class WorldGeneratorArgs : ScriptableObject
     /// Amount of TerrainLayers that were added.
     /// </summary>
     public int _TerrainLayerCount => this._terrainLayerIndices.Count;
+
+    /// <summary>
+    /// Gets the height (in world-space) of terrain at xy-position in world-space.
+    /// </summary>
+    /// <param name="x">x-coordinate in world-space</param>
+    /// <param name="y">y-coordinate in world-space</param>
+    /// <returns>The height in world-space at given xy-position.</returns>
+    public float GetHeight(float x, float y)
+    {
+        float height = this.terrainData.GetInterpolatedHeight(x / this.terrainData.size.x, y / this.terrainData.size.z) - this.WaterLevel;
+        Debug.Log($"{x / this.terrainData.size.x},{y / this.terrainData.size.z}|{height}");
+        return height;
+    }
 
     /// <summary>
     /// Gets the biome at specified biome-index.

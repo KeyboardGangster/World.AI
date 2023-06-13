@@ -3,49 +3,76 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
+[RequireComponent(typeof(CamTargetPicker))]
 public class Snapshot : MonoBehaviour
 {
+    [SerializeField]
     private Camera cam;
+    [SerializeField]
+    private WorldGenerator worldGenerator;
+    [SerializeField]
+    private WorldGeneratorInterface_AI worldGeneratorInterface;
+    [SerializeField]
+    private AthmosphereControl athmosphereControl;
+    private CamTargetPicker targetPicker;
 
     private object threadLock = new object();
 
     private bool captureRequested = false;
+    private string prompt;
+    private string key;
+    private float[,] heightData;
 
-    private byte[] capturedImage;
+    private byte[][] capturedImages;
 
-    public byte[] CapturedImage
+    public byte[][] CapturedImages
     {
         get
         {
             lock (this.threadLock)
-                return this.capturedImage;
+                return this.capturedImages;
         }
         private set
         {
             lock (this.threadLock)
-                this.capturedImage = value;
+                this.capturedImages = value;
         }
     }
 
     private void Awake()
     {
-        this.cam = this.GetComponent<Camera>();
+        this.targetPicker = this.GetComponent<CamTargetPicker>();
         StartCoroutine(CoroutineCapture());
     }
 
     private IEnumerator CoroutineCapture()
     {
         yield return new WaitForSeconds(3);
-        Capture();
 
         while (true)
         {
             lock (this.threadLock)
             {
-                if (captureRequested)
+                if (this.captureRequested)
                 {
-                    this.CapturedImage = this.Capture();
+                    this.worldGeneratorInterface.GenerateWorld(this.prompt, this.key);
+                    yield return new WaitForSeconds(1f);
+
+                    Transform[] targets = this.targetPicker.getTargets(this.worldGenerator.Args, this.heightData, this.athmosphereControl.GetTimeOfDay());
+                    byte[][] imagesJpg = new byte[targets.Length][];
+
+                    for (int i = 0; i < targets.Length; i++)
+                    {
+                        this.cam.transform.position = targets[i].position;
+                        this.cam.transform.rotation = targets[i].rotation;
+                        yield return new WaitForSeconds(1);
+                        imagesJpg[i] = this.Capture(targets[i]);
+
+                    }
+
+                    this.CapturedImages = imagesJpg;
                     this.captureRequested = false;
                 }
             }
@@ -54,16 +81,23 @@ public class Snapshot : MonoBehaviour
         }
     }
 
-    public void RequestCapture()
+    public void ReceiveHeightdata(float[,] heightData)
+    {
+        this.heightData = heightData;
+    }
+
+    public void RequestCapture(string prompt, string key)
     {
         lock(this.threadLock)
         {
+            this.prompt = prompt;
+            this.key = key;
             this.captureRequested = true;
-            this.CapturedImage = null;
+            this.CapturedImages = null;
         }
     }
 
-    public byte[] Capture()
+    public byte[] Capture(Transform target)
     {
         RenderTexture activeRenderTexture = RenderTexture.active;
         RenderTexture.active = cam.targetTexture;
@@ -82,8 +116,10 @@ public class Snapshot : MonoBehaviour
         if (!Directory.Exists(Application.dataPath + "/snapshots/"))
             Directory.CreateDirectory(Application.dataPath + "/snapshots/");
 
-        File.WriteAllBytes(Application.dataPath + "/snapshots/" + Random.Range(0, 99999999) + ".jpg", bytes);
+        File.WriteAllBytes(Application.dataPath + "/snapshots/__" + Random.Range(0, 99999999) + ".jpg", bytes);
+
         return bytes;
+
     }
 
     private void FixColorSpace(Texture2D image)

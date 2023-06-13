@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(Snapshot))]
 public class ServerRequestHandler : MonoBehaviour
 {
     private Snapshot snapshot;
@@ -15,6 +16,7 @@ public class ServerRequestHandler : MonoBehaviour
     private void Start()
     {
         this.snapshot = this.GetComponent<Snapshot>();
+
         new Thread(StartListening).Start();
     }
 
@@ -23,21 +25,44 @@ public class ServerRequestHandler : MonoBehaviour
         TcpListener listener = new TcpListener(IPAddress.Loopback, 9999);
         listener.Start();
 
-        using (TcpClient client = listener.AcceptTcpClient())
-        using (NetworkStream stream = client.GetStream())
+        while(true)
         {
-            //Read request from client.
-            string jsonData = ReadString(stream, client.ReceiveBufferSize);
-            JObject jsonObject = JObject.Parse(jsonData);
+            using (TcpClient client = listener.AcceptTcpClient())
+            using (NetworkStream stream = client.GetStream())
+            {
+                Debug.Log("Connection established.");
 
-            //Process client's request.
-            this.snapshot.RequestCapture();
-            while (this.snapshot.CapturedImage == null) { }
-            byte[] jpg = this.snapshot.CapturedImage;
-            jsonObject.Add("Image", JToken.FromObject(Convert.ToBase64String(jpg)));
+                //Read request from client.
+                string jsonData = ReadString(stream, client.ReceiveBufferSize);
+                JObject jsonObject = JObject.Parse(jsonData);
 
-            //Send back processed data.
-            WriteString(stream, jsonObject.ToString());
+                bool promptFound = jsonObject.TryGetValue("Prompt", out JToken prompt);
+                bool keyFound = jsonObject.TryGetValue("Key", out JToken key);
+
+                if (!promptFound || !keyFound)
+                {
+                    Debug.LogError("No prompt or key given, disconnecting.");
+                    continue;
+                }
+
+                Debug.Log("Read request. Processing renders...");
+
+                //Process client's request.
+                this.snapshot.RequestCapture(prompt.Value<string>(), key.Value<string>());
+                while (this.snapshot.CapturedImages == null) { }
+                byte[][] imagesJpg = this.snapshot.CapturedImages;
+                int number = 1;
+
+                foreach (byte[] jpg in imagesJpg)
+                {
+                    jsonObject.Add($"Image{number++}", JToken.FromObject(Convert.ToBase64String(jpg)));
+                }
+
+                //Send back processed data.
+                WriteString(stream, jsonObject.ToString());
+
+                Debug.Log("Sent images.");
+            }
         }
     }
 

@@ -36,11 +36,25 @@ public class WorldGeneratorInterface_AI : WorldGeneratorInterface
 
     //private SOHeight[] biomeDistributionData; //Currently replaced by Bias and Randomness.
 
+    public void GenerateWorld(string prompt, string key)
+    {
+        this.prompt = prompt;
+        this.key = key;
+
+        this.GenerateWorld();
+    }
+
     public override async void GenerateWorld()
     {
         if (string.IsNullOrEmpty(this.prompt))
         {
             Debug.LogError("Your prompt is empty, please write a prompt so ChatGPT can help you out.");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(this.key))
+        {
+            Debug.LogError("Your key is empty, please provide an OpenAI-API key so we can talk to ChatGPT for you.");
             return;
         }
 

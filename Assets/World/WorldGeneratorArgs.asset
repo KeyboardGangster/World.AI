@@ -12,36 +12,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 903f85b6dc9626c448c308336e9c6576, type: 3}
   m_Name: WorldGeneratorArgs
   m_EditorClassIdentifier: 
-  terrainData: {fileID: 15600000, guid: f8db9b2c2570a1a45815ff2592e590e1, type: 2}
-  seed: 1
+  terrainData: {fileID: 15600000, guid: 1c97a6bc0f4a01d42a5228988090bcd8, type: 2}
+  seed: 7572865
   bias:
-    rid: 3878318537468018688
+    rid: 3878318578105319454
   randomness:
-    rid: 3878318537468018689
+    rid: 3878318578105319455
   biomeScale: 4
   worldScaleRatio: 0.7751938
   toyScaleRatio: 2
   waterLevel: 100
   availableBiomes:
-  - biome: {fileID: 11400000, guid: 3755698dd6d9bed4d96ee798a478ed34, type: 2}
+  - biome: {fileID: 11400000, guid: a335be55e0532764487b1b95986e633f, type: 2}
     bias: {x: 0, y: 0.5}
     random: {x: 0, y: 0.5}
     finalFalloffRate: 0.046511628
     finalGrassNoiseScale: 0.645
-  - biome: {fileID: 11400000, guid: 3aadbe4912fda4648ba9f86f007d6623, type: 2}
+  - biome: {fileID: 11400000, guid: 4d2da6d2a48da9a4a8ef7ed4b29f7d00, type: 2}
     bias: {x: 0, y: 0.5}
     random: {x: 0.5, y: 1}
+    finalFalloffRate: 0.046511628
+    finalGrassNoiseScale: 0.645
+  - biome: {fileID: 11400000, guid: 3aadbe4912fda4648ba9f86f007d6623, type: 2}
+    bias: {x: 0.5, y: 1}
+    random: {x: 0, y: 0.5}
     finalFalloffRate: 0.015503876
     finalGrassNoiseScale: 0.645
-  - biome: {fileID: 11400000, guid: be3250a42eb6bbb4db2e53b9be803999, type: 2}
+  - biome: {fileID: 11400000, guid: f254a5e19e0fa6b41a8be30d2a8c933d, type: 2}
     bias: {x: 0.5, y: 1}
-    random: {x: 0, y: 1}
+    random: {x: 0.5, y: 1}
     finalFalloffRate: 0.015503876
     finalGrassNoiseScale: 0.645
   references:
     version: 2
     RefIds:
-    - rid: 3878318537468018688
+    - rid: 3878318578105319454
       type: {class: NoiseData, ns: , asm: Assembly-CSharp}
       data:
         isBiomeDistribution: 1
@@ -51,10 +56,10 @@ MonoBehaviour:
         addend: 0
         noise: {fileID: 11400000, guid: 1ee91344168a94944b0704cc76249703, type: 2}
         octaveOffsets:
-        - {x: -5027, y: -7786}
-        - {x: -660, y: 5432}
+        - {x: -7937, y: -2064}
+        - {x: -870, y: -8867}
         maxValue: 1.5
-    - rid: 3878318537468018689
+    - rid: 3878318578105319455
       type: {class: NoiseData, ns: , asm: Assembly-CSharp}
       data:
         isBiomeDistribution: 1
@@ -64,6 +69,6 @@ MonoBehaviour:
         addend: 0
         noise: {fileID: 11400000, guid: cb1e3786fb8eb9b46bea41ec9097eb99, type: 2}
         octaveOffsets:
-        - {x: -69027, y: -71786}
-        - {x: -64660, y: -58568}
+        - {x: -71937, y: -66064}
+        - {x: -64870, y: -72867}
         maxValue: 1.5
