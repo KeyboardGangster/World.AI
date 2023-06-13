@@ -60,6 +60,7 @@ public class ServerRequestHandler : MonoBehaviour
 
                 //Send back processed data.
                 WriteString(stream, jsonObject.ToString());
+                Thread.Sleep(3000);
 
                 Debug.Log("Sent images.");
             }
