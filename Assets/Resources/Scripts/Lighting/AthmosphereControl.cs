@@ -11,6 +11,8 @@ using static UnityEngine.Rendering.HighDefinition.VolumetricClouds;
 public class AthmosphereControl : MonoBehaviour
 {
     private WorldGenerator worldGenerator;
+    public VolumeProfile[] allBiomeVolumes;
+    public VolumeProfile[] allRainVolumes;
 
     [Header("Components")]
     [SerializeField] private Transform target;
@@ -67,7 +69,31 @@ public class AthmosphereControl : MonoBehaviour
         if (defaultVolume != null)
             defaultVolume.enabled = false;
 
-        for (int i = 0; i < this.worldGenerator.Args.BiomeCount; i++)
+        foreach(VolumeProfile vp in this.allBiomeVolumes)
+        {
+            if (!this.volumesDictionary.ContainsKey(vp))
+            {
+                Volume v = this.volumes.gameObject.AddComponent<Volume>();
+                v.profile = vp;
+                v.priority = 0;
+                v.weight = 0;
+                this.volumesDictionary.Add(vp, v);
+            }
+        }
+
+        foreach(VolumeProfile vp in this.allRainVolumes)
+        {
+            if (!this.volumesDictionary.ContainsKey(vp))
+            {
+                Volume vRain = this.volumes.gameObject.AddComponent<Volume>();
+                vRain.profile = vp;
+                vRain.priority = 1;
+                vRain.weight = 0;
+                this.volumesDictionary.Add(vp, vRain);
+            }
+        }
+
+        /*for (int i = 0; i < this.worldGenerator.Args.BiomeCount; i++)
         {
             BiomeData biomeData = this.worldGenerator.Args.GetBiome(i);
 
@@ -79,7 +105,7 @@ public class AthmosphereControl : MonoBehaviour
                 v.weight = 0;
                 this.volumesDictionary.Add(biomeData.biome.Lighting.VolumeProfile, v);
 
-                if (biomeData.biome.Lighting.VolumeProfileRain != null)
+                if (biomeData.biome.Lighting.VolumeProfileRain != null && !this.volumesDictionary.ContainsKey(biomeData.biome.Lighting.VolumeProfileRain))
                 {
                     Volume vRain = this.volumes.gameObject.AddComponent<Volume>();
                     vRain.profile = biomeData.biome.Lighting.VolumeProfileRain;
@@ -88,7 +114,7 @@ public class AthmosphereControl : MonoBehaviour
                     this.volumesDictionary.Add(biomeData.biome.Lighting.VolumeProfileRain, vRain);
                 }
             }
-        }
+        }*/
 
         StartCoroutine(BlendControl());
         StartCoroutine(BlendingCoroutine());

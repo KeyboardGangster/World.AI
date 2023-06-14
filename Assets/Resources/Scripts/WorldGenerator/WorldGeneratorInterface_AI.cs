@@ -10,6 +10,9 @@ using UnityEngine;
 [RequireComponent(typeof(WorldGenerator))]
 public class WorldGeneratorInterface_AI : WorldGeneratorInterface
 {
+    public bool isGenerated = false;
+    public bool isFailed = false;
+
     private Terrain terrain;
     private WorldGenerator worldGenerator;
 
@@ -38,6 +41,8 @@ public class WorldGeneratorInterface_AI : WorldGeneratorInterface
 
     public void GenerateWorld(string prompt, string key)
     {
+        this.isFailed = false;
+        this.isGenerated = false;
         this.prompt = prompt;
         this.key = key;
 
@@ -49,54 +54,64 @@ public class WorldGeneratorInterface_AI : WorldGeneratorInterface
         if (string.IsNullOrEmpty(this.prompt))
         {
             Debug.LogError("Your prompt is empty, please write a prompt so ChatGPT can help you out.");
+            this.isFailed = true;
             return;
         }
 
         if (string.IsNullOrEmpty(this.key))
         {
             Debug.LogError("Your key is empty, please provide an OpenAI-API key so we can talk to ChatGPT for you.");
+            this.isFailed = true;
             return;
         }
 
-        if (this.worldGenerator == null)
-            this.worldGenerator = this.GetComponent<WorldGenerator>();
-
-        //User prompt changed (or alwaysAskChatGPT set to true), OpenAI communication necessary.
-        if (this.alwaysAskChatGPT || this.prevPrompt != this.prompt)
+        try
         {
-            BiomeData[] biomeData = await FetchWorldsFromOpenAI();
+            if (this.worldGenerator == null)
+                this.worldGenerator = this.GetComponent<WorldGenerator>();
 
-            ShowProgressMsg("Generating world from processed answer...");
-            if (!this.fixedSeed)
-                this.seed = Random.Range(0, 9999999);
-
-            this.prevBiomeData = biomeData;
-            this.Prepare(biomeData);
-            this.worldGenerator.Generate();
-
-            AthmosphereControl athmosphereControl = this.GetComponent<AthmosphereControl>();
-            if (athmosphereControl != null)
+            //User prompt changed (or alwaysAskChatGPT set to true), OpenAI communication necessary.
+            if (this.alwaysAskChatGPT || this.prevPrompt != this.prompt)
             {
-                ShowProgressMsg("Found AthmosphereControl, asking ChatGPT for time of day...");
-                int hourOfDay = await FetchTimeFromOpenAI();
-                ShowProgressMsg($"Done! It's {hourOfDay} o'clock.");
-                athmosphereControl.SetTimeOfDay(hourOfDay);
+                BiomeData[] biomeData = await FetchWorldsFromOpenAI();
+
+                ShowProgressMsg("Generating world from processed answer...");
+                if (!this.fixedSeed)
+                    this.seed = Random.Range(0, 9999999);
+
+                this.prevBiomeData = biomeData;
+                this.Prepare(biomeData);
+                this.worldGenerator.Generate();
+
+                AthmosphereControl athmosphereControl = this.GetComponent<AthmosphereControl>();
+                if (athmosphereControl != null)
+                {
+                    ShowProgressMsg("Found AthmosphereControl, asking ChatGPT for time of day...");
+                    int hourOfDay = await FetchTimeFromOpenAI();
+                    ShowProgressMsg($"Done! It's {hourOfDay} o'clock.");
+                    athmosphereControl.SetTimeOfDay(hourOfDay);
+                }
             }
+            //User prompt did not change, just regenerate.
+            else
+            {
+                ShowProgressMsg("Prompt didn't change, using previous ChatGPT-answer...");
+                ShowProgressMsg("Generating world...");
+
+                if (!this.fixedSeed)
+                    this.seed = Random.Range(0, 9999999);
+
+                this.Prepare(this.prevBiomeData);
+                this.worldGenerator.Generate();
+            }
+
+            this.prevPrompt = prompt;
+            this.isGenerated = true;
         }
-        //User prompt did not change, just regenerate.
-        else
+        catch
         {
-            ShowProgressMsg("Prompt didn't change, using previous ChatGPT-answer...");
-            ShowProgressMsg("Generating world...");
-
-            if(!this.fixedSeed)
-                this.seed = Random.Range(0, 9999999);
-
-            this.Prepare(this.prevBiomeData);
-            this.worldGenerator.Generate();
+            this.isFailed = true;
         }
-
-        this.prevPrompt = prompt;
     }
 
     private async Task<BiomeData[]> FetchWorldsFromOpenAI()

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 422.30908, g: 289.9048, b: 149.62512, a: 1}
+  m_IndirectSpecularColor: {r: 385.25586, g: 257.3624, b: 122.78637, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -10195,6 +10195,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8c2a055d9c3b714085a128afc117052, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  allBiomeVolumes:
+  - {fileID: 11400000, guid: 21c6b3fc42e606d43b1988997c9cb78b, type: 2}
+  - {fileID: 11400000, guid: eac6b39b51222a640b57ce0c21305881, type: 2}
+  - {fileID: 11400000, guid: 78fd0af6f6991d948a855cb8e9b2d263, type: 2}
+  allRainVolumes:
+  - {fileID: 11400000, guid: c9ee13ba3497b8d4588d8646d9e781c2, type: 2}
   target: {fileID: 57290762}
   volumes: {fileID: 1796942902}
   cloudOverride: {fileID: 33092415}
@@ -10220,12 +10226,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f3eff5d6065c4c42ae50728e325d2b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGenerated: 0
+  isFailed: 0
   prompt: cool flower field with a forest on hills at noon.
-  key: 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
+  key: asd
   size: 0
   seed: 9093310
   fixedSeed: 0
-  alwaysAskChatGPT: 0
+  alwaysAskChatGPT: 1
   showProgressLogs: 0
 --- !u!114 &603735831
 MonoBehaviour:
@@ -10250,7 +10258,6 @@ MonoBehaviour:
   - {fileID: 8574412962073106934, guid: a5179d8ca77aa26449d548b379f95ef4, type: 2}
   - {fileID: 8574412962073106934, guid: 6d3034cbae32a284894b89e642e8826c, type: 2}
   - {fileID: 8574412962073106934, guid: fd72173a2bcbde349bcacb4758ca3c7b, type: 2}
-  snapshot: {fileID: 2106833332}
 --- !u!154 &603735832
 TerrainCollider:
   m_ObjectHideFlags: 0

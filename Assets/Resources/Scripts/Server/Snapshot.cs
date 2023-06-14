@@ -8,6 +8,8 @@ using static UnityEngine.GraphicsBuffer;
 [RequireComponent(typeof(CamTargetPicker))]
 public class Snapshot : MonoBehaviour
 {
+
+
     [SerializeField]
     private Camera cam;
     [SerializeField]
@@ -23,9 +25,9 @@ public class Snapshot : MonoBehaviour
     private bool captureRequested = false;
     private string prompt;
     private string key;
-    private float[,] heightData;
 
     private byte[][] capturedImages;
+    private bool isFailed;
 
     public byte[][] CapturedImages
     {
@@ -38,6 +40,20 @@ public class Snapshot : MonoBehaviour
         {
             lock (this.threadLock)
                 this.capturedImages = value;
+        }
+    }
+
+    public bool IsFailed
+    {
+        get
+        {
+            lock(this.threadLock)
+                return this.isFailed;
+        }
+        private set
+        {
+            lock(this.threadLock)
+                this.isFailed = value;
         }
     }
 
@@ -58,9 +74,22 @@ public class Snapshot : MonoBehaviour
                 if (this.captureRequested)
                 {
                     this.worldGeneratorInterface.GenerateWorld(this.prompt, this.key);
+
+                    Debug.Log("Waiting for generation...");
+                    yield return new WaitUntil(() => this.worldGeneratorInterface.isGenerated || this.worldGeneratorInterface.isFailed);
+
+                    if (this.worldGeneratorInterface.isFailed)
+                    {
+                        this.CapturedImages = null;
+                        this.captureRequested = false;
+                        this.isFailed = true;
+                        continue;
+                    }
+
+                    Debug.Log("complete!");
                     yield return new WaitForSeconds(1f);
 
-                    Transform[] targets = this.targetPicker.getTargets(this.worldGenerator.Args, this.heightData, this.athmosphereControl.GetTimeOfDay());
+                    Transform[] targets = this.targetPicker.getTargets(this.worldGenerator.Args, this.athmosphereControl.GetTimeOfDay());
                     byte[][] imagesJpg = new byte[targets.Length][];
 
                     for (int i = 0; i < targets.Length; i++)
@@ -81,11 +110,6 @@ public class Snapshot : MonoBehaviour
         }
     }
 
-    public void ReceiveHeightdata(float[,] heightData)
-    {
-        this.heightData = heightData;
-    }
-
     public void RequestCapture(string prompt, string key)
     {
         lock(this.threadLock)
@@ -94,6 +118,7 @@ public class Snapshot : MonoBehaviour
             this.key = key;
             this.captureRequested = true;
             this.CapturedImages = null;
+            this.isFailed = false;
         }
     }
 
@@ -113,10 +138,10 @@ public class Snapshot : MonoBehaviour
         byte[] bytes = image.EncodeToJPG();
         Destroy(image);
 
-        if (!Directory.Exists(Application.dataPath + "/snapshots/"))
+        /*if (!Directory.Exists(Application.dataPath + "/snapshots/"))
             Directory.CreateDirectory(Application.dataPath + "/snapshots/");
 
-        File.WriteAllBytes(Application.dataPath + "/snapshots/__" + Random.Range(0, 99999999) + ".jpg", bytes);
+        File.WriteAllBytes(Application.dataPath + "/snapshots/__" + Random.Range(0, 99999999) + ".jpg", bytes);*/
 
         return bytes;
 

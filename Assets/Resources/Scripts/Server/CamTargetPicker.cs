@@ -13,7 +13,7 @@ public class CamTargetPicker : MonoBehaviour
     [SerializeField]
     private Transform[] targets_evening;
 
-    public Transform[] getTargets(WorldGeneratorArgs args, float[,] heightData, float timeOfDay)
+    public Transform[] getTargets(WorldGeneratorArgs args, float timeOfDay)
     {
         float ratio = args.TerrainData.heightmapResolution / args.TerrainData.size.x;
 
@@ -28,25 +28,7 @@ public class CamTargetPicker : MonoBehaviour
                 //adjust height
                 Vector3 newPos = target.position;
 
-                RaycastHit hit;
-                if (Physics.Raycast(newPos, Vector3.up, out hit))
-                {
-                    newPos.y = hit.point.y;
-                }
-                else if (Physics.Raycast(newPos, Vector3.down, out hit))
-                {
-                    newPos.y = hit.point.y;
-                }
-                else if (heightData != null)
-                {
-                    Debug.LogError("Couldn't find raycast, looking for heightmap-data");
-                    newPos.y = heightData[Mathf.FloorToInt(newPos.x * ratio), Mathf.FloorToInt(newPos.z * ratio)];
-                }
-                else
-                {
-                    Debug.LogError("Couldn't find heightmap-data, looking for terrainData");
-                    newPos.y = args.GetHeight(target.position.x, target.position.z); //fallback, I think this doesn't work at runtime for some reason. Only with pregenerated worlds.*/
-                }
+                newPos.y = args.GetHeight(target.position.x, target.position.z); //fallback, I think this doesn't work at runtime for some reason. Only with pregenerated worlds.*/
 
                 newPos.y += Random.Range(2f, 5f);
                 target.position = newPos;

@@ -7,6 +7,7 @@ using UnityEngine;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph.Serialization;
 
 [RequireComponent(typeof(Snapshot))]
 public class ServerRequestHandler : MonoBehaviour
@@ -42,6 +43,7 @@ public class ServerRequestHandler : MonoBehaviour
                 if (!promptFound || !keyFound)
                 {
                     Debug.LogError("No prompt or key given, disconnecting.");
+                    HandlerFailure(jsonObject, stream);
                     continue;
                 }
 
@@ -49,7 +51,15 @@ public class ServerRequestHandler : MonoBehaviour
 
                 //Process client's request.
                 this.snapshot.RequestCapture(prompt.Value<string>(), key.Value<string>());
-                while (this.snapshot.CapturedImages == null) { }
+                while (this.snapshot.CapturedImages == null && !this.snapshot.IsFailed) { }
+
+                if (this.snapshot.IsFailed)
+                {
+                    Debug.LogError("Generation failed, disconnecting.");
+                    HandlerFailure(jsonObject, stream);
+                    continue;
+                }
+
                 byte[][] imagesJpg = this.snapshot.CapturedImages;
                 int number = 1;
 
@@ -58,13 +68,28 @@ public class ServerRequestHandler : MonoBehaviour
                     jsonObject.Add($"Image{number++}", JToken.FromObject(Convert.ToBase64String(jpg)));
                 }
 
+                jsonObject.Add("Success", JToken.FromObject(true));
+
                 //Send back processed data.
                 WriteString(stream, jsonObject.ToString());
-                Thread.Sleep(3000);
-
-                Debug.Log("Sent images.");
+                Debug.Log("Sent images. Waiting for connection-close...");
+                WaitForShutdown(stream);
+                Debug.Log("Connection closed.");
             }
         }
+    }
+
+    private static void HandlerFailure(JObject jsonObject, NetworkStream stream)
+    {
+        jsonObject.Add("Success", JToken.FromObject(false));
+        WriteString(stream, jsonObject.ToString());
+        WaitForShutdown(stream);
+    }
+
+    private static void WaitForShutdown(NetworkStream stream)
+    {
+        byte[] buffer = new byte[100];
+        while (stream.Read(buffer, 0, buffer.Length) > 0) { }
     }
 
     private static string ReadString(NetworkStream stream, int bufferSize)

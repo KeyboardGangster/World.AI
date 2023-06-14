@@ -18,8 +18,6 @@ public class WorldGenerator : MonoBehaviour
     private Transform waterPlane;
     [SerializeField]
     private TerrainLayer[] terrainLayers;
-    [SerializeField]
-    private Snapshot snapshot;
 
     /// <summary>
     /// Holds all the data necessary to generate a world. This needs to be initialized in a WorldGeneratorInterface.
@@ -70,7 +68,7 @@ public class WorldGenerator : MonoBehaviour
         BiomeGenerator.GenerateBiomemapData(args, 1, 1);
     }
 
-    private void CreateHeightMap(WorldGeneratorArgs args)
+    private static void CreateHeightMap(WorldGeneratorArgs args)
     {
         int size = args.TerrainData.heightmapResolution;
 
@@ -95,9 +93,6 @@ public class WorldGenerator : MonoBehaviour
                 heightMap[x, y] = terrainHeight / maxTerrainHeight;
             }
         }
-
-        if (this.snapshot != null)
-            this.snapshot.ReceiveHeightdata(heightMap);
 
         args.TerrainData.SetHeights(0, 0, heightMap);
     }
