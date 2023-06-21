@@ -12,6 +12,9 @@ using UnityEditor.ShaderGraph.Serialization;
 [RequireComponent(typeof(Snapshot))]
 public class ServerRequestHandler : MonoBehaviour
 {
+    [SerializeField]
+    private string serverName;
+
     private Snapshot snapshot;
 
     private void Start()
@@ -68,6 +71,9 @@ public class ServerRequestHandler : MonoBehaviour
                     jsonObject.Add($"Image{number++}", JToken.FromObject(Convert.ToBase64String(jpg)));
                 }
 
+                jsonObject.Add("ServerName", JToken.FromObject(this.serverName));
+                jsonObject.Add("eSeed", JToken.FromObject(this.snapshot.ExtendedSeed));
+                jsonObject.Add("ToD", JToken.FromObject($"{Mathf.FloorToInt(this.snapshot.TimeOfDay).ToString().PadLeft(2, '0')}:00"));
                 jsonObject.Add("Success", JToken.FromObject(true));
 
                 //Send back processed data.

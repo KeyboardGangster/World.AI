@@ -8,14 +8,12 @@ using static UnityEngine.GraphicsBuffer;
 [RequireComponent(typeof(CamTargetPicker))]
 public class Snapshot : MonoBehaviour
 {
-
-
     [SerializeField]
     private Camera cam;
     [SerializeField]
     private WorldGenerator worldGenerator;
     [SerializeField]
-    private WorldGeneratorInterface_AI worldGeneratorInterface;
+    private WorldGeneratorInterface_MAD worldGeneratorInterface;
     [SerializeField]
     private AthmosphereControl athmosphereControl;
     private CamTargetPicker targetPicker;
@@ -57,6 +55,24 @@ public class Snapshot : MonoBehaviour
         }
     }
 
+    public string ExtendedSeed
+    {
+        get
+        {
+            lock (this.threadLock)
+                return this.worldGeneratorInterface.extendedSeed;
+        }
+    }
+
+    public float TimeOfDay
+    {
+        get
+        {
+            lock (this.threadLock)
+                return this.athmosphereControl.GetTimeOfDay();
+        }
+    }
+
     private void Awake()
     {
         this.targetPicker = this.GetComponent<CamTargetPicker>();
@@ -73,7 +89,7 @@ public class Snapshot : MonoBehaviour
             {
                 if (this.captureRequested)
                 {
-                    this.worldGeneratorInterface.GenerateWorld(this.prompt, this.key);
+                    this.worldGeneratorInterface.GenerateWorldWithChatGPT(this.prompt, this.key);
 
                     Debug.Log("Waiting for generation...");
                     yield return new WaitUntil(() => this.worldGeneratorInterface.isGenerated || this.worldGeneratorInterface.isFailed);
@@ -86,8 +102,8 @@ public class Snapshot : MonoBehaviour
                         continue;
                     }
 
-                    Debug.Log("complete!");
-                    yield return new WaitForSeconds(1f);
+                    Debug.Log("Complete!");
+                    yield return new WaitForSeconds(1.2f);
 
                     Transform[] targets = this.targetPicker.getTargets(this.worldGenerator.Args, this.athmosphereControl.GetTimeOfDay());
                     byte[][] imagesJpg = new byte[targets.Length][];

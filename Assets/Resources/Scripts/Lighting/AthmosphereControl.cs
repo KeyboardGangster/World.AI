@@ -309,7 +309,7 @@ public class AthmosphereControl : MonoBehaviour
 
                 //Quickfix to avoid lighting-bug
                 if ((Application.isPlaying && this.fixedTimeOfDay) || !Application.isPlaying)
-                    this.Invoke("LightingBugQuickfix", 0.2f); //Forgive me for I have sinned.
+                    this.Invoke("LightingBugQuickfix", 1f); //Forgive me for I have sinned.
             }
         }
     }

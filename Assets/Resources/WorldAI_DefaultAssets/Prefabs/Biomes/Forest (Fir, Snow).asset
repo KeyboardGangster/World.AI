@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3a5c988dc50e17499978d6435f77559, type: 3}
+  m_Name: Forest (Fir, Snow)
+  m_EditorClassIdentifier: 
+  description: Fir-tree-forest (very tall, dense forest) on a relatively flat terrain
+    with ocasional boulder formations during snowy winter.
+  biomeLighting: {fileID: 11400000, guid: 65346779ccfbe1247a41e00c6e557bf4, type: 2}
+  height: {fileID: 11400000, guid: 942b8a6152e0ef549bc7b877fedb23ea, type: 2}
+  falloffRate: 0.03
+  baseTerrainLayer: {fileID: 8574412962073106934, guid: a91270ebf405606448cca3900462f4c3, type: 2}
+  overrideSteepTerrainLayer: 0
+  overrideInWaterTerrainLayer: 0
+  trees:
+  - tree: {fileID: 11400000, guid: 07c331ece0367864fa2f17673dfaf3ff, type: 2}
+    spawnRate: 1
+  - tree: {fileID: 11400000, guid: 80e578bf31c4b7b41b214ac28368b843, type: 2}
+    spawnRate: 1
+  - tree: {fileID: 11400000, guid: 0265e2c78e17a9d4b94f9b6a34b0754a, type: 2}
+    spawnRate: 1
+  forceRemoveTreesUnderwater: 0
+  grass:
+  - grass: {fileID: 11400000, guid: 1e5b35dafc46bb94c918695d19302741, type: 2}
+    spawnRate: 0.019
+    density: 1
+    biased: 1
+  - grass: {fileID: 11400000, guid: 05fed8dc9c8799f4b8f87a3af8a2cf85, type: 2}
+    spawnRate: 0.009
+    density: 0
+    biased: 1
+  grassNoiseScale: 1
+  propagationData:
+  - rocks:
+    - {fileID: 11400000, guid: e2d13b05ca814054489b5c4392c00534, type: 2}
+    - {fileID: 11400000, guid: 750ba10b35ba91440b6e93942aeb98f1, type: 2}
+    - {fileID: 11400000, guid: 98470907d56400947b2ef0a91db7b374, type: 2}
+    - {fileID: 11400000, guid: df9636011d86e2445a074144f2e6780d, type: 2}
+    - {fileID: 11400000, guid: b2009352ab752e94d8d7a6e7bfecd9f8, type: 2}
+    spawnRate: 0.05
+    startingSize: 1.5
+    sizeDecrease: 0.814
+    minIterations: 1
+    maxIterations: 2

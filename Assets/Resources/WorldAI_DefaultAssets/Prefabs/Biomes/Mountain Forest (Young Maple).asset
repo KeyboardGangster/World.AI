@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3a5c988dc50e17499978d6435f77559, type: 3}
+  m_Name: Mountain Forest (Young Maple)
+  m_EditorClassIdentifier: 
+  description: Young Mapletree-forest (thick foliage, small trees) on a mountain
+    with ocasional boulder formations.
+  biomeLighting: {fileID: 11400000, guid: c1c505e1a4d9ce3419a57cc21e725c54, type: 2}
+  height: {fileID: 11400000, guid: 205fa387cc97f5e48942dba3af143570, type: 2}
+  falloffRate: 0.01
+  baseTerrainLayer: {fileID: 8574412962073106934, guid: 7af6a2cfc3b680341aad1449c76b2459, type: 2}
+  overrideSteepTerrainLayer: 0
+  overrideInWaterTerrainLayer: 0
+  trees:
+  - tree: {fileID: 11400000, guid: 6fc5b70681e4b34469e263db700e2c82, type: 2}
+    spawnRate: 0.898
+  - tree: {fileID: 11400000, guid: 680b8a37a7c9fe7429e37dc723556831, type: 2}
+    spawnRate: 0.898
+  - tree: {fileID: 11400000, guid: bfe5771346d503144a967ac281f1ae27, type: 2}
+    spawnRate: 0.167
+  - tree: {fileID: 11400000, guid: ac41d6b9013d5ad45a17accf2283e0d1, type: 2}
+    spawnRate: 0.17
+  - tree: {fileID: 11400000, guid: f03f6605507e2594b9baa61ab03e0569, type: 2}
+    spawnRate: 0.194
+  - tree: {fileID: 11400000, guid: c0f0a7f1344fd834bae2c406eeb961ff, type: 2}
+    spawnRate: 0.183
+  - tree: {fileID: 11400000, guid: 2a03b1bf198f7334e88411dfe19e7b39, type: 2}
+    spawnRate: 0.001
+  - tree: {fileID: 11400000, guid: 30ce5c49a0c404749a92cb50d308ed22, type: 2}
+    spawnRate: 0.217
+  - tree: {fileID: 11400000, guid: 33cf633d0f985194f95c79efddb78f5d, type: 2}
+    spawnRate: 0.007
+  forceRemoveTreesUnderwater: 0
+  grass:
+  - grass: {fileID: 11400000, guid: 231c7f55d7b3b2a4d9f7d9c2f2e07fc1, type: 2}
+    spawnRate: 0.931
+    density: 2
+    biased: 0
+  - grass: {fileID: 11400000, guid: fa9c068acf74d4240ae6de627038fb69, type: 2}
+    spawnRate: 0.069
+    density: 1
+    biased: 1
+  - grass: {fileID: 11400000, guid: 05fed8dc9c8799f4b8f87a3af8a2cf85, type: 2}
+    spawnRate: 0.057
+    density: 1
+    biased: 1
+  grassNoiseScale: 1
+  propagationData:
+  - rocks:
+    - {fileID: 11400000, guid: e2d13b05ca814054489b5c4392c00534, type: 2}
+    - {fileID: 11400000, guid: 750ba10b35ba91440b6e93942aeb98f1, type: 2}
+    - {fileID: 11400000, guid: 98470907d56400947b2ef0a91db7b374, type: 2}
+    - {fileID: 11400000, guid: df9636011d86e2445a074144f2e6780d, type: 2}
+    - {fileID: 11400000, guid: b2009352ab752e94d8d7a6e7bfecd9f8, type: 2}
+    spawnRate: 0.05
+    startingSize: 1.5
+    sizeDecrease: 0.814
+    minIterations: 1
+    maxIterations: 2

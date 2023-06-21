@@ -15,38 +15,38 @@ MonoBehaviour:
   terrainData: {fileID: 15600000, guid: f8db9b2c2570a1a45815ff2592e590e1, type: 2}
   seed: 1
   bias:
-    rid: 3878318537468018688
+    rid: 3878318848550109242
   randomness:
-    rid: 3878318537468018689
-  biomeScale: 4
-  worldScaleRatio: 0.7751938
-  toyScaleRatio: 2
+    rid: 3878318848550109243
+  biomeScale: 10
+  worldScaleRatio: 0.97465885
+  toyScaleRatio: 1
   waterLevel: 100
   availableBiomes:
-  - biome: {fileID: 11400000, guid: 3755698dd6d9bed4d96ee798a478ed34, type: 2}
+  - biome: {fileID: 11400000, guid: 3f6b60ab07b554447a01547d79b2f930, type: 2}
     bias: {x: 0, y: 0.5}
     random: {x: 0, y: 0.5}
-    finalFalloffRate: 0.046511628
-    finalGrassNoiseScale: 0.645
-  - biome: {fileID: 11400000, guid: 3aadbe4912fda4648ba9f86f007d6623, type: 2}
+    finalFalloffRate: 0.009746588
+    finalGrassNoiseScale: 1.026
+  - biome: {fileID: 11400000, guid: 1c892619c35c19340bef6654ed808c81, type: 2}
     bias: {x: 0, y: 0.5}
     random: {x: 0.5, y: 1}
-    finalFalloffRate: 0.015503876
-    finalGrassNoiseScale: 0.645
-  - biome: {fileID: 11400000, guid: be3250a42eb6bbb4db2e53b9be803999, type: 2}
+    finalFalloffRate: 0.029239764
+    finalGrassNoiseScale: 1.026
+  - biome: {fileID: 11400000, guid: d243699809a46a84da088d83dc1d3136, type: 2}
     bias: {x: 0.5, y: 1}
     random: {x: 0, y: 1}
-    finalFalloffRate: 0.015503876
-    finalGrassNoiseScale: 0.645
+    finalFalloffRate: 0.009746588
+    finalGrassNoiseScale: 1.026
   references:
     version: 2
     RefIds:
-    - rid: 3878318537468018688
+    - rid: 3878318848550109242
       type: {class: NoiseData, ns: , asm: Assembly-CSharp}
       data:
         isBiomeDistribution: 1
         reference: {fileID: 11400000, guid: 1ee91344168a94944b0704cc76249703, type: 2}
-        scale: 77.4
+        scale: 307.80002
         multiplier: 1
         addend: 0
         noise: {fileID: 11400000, guid: 1ee91344168a94944b0704cc76249703, type: 2}
@@ -54,12 +54,12 @@ MonoBehaviour:
         - {x: -5027, y: -7786}
         - {x: -660, y: 5432}
         maxValue: 1.5
-    - rid: 3878318537468018689
+    - rid: 3878318848550109243
       type: {class: NoiseData, ns: , asm: Assembly-CSharp}
       data:
         isBiomeDistribution: 1
         reference: {fileID: 11400000, guid: cb1e3786fb8eb9b46bea41ec9097eb99, type: 2}
-        scale: 38.7
+        scale: 153.90001
         multiplier: 1
         addend: 0
         noise: {fileID: 11400000, guid: cb1e3786fb8eb9b46bea41ec9097eb99, type: 2}

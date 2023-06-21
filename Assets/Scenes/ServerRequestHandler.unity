@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 385.25586, g: 257.3624, b: 122.78637, a: 1}
+  m_IndirectSpecularColor: {r: 0.021766216, g: 0.025993377, b: 0.03820926, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -10174,7 +10174,7 @@ GameObject:
   - component: {fileID: 603735833}
   - component: {fileID: 603735832}
   - component: {fileID: 603735831}
-  - component: {fileID: 603735830}
+  - component: {fileID: 603735835}
   - component: {fileID: 603735829}
   m_Layer: 0
   m_Name: World
@@ -10206,7 +10206,7 @@ MonoBehaviour:
   cloudOverride: {fileID: 33092415}
   sun: {fileID: 1389281919}
   moon: {fileID: 1977053771}
-  timeOfDay: 6.1
+  timeOfDay: 22.6
   fixedTimeOfDay: 1
   dayDurationSeconds: 1200
   isRaining: 0
@@ -10214,27 +10214,6 @@ MonoBehaviour:
   isStriking: 0
   lightningPeriod: 0
   lightningEffect: {fileID: 939292864}
---- !u!114 &603735830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 603735828}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f3eff5d6065c4c42ae50728e325d2b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isGenerated: 0
-  isFailed: 0
-  prompt: cool flower field with a forest on hills at noon.
-  key: asd
-  size: 0
-  seed: 9093310
-  fixedSeed: 0
-  alwaysAskChatGPT: 1
-  showProgressLogs: 0
 --- !u!114 &603735831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10324,6 +10303,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &603735835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 603735828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24b609a93bfd302489f23e9b74525005, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGenerated: 0
+  isFailed: 0
+  extendedSeed: 
+  prompt: coniferous tree forest on hilly terrain in winter at night.
+  key: asd
+  size: 0
+  seed: 352832
+  fixedSeed: 0
+  alwaysAskChatGPT: 0
+  showProgressLogs: 0
 --- !u!1 &775485208
 GameObject:
   m_ObjectHideFlags: 0
@@ -25038,7 +25039,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -25211,7 +25212,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1389281918}
-  m_LocalRotation: {x: 0.0033878337, y: -0.9658431, z: 0.012643566, w: 0.2587969}
+  m_LocalRotation: {x: 0.21329956, y: 0.5471065, z: 0.7960447, w: -0.14659676}
   m_LocalPosition: {x: 0, y: 100, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -35048,7 +35049,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -35221,7 +35222,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1977053770}
-  m_LocalRotation: {x: -0.2587969, y: -0.012643579, z: -0.9658431, w: 0.0033878374}
+  m_LocalRotation: {x: 0.14659674, y: -0.79604477, z: 0.54710644, w: 0.21329957}
   m_LocalPosition: {x: 0, y: 100, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -40131,6 +40132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57a3acdec0e1bf1409fcb712b524a3c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serverName: Jonny.AI
 --- !u!114 &2106833331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40175,7 +40177,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 57290761}
   worldGenerator: {fileID: 603735831}
-  worldGeneratorInterface: {fileID: 603735830}
+  worldGeneratorInterface: {fileID: 603735835}
   athmosphereControl: {fileID: 603735829}
 --- !u!4 &2106833333
 Transform:

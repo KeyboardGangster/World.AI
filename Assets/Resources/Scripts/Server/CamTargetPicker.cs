@@ -18,10 +18,11 @@ public class CamTargetPicker : MonoBehaviour
         float ratio = args.TerrainData.heightmapResolution / args.TerrainData.size.x;
 
         HashSet<Transform> targets = new HashSet<Transform>();
+        System.Random random = new System.Random(args.Seed);
 
         while(targets.Count < 5)
         {
-            Transform target = this.PickTarget(timeOfDay);
+            Transform target = this.PickTarget(random, timeOfDay);
 
             if (!targets.Contains(target))
             {
@@ -30,7 +31,8 @@ public class CamTargetPicker : MonoBehaviour
 
                 newPos.y = args.GetHeight(target.position.x, target.position.z); //fallback, I think this doesn't work at runtime for some reason. Only with pregenerated worlds.*/
 
-                newPos.y += Random.Range(2f, 5f);
+                //newPos.y += Random.Range(2f, 5f);
+                newPos.y += random.Next(200, 500) / 100f;
                 target.position = newPos;
 
                 //adjust rotation
@@ -79,19 +81,19 @@ public class CamTargetPicker : MonoBehaviour
 
     private bool IsLateNight(float timeOfDay) => timeOfDay >= 3.5f && timeOfDay <= 5.4f; //3.5 = -20 x-rotation, 5.4 = -0 x-rotation
 
-    private Transform PickTarget(float timeOfDay)
+    private Transform PickTarget(System.Random random, float timeOfDay)
     {
-        if (Random.Range(0f, 1f) < 0.2f && (this.IsMorning(timeOfDay) || this.IsEarlyNight(timeOfDay)))
+        if (random.Next(0, 100) < 20 && (this.IsMorning(timeOfDay) || this.IsEarlyNight(timeOfDay)))
         {
-            return this.targets_morning[Random.Range(0, this.targets_morning.Length)];
+            return this.targets_morning[random.Next(0, this.targets_morning.Length)];
         }
-        else if (Random.Range(0f, 1f) < 0.2f && (this.IsEvening(timeOfDay) || this.IsLateNight(timeOfDay)))
+        else if (random.Next(0, 100) < 20 && (this.IsEvening(timeOfDay) || this.IsLateNight(timeOfDay)))
         {
-            return this.targets_evening[Random.Range(0, this.targets_evening.Length)];
+            return this.targets_evening[random.Next(0, this.targets_evening.Length)];
         }
         else
         {
-            return this.targets[Random.Range(0, this.targets.Length)];
+            return this.targets[random.Next(0, this.targets.Length)];
         }
     }
 }

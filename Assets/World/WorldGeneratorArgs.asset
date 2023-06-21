@@ -13,35 +13,30 @@ MonoBehaviour:
   m_Name: WorldGeneratorArgs
   m_EditorClassIdentifier: 
   terrainData: {fileID: 15600000, guid: 1c97a6bc0f4a01d42a5228988090bcd8, type: 2}
-  seed: 1124163
+  seed: 352832
   bias:
-    rid: 3878318689025785868
+    rid: 3878318848550109906
   randomness:
-    rid: 3878318689025785869
+    rid: 3878318848550109907
   biomeScale: 4
   worldScaleRatio: 0.7751938
   toyScaleRatio: 2
   waterLevel: 100
   availableBiomes:
-  - biome: {fileID: 11400000, guid: 02ec4a3e7af020546b6f2f52e2a9ddc8, type: 2}
+  - biome: {fileID: 11400000, guid: d2950d9f290b59e41b34a4e27c4f6b5e, type: 2}
     bias: {x: 0, y: 0.5}
-    random: {x: 0, y: 0.5}
-    finalFalloffRate: 0.015503876
-    finalGrassNoiseScale: 0.645
-  - biome: {fileID: 11400000, guid: 59414740e1f4b0e4d98d3f5225b13844, type: 2}
-    bias: {x: 0, y: 0.5}
-    random: {x: 0.5, y: 1}
-    finalFalloffRate: 0.046511628
-    finalGrassNoiseScale: 0
-  - biome: {fileID: 11400000, guid: 915e813ca246c784cb5a5478683abb76, type: 2}
-    bias: {x: 0.5, y: 1}
     random: {x: 0, y: 1}
     finalFalloffRate: 0.046511628
+    finalGrassNoiseScale: 0.645
+  - biome: {fileID: 11400000, guid: 92f7ae02479e34f46aff69145ef38742, type: 2}
+    bias: {x: 0.5, y: 1}
+    random: {x: 0, y: 1}
+    finalFalloffRate: 0.015503876
     finalGrassNoiseScale: 0.645
   references:
     version: 2
     RefIds:
-    - rid: 3878318689025785868
+    - rid: 3878318848550109906
       type: {class: NoiseData, ns: , asm: Assembly-CSharp}
       data:
         isBiomeDistribution: 1
@@ -51,10 +46,10 @@ MonoBehaviour:
         addend: 0
         noise: {fileID: 11400000, guid: 1ee91344168a94944b0704cc76249703, type: 2}
         octaveOffsets:
-        - {x: 8694, y: -6586}
-        - {x: -5913, y: -5934}
+        - {x: -8107, y: -4100}
+        - {x: -8027, y: -8916}
         maxValue: 1.5
-    - rid: 3878318689025785869
+    - rid: 3878318848550109907
       type: {class: NoiseData, ns: , asm: Assembly-CSharp}
       data:
         isBiomeDistribution: 1
@@ -64,6 +59,6 @@ MonoBehaviour:
         addend: 0
         noise: {fileID: 11400000, guid: cb1e3786fb8eb9b46bea41ec9097eb99, type: 2}
         octaveOffsets:
-        - {x: -55306, y: -70586}
-        - {x: -69913, y: -69934}
+        - {x: -72107, y: -68100}
+        - {x: -72027, y: -72916}
         maxValue: 1.5
