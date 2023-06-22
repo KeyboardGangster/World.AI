@@ -14,6 +14,7 @@ public class WorldGeneratorInterface_MAD : WorldGeneratorInterface
     public bool isFailed = false;
 
     public string extendedSeed;
+    public bool useExtendedSeed = false;
 
     private Terrain terrain;
     private WorldGenerator worldGenerator;
@@ -45,22 +46,23 @@ public class WorldGeneratorInterface_MAD : WorldGeneratorInterface
     {
         this.isFailed = false;
         this.isGenerated = false;
-
-        /*if (this.useDebugExtendedSeed && !string.IsNullOrEmpty(this.debugExtendedSeed))
-        {
-            Debug.Log("!!");
-            GenerateWorldWithExtendedSeed(this.debugExtendedSeed);
-            return;
-        }*/
-
-        this.GenerateWorldWithChatGPT(this.prompt, this.key);
+        if (this.useExtendedSeed)
+            this.GenerateWorldFromSeed(this.extendedSeed);
+        else
+            this.GenerateWorldAsync();
     }
 
-    public void GenerateWorldWithChatGPT(string prompt, string key)
+    public void GenerateWorld(string prompt, string key, bool fromSeed)
     {
+        this.isFailed = false;
+        this.isGenerated = false;
         this.prompt = prompt;
         this.key = key;
-        this.GenerateWorldAsync();
+
+        if (fromSeed)
+            this.GenerateWorldFromSeed(prompt);
+        else
+            this.GenerateWorldAsync();
     }
 
     private async void GenerateWorldAsync()
@@ -130,87 +132,91 @@ public class WorldGeneratorInterface_MAD : WorldGeneratorInterface
         }
     }
 
-    public void GenerateWorldWithExtendedSeed(string extendedSeed)
+    public void GenerateWorldFromSeed(string extendedSeed)
     {
-        //Convert to usable data
-        if (extendedSeed.Length > 11)
-            extendedSeed.Remove(0, extendedSeed.Length - 11);
+            //Convert to usable data
+            if (extendedSeed.Length > 11)
+                extendedSeed.Remove(0, extendedSeed.Length - 11);
 
-        string base10 = extendedSeed.ToBase10().ToString();
+            string base10 = extendedSeed.ToBase10().ToString();
 
-        if (base10.Length > 18)
-            base10 = base10.Substring(0, 18);
-        else if (base10.Length < 18)
-            base10 = base10.PadLeft(18, '0');
+            if (base10.Length > 18)
+                base10 = base10.Substring(0, 18);
+            else if (base10.Length < 18)
+                base10 = base10.PadLeft(18, '0');
 
-        if (!int.TryParse(base10.Substring(0, 2), out int biome5Index) ||
-            !int.TryParse(base10.Substring(2, 2), out int biome4Index) ||
-            !int.TryParse(base10.Substring(4, 2), out int biome3Index) ||
-            !int.TryParse(base10.Substring(6, 2), out int biome2Index) ||
-            !int.TryParse(base10.Substring(8, 2), out int biome1Index) ||
-            !int.TryParse(base10.Substring(10, 2), out int timeOfDay) ||
-            !int.TryParse(base10.Substring(12), out int seed
-        ))
-            throw new System.ArgumentException();
+            if (!int.TryParse(base10.Substring(0, 2), out int biome5Index) ||
+                !int.TryParse(base10.Substring(2, 2), out int biome4Index) ||
+                !int.TryParse(base10.Substring(4, 2), out int biome3Index) ||
+                !int.TryParse(base10.Substring(6, 2), out int biome2Index) ||
+                !int.TryParse(base10.Substring(8, 2), out int biome1Index) ||
+                !int.TryParse(base10.Substring(10, 2), out int timeOfDay) ||
+                !int.TryParse(base10.Substring(12), out int seed
+            ))
+                throw new System.ArgumentException();
 
-        int[] biomeIndices = new int[]
-        {
+            int[] biomeIndices = new int[]
+            {
             biome1Index,
             biome2Index,
             biome3Index,
             biome4Index,
             biome5Index
-        };
+            };
 
-        SOBiome[] allBiomes = Resources.LoadAll<SOBiome>("WorldAI_DefaultAssets/Prefabs/Biomes/");
-        List<SOBiome> selectedBiomes = new List<SOBiome>();
-        int biomeCount = 0;
-        System.Random random = new System.Random(seed);
+            SOBiome[] allBiomes = Resources.LoadAll<SOBiome>("WorldAI_DefaultAssets/Prefabs/Biomes/");
+            List<SOBiome> selectedBiomes = new List<SOBiome>();
+            int biomeCount = 0;
+            System.Random random = new System.Random(seed);
 
-        //Determine amount of biomes
-        for (int i = biomeIndices.Length - 1; i >= 0; i--)
-        {
-            if (biomeIndices[i] != 0)
+            //Determine amount of biomes
+            for (int i = biomeIndices.Length - 1; i >= 0; i--)
             {
-                biomeCount = i + 1;
-                break;
+                if (biomeIndices[i] != 0)
+                {
+                    biomeCount = i + 1;
+                    break;
+                }
             }
-        }
 
-        //Fallback
-        if (biomeCount == 0)
-        {
-            biomeCount = random.Next(1, 6);
+            //Fallback
+            if (biomeCount == 0)
+            {
+                biomeCount = random.Next(1, 6);
 
-            for(int i = 0; i < biomeCount; i++)
-                biomeIndices[i] = random.Next(0, allBiomes.Length) + 1;
-        }
+                for (int i = 0; i < biomeCount; i++)
+                    biomeIndices[i] = random.Next(0, allBiomes.Length) + 1;
+            }
 
-        //Put biomes in list
-        for(int i = 0; i < biomeCount; i++)
-        {
-            int biomeIndex = biomeIndices[i] - 1;
+            //Put biomes in list
+            for (int i = 0; i < biomeCount; i++)
+            {
+                int biomeIndex = biomeIndices[i] - 1;
 
-            if (biomeIndex >= allBiomes.Length)
-                biomeIndex = random.Next(0, allBiomes.Length);
+                if (biomeIndex >= allBiomes.Length)
+                    biomeIndex = random.Next(0, allBiomes.Length);
 
-            selectedBiomes.Add(allBiomes[biomeIndex]);
-        }
+                selectedBiomes.Add(allBiomes[biomeIndex]);
+            }
 
-        //Set seed
-        this.seed = seed;
+            //Set seed
+            this.seed = seed;
 
-        //Generate world
-        this.Prepare(ConvertToBiomeData(allBiomes, selectedBiomes));
-        this.worldGenerator.Generate();
+            //Generate world
+            this.Prepare(ConvertToBiomeData(allBiomes, selectedBiomes));
 
-        //Set time of day
-        AthmosphereControl athmosphereControl = this.GetComponent<AthmosphereControl>();
-        if (athmosphereControl != null)
-        {
-            Debug.Log(timeOfDay);
-            athmosphereControl.SetTimeOfDay(timeOfDay);
-        }
+        if (this.worldGenerator == null)
+            this.worldGenerator = this.GetComponent<WorldGenerator>();
+
+            this.worldGenerator.Generate();
+
+            //Set time of day
+            AthmosphereControl athmosphereControl = this.GetComponent<AthmosphereControl>();
+            if (athmosphereControl != null)
+                athmosphereControl.SetTimeOfDay(timeOfDay);
+
+            this.extendedSeed = extendedSeed;
+            this.isGenerated = true;
     }
 
     public string GetExtendedSeed()
@@ -252,7 +258,7 @@ public class WorldGeneratorInterface_MAD : WorldGeneratorInterface
             seed = seed.Substring(0, 6);
 
         sb.Append(seed);
-        Debug.Log(sb.ToString());
+        Debug.Log("eSeed: " + sb.ToString());
         //Convert to Base36
         ulong base10 = System.Convert.ToUInt64(sb.ToString());
         return base10.ToBase36();

@@ -29,7 +29,7 @@ public class CamTargetPicker : MonoBehaviour
                 //adjust height
                 Vector3 newPos = target.position;
 
-                newPos.y = args.GetHeight(target.position.x, target.position.z); //fallback, I think this doesn't work at runtime for some reason. Only with pregenerated worlds.*/
+                newPos.y = args.GetHeight(target.position.x, target.position.z);
 
                 //newPos.y += Random.Range(2f, 5f);
                 newPos.y += random.Next(200, 500) / 100f;

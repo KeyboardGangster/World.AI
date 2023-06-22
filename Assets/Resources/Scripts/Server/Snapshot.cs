@@ -23,6 +23,7 @@ public class Snapshot : MonoBehaviour
     private bool captureRequested = false;
     private string prompt;
     private string key;
+    private bool fromSeed;
 
     private byte[][] capturedImages;
     private bool isFailed;
@@ -89,7 +90,7 @@ public class Snapshot : MonoBehaviour
             {
                 if (this.captureRequested)
                 {
-                    this.worldGeneratorInterface.GenerateWorldWithChatGPT(this.prompt, this.key);
+                    this.worldGeneratorInterface.GenerateWorld(this.prompt, this.key, this.fromSeed);
 
                     Debug.Log("Waiting for generation...");
                     yield return new WaitUntil(() => this.worldGeneratorInterface.isGenerated || this.worldGeneratorInterface.isFailed);
@@ -126,12 +127,13 @@ public class Snapshot : MonoBehaviour
         }
     }
 
-    public void RequestCapture(string prompt, string key)
+    public void RequestCapture(string prompt, string key, bool fromSeed)
     {
         lock(this.threadLock)
         {
             this.prompt = prompt;
             this.key = key;
+            this.fromSeed = fromSeed;
             this.captureRequested = true;
             this.CapturedImages = null;
             this.isFailed = false;

@@ -42,10 +42,11 @@ public class ServerRequestHandler : MonoBehaviour
 
                 bool promptFound = jsonObject.TryGetValue("Prompt", out JToken prompt);
                 bool keyFound = jsonObject.TryGetValue("Key", out JToken key);
+                bool fromSeedFound = jsonObject.TryGetValue("FromSeed", out JToken fromSeed);
 
-                if (!promptFound || !keyFound)
+                if (!promptFound || !keyFound || !fromSeedFound)
                 {
-                    Debug.LogError("No prompt or key given, disconnecting.");
+                    Debug.LogError("Invalid json received! Are you using the right version? Disconnecting...");
                     HandlerFailure(jsonObject, stream);
                     continue;
                 }
@@ -53,7 +54,7 @@ public class ServerRequestHandler : MonoBehaviour
                 Debug.Log("Read request. Processing renders...");
 
                 //Process client's request.
-                this.snapshot.RequestCapture(prompt.Value<string>(), key.Value<string>());
+                this.snapshot.RequestCapture(prompt.Value<string>(), key.Value<string>(), fromSeed.Value<bool>());
                 while (this.snapshot.CapturedImages == null && !this.snapshot.IsFailed) { }
 
                 if (this.snapshot.IsFailed)

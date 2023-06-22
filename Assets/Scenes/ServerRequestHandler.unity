@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.021766216, g: 0.025993377, b: 0.03820926, a: 1}
+  m_IndirectSpecularColor: {r: 5715.99, g: 3513.4219, b: 2409.621, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -10196,6 +10196,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allBiomeVolumes:
+  - {fileID: 11400000, guid: ff9059c3a98636b40a4ed4a73fa4d251, type: 2}
   - {fileID: 11400000, guid: 21c6b3fc42e606d43b1988997c9cb78b, type: 2}
   - {fileID: 11400000, guid: eac6b39b51222a640b57ce0c21305881, type: 2}
   - {fileID: 11400000, guid: 78fd0af6f6991d948a855cb8e9b2d263, type: 2}
@@ -10206,7 +10207,7 @@ MonoBehaviour:
   cloudOverride: {fileID: 33092415}
   sun: {fileID: 1389281919}
   moon: {fileID: 1977053771}
-  timeOfDay: 22.6
+  timeOfDay: 13
   fixedTimeOfDay: 1
   dayDurationSeconds: 1200
   isRaining: 0
@@ -10315,16 +10316,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24b609a93bfd302489f23e9b74525005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isGenerated: 0
+  isGenerated: 1
   isFailed: 0
-  extendedSeed: 
+  extendedSeed: asd
+  useExtendedSeed: 0
   prompt: coniferous tree forest on hilly terrain in winter at night.
-  key: asd
+  key: 1234
   size: 0
-  seed: 352832
+  seed: 13981
   fixedSeed: 0
-  alwaysAskChatGPT: 0
-  showProgressLogs: 0
+  alwaysAskChatGPT: 1
+  showProgressLogs: 1
 --- !u!1 &775485208
 GameObject:
   m_ObjectHideFlags: 0
@@ -25039,7 +25041,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -25212,7 +25214,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1389281918}
-  m_LocalRotation: {x: 0.21329956, y: 0.5471065, z: 0.7960447, w: -0.14659676}
+  m_LocalRotation: {x: 0.20533499, y: -0.5880183, z: 0.7663205, w: 0.15755905}
   m_LocalPosition: {x: 0, y: 100, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -35049,7 +35051,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -35222,7 +35224,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1977053770}
-  m_LocalRotation: {x: 0.14659674, y: -0.79604477, z: 0.54710644, w: 0.21329957}
+  m_LocalRotation: {x: -0.15755905, y: -0.7663205, z: -0.5880183, w: 0.20533499}
   m_LocalPosition: {x: 0, y: 100, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
