@@ -134,6 +134,8 @@ public class WorldGeneratorInterface_MAD : WorldGeneratorInterface
 
     public void GenerateWorldFromSeed(string extendedSeed)
     {
+        try
+        {   
             //Convert to usable data
             if (extendedSeed.Length > 11)
                 extendedSeed.Remove(0, extendedSeed.Length - 11);
@@ -205,8 +207,8 @@ public class WorldGeneratorInterface_MAD : WorldGeneratorInterface
             //Generate world
             this.Prepare(ConvertToBiomeData(allBiomes, selectedBiomes));
 
-        if (this.worldGenerator == null)
-            this.worldGenerator = this.GetComponent<WorldGenerator>();
+            if (this.worldGenerator == null)
+                this.worldGenerator = this.GetComponent<WorldGenerator>();
 
             this.worldGenerator.Generate();
 
@@ -217,6 +219,11 @@ public class WorldGeneratorInterface_MAD : WorldGeneratorInterface
 
             this.extendedSeed = extendedSeed;
             this.isGenerated = true;
+        }
+        catch
+        {
+            this.isFailed = true;
+        }
     }
 
     public string GetExtendedSeed()
