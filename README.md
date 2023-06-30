@@ -18,10 +18,18 @@ Create your world with a couple simple steps: Either write your prompt for ChatG
 Each biome comes with its own (definable) atmosphere. Just set the target to track before playing!
 ### Day-Night-Cycle
 WorldAI comes with its own Day-night-cycle! Just set the duration of a day and adjust the time-of-day-slider. You can also fixate the time.
+
+https://github.com/KeyboardGangster/World.AI/assets/120393465/db3bd04c-18a8-4184-9809-1659af5e629e
+
 ### Rain
 WorldAI can also switch to rainy weather in-game! Just tick the isRaining checkBox or press "R" when playing.
+
+https://github.com/KeyboardGangster/World.AI/assets/120393465/f743b234-e1dd-4dc7-8a06-21f7f250ee03
+
 ### Thunder
 Also includes thunder! Currently you need to tick the isStricking checkBox to see the effect.
+
+https://github.com/KeyboardGangster/World.AI/assets/120393465/8c0a7c18-7295-48a5-a05b-a5cb69f46091
 
 ## Shapes (not ChatGPT)
 You can have your biomes generate in shapes aswell!
