@@ -79,7 +79,7 @@ public class AthmosphereControl : MonoBehaviour
                 v.weight = 0;
                 this.volumesDictionary.Add(biomeData.biome.Lighting.VolumeProfile, v);
 
-                if (biomeData.biome.Lighting.VolumeProfileRain != null)
+                if (biomeData.biome.Lighting.VolumeProfileRain != null && !this.volumesDictionary.ContainsKey(biomeData.biome.Lighting.VolumeProfileRain))
                 {
                     Volume vRain = this.volumes.gameObject.AddComponent<Volume>();
                     vRain.profile = biomeData.biome.Lighting.VolumeProfileRain;
@@ -243,7 +243,7 @@ public class AthmosphereControl : MonoBehaviour
     private void UpdateDayCycle()
     {
         this.timeOfDay += this.orbitSpeed * Time.deltaTime;
-        this.timeOfDay = ((this.timeOfDay % 24) + 24) % this.timeOfDay;
+        this.timeOfDay = ((this.timeOfDay % 24) + 24) % 24;
         this.SetDayCycle();
     }
 
