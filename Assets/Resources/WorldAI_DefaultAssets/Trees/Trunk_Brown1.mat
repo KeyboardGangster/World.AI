@@ -297,7 +297,7 @@ Material:
     - _TransparentSortPriority: 0
     - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 0
-    - _TrunkBending: 0.2
+    - _TrunkBending: 0.03
     - _TwoSided: 2
     - _UVBase: 0
     - _UVDetail: 0

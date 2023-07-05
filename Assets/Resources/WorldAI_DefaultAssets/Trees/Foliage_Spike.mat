@@ -276,7 +276,7 @@ Material:
     - _Ior: 1.5
     - _IridescenceMask: 1
     - _IridescenceThickness: 1
-    - _LeafBending: 0.05
+    - _LeafBending: 0.01
     - _LinkDetailsWithBase: 1
     - _MaterialID: 0
     - _Metallic: 0
@@ -329,7 +329,7 @@ Material:
     - _TransparentSortPriority: 0
     - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 0
-    - _TrunkBending: 0.2
+    - _TrunkBending: 0.02
     - _UVBase: 0
     - _UVDetail: 0
     - _UVEmissive: 0

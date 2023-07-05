@@ -47,7 +47,7 @@ public class AthmosphereControl : MonoBehaviour
     [SerializeField]
     private float windSpeed = 0.25f;
     [SerializeField]
-    private float windStrength = 0.4f;
+    private float windStrength = 0.3f;
     [SerializeField]
     private float windRotation = 20;
 
@@ -103,6 +103,7 @@ public class AthmosphereControl : MonoBehaviour
 
         Shader.SetGlobalFloat("_WindSpeed", this.windSpeed);
         Shader.SetGlobalFloat("_WindStrength", this.windStrength);
+        Shader.SetGlobalVector("_WindDirection", Quaternion.Euler(0, this.windRotation, 0) * Vector3.forward);
     }
 
     private void Update()
