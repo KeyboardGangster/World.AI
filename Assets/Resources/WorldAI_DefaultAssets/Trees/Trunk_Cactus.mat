@@ -24,7 +24,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Trunk_Cactus
-  m_Shader: {fileID: 4800000, guid: 6e4a33c008dac084b8c392f559ac7a54, type: 3}
+  m_Shader: {fileID: 4800000, guid: 0ff1ebecee2134144b0a77d2138fcb15, type: 3}
   m_ValidKeywords:
   - _DISABLE_DECALS
   - _DISABLE_SSR
@@ -294,6 +294,7 @@ Material:
     - _TransparentSortPriority: 0
     - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 0
+    - _TrunkBending: 0.2
     - _TwoSided: 2
     - _UVBase: 0
     - _UVDetail: 0
@@ -302,6 +303,8 @@ Material:
     - _UseShadowThreshold: 0
     - _WINDQUALITY: 4
     - _WindQuality: 1
+    - _WindSpeed: 0.15
+    - _WindStrength: 0.3
     - _WorldMapping: 0
     - _ZTestDepthEqualForOpaque: 3
     - _ZTestGBuffer: 4

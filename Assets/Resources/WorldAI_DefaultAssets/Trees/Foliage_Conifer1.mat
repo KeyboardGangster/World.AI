@@ -39,7 +39,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Foliage_Conifer1
-  m_Shader: {fileID: 4800000, guid: ea049e4b816d2764faac44a2b744befc, type: 3}
+  m_Shader: {fileID: 4800000, guid: 83fb495fe03bc1b4a87d596903366e12, type: 3}
   m_ValidKeywords:
   - _ALPHATEST_ON
   - _DISABLE_DECALS

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 6033.078, g: 3683.9219, b: 2502.6094, a: 1}
+  m_IndirectSpecularColor: {r: 6011.8984, g: 3674.543, b: 2499.9375, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -20210,6 +20210,12 @@ MonoBehaviour:
   dayDurationSeconds: 1200
   isRaining: 0
   rainEffect: {fileID: 109459797}
+  isStriking: 0
+  lightningPeriod: 0
+  lightningEffect: {fileID: 0}
+  windSpeed: 0.25
+  windStrength: 0.4
+  windRotation: 20
 --- !u!114 &2096298619
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20255,7 +20261,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   args: {fileID: 11400000, guid: 711ac0f0d93dc0146990b18f793f4092, type: 2}
-  waterPlane: {fileID: 0}
+  waterPlane: {fileID: 458234380}
   terrainLayers:
   - {fileID: 8574412962073106934, guid: afaaddd5e70cfa34dafe2e2a053a4c9a, type: 2}
   - {fileID: 8574412962073106934, guid: bab590c936c35f542bc5bf450988aba7, type: 2}

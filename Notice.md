@@ -9,6 +9,7 @@ External Libraries are licensed under their respective licenses.
 Microsoft, Newtonsoft: MIT
 OpenAI_API: CC0
 
+HDRP Shadergraphs are based on SG-HDRP-Lit-master. (Permission was given to use/ derivate from and redistribute their shadergraphs for this project)
 
 Everything else is licensed under MIT where applicable.
 See provided licenses for further detail.
@@ -26,3 +27,5 @@ Modular-Tree - https://github.com/MaximeHerpin/modular_tree
 Tree Sapling Gen - https://docs.blender.org/manual/en/latest/addons/add_curve/sapling.html
 
 OpenAI_API - https://github.com/OkGoDoIt/OpenAI-API-dotnet
+
+SG-HDRP-Lit-master - https://github.com/RemyUnity/SG-HDRP-Lit

@@ -11,7 +11,6 @@ using UnityEngine;
 /// Do not use at runtime, unless you're generating worlds at runtime!<br/>
 /// Static declarations are used during initialization of this class, use with caution.
 /// </summary>
-[CreateAssetMenu(fileName = "WorldGeneratorArgs", menuName = "GoFuckYourself", order = 0)]
 public class WorldGeneratorArgs : ScriptableObject
 {
     [SerializeField]

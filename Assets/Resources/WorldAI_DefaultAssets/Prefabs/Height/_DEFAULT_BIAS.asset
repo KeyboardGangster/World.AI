@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61cc73a78cc43244288a2499986390c1, type: 3}
   m_Name: _DEFAULT_BIAS
   m_EditorClassIdentifier: 
+  description: 
+  heightAddend: 0
+  heightMultiplier: 1
+  scale: 1
   octaves: 2
   lacunarity: 2
   persistance: 0.5
-  heightAddend: 0
-  heightMultiplier: 1
   noiseScale: 30
+  offset: {x: 0, y: 0}
   pattern: 0000000000000000
-  seed: 0

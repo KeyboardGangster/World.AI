@@ -44,6 +44,13 @@ public class AthmosphereControl : MonoBehaviour
     [SerializeField] private ParticleSystem lightningEffect;
     //private Camera mainCam;
 
+    [SerializeField]
+    private float windSpeed = 0.25f;
+    [SerializeField]
+    private float windStrength = 0.4f;
+    [SerializeField]
+    private float windRotation = 20;
+
     private void Awake()
     {
         //this.mainCam = Camera.main;
@@ -93,6 +100,9 @@ public class AthmosphereControl : MonoBehaviour
         StartCoroutine(BlendControl());
         StartCoroutine(BlendingCoroutine());
         StartCoroutine(UpdateLightning());
+
+        Shader.SetGlobalFloat("_WindSpeed", this.windSpeed);
+        Shader.SetGlobalFloat("_WindStrength", this.windStrength);
     }
 
     private void Update()
@@ -115,6 +125,10 @@ public class AthmosphereControl : MonoBehaviour
 
 
         this.orbitSpeed = 24 / (this.dayDurationSeconds > 0 ? this.dayDurationSeconds : 1);
+
+        Shader.SetGlobalFloat("_WindSpeed", this.windSpeed);
+        Shader.SetGlobalFloat("_WindStrength", this.windStrength);
+        Shader.SetGlobalVector("_WindDirection", Quaternion.Euler(0, this.windRotation, 0) * Vector3.forward);
 
         this.SetDayCycle();
     }

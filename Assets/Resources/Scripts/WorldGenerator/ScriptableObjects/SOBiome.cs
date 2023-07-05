@@ -63,7 +63,7 @@ public class SOBiome : ScriptableObject
 
     private void OnValidate()
     {
-        if (this.description.Length > 150)
+        if (this.description != null && this.description.Length > 150)
         {
             this.description = this.description.Remove(149);
             Debug.LogWarning("Your description is too long, please shorten it to max 150 words.");
