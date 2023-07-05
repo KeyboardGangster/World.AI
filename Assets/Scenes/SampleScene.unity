@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 5340.4727, g: 3318.0566, b: 2326.254, a: 1}
+  m_IndirectSpecularColor: {r: 5349.0723, g: 3314.4668, b: 2311.4492, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -14983,8 +14983,7 @@ MonoBehaviour:
   isStriking: 0
   lightningPeriod: 0
   lightningEffect: {fileID: 841498294}
-  windSpeed: 0.25
-  windStrength: 0.3
+  wind: 2
   windRotation: 20
 --- !u!114 &758193783
 MonoBehaviour:
@@ -15006,7 +15005,7 @@ MonoBehaviour:
     random: {x: 0, y: 0.5}
     finalFalloffRate: 0.029239764
     finalGrassNoiseScale: 1.026
-  - biome: {fileID: 11400000, guid: be3250a42eb6bbb4db2e53b9be803999, type: 2}
+  - biome: {fileID: 11400000, guid: 392359bd411a04746a68ef546080cecb, type: 2}
     bias: {x: 0, y: 0.5}
     random: {x: 0.5, y: 1}
     finalFalloffRate: 0.009746588

@@ -45,11 +45,9 @@ public class AthmosphereControl : MonoBehaviour
     //private Camera mainCam;
 
     [SerializeField]
-    private float windSpeed = 0.25f;
+    private WindStrength wind = WindStrength.Light;
     [SerializeField]
-    private float windStrength = 0.3f;
-    [SerializeField]
-    private float windRotation = 20;
+    private float windRotation = 20; //degrees
 
     private void Awake()
     {
@@ -101,9 +99,7 @@ public class AthmosphereControl : MonoBehaviour
         StartCoroutine(BlendingCoroutine());
         StartCoroutine(UpdateLightning());
 
-        Shader.SetGlobalFloat("_WindSpeed", this.windSpeed);
-        Shader.SetGlobalFloat("_WindStrength", this.windStrength);
-        Shader.SetGlobalVector("_WindDirection", Quaternion.Euler(0, this.windRotation, 0) * Vector3.forward);
+        this.SetWind();
     }
 
     private void Update()
@@ -127,9 +123,7 @@ public class AthmosphereControl : MonoBehaviour
 
         this.orbitSpeed = 24 / (this.dayDurationSeconds > 0 ? this.dayDurationSeconds : 1);
 
-        Shader.SetGlobalFloat("_WindSpeed", this.windSpeed);
-        Shader.SetGlobalFloat("_WindStrength", this.windStrength);
-        Shader.SetGlobalVector("_WindDirection", Quaternion.Euler(0, this.windRotation, 0) * Vector3.forward);
+        this.SetWind();
 
         this.SetDayCycle();
     }
@@ -388,5 +382,36 @@ public class AthmosphereControl : MonoBehaviour
 
             yield return new WaitForSeconds(this.lightningPeriod);
         }
+    }
+
+    private void SetWind()
+    {
+        float speed, strength;
+
+        switch (this.wind)
+        {
+            case WindStrength.Calm:
+                speed = 0.1f;
+                strength = 0.1f;
+                break;
+            case WindStrength.Light:
+                speed = 0.25f;
+                strength = 0.3f;
+                break;
+            case WindStrength.Moderate:
+                speed = 0.5f;
+                strength = 0.6f;
+                break;
+            case WindStrength.Strong:
+                speed = 1f;
+                strength = 0.8f;
+                break;
+            default:
+                throw new System.NotImplementedException();
+        }
+
+        Shader.SetGlobalFloat("_WindSpeed", speed);
+        Shader.SetGlobalFloat("_WindStrength", strength);
+        Shader.SetGlobalVector("_WindDirection", Quaternion.Euler(0, this.windRotation, 0) * Vector3.forward);
     }
 }

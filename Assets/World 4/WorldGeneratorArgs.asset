@@ -15,9 +15,9 @@ MonoBehaviour:
   terrainData: {fileID: 15600000, guid: ebd1e79b16b8d3742b4bf5f6ae3af42e, type: 2}
   seed: 1
   bias:
-    rid: 7215798055279001610
+    rid: 7215798072098422784
   randomness:
-    rid: 7215798055279001611
+    rid: 7215798072098422785
   biomeScale: 10
   worldScaleRatio: 0.97465885
   toyScaleRatio: 1
@@ -28,7 +28,7 @@ MonoBehaviour:
     random: {x: 0, y: 0.5}
     finalFalloffRate: 0.029239764
     finalGrassNoiseScale: 1.026
-  - biome: {fileID: 11400000, guid: be3250a42eb6bbb4db2e53b9be803999, type: 2}
+  - biome: {fileID: 11400000, guid: 392359bd411a04746a68ef546080cecb, type: 2}
     bias: {x: 0, y: 0.5}
     random: {x: 0.5, y: 1}
     finalFalloffRate: 0.009746588
@@ -41,7 +41,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 7215798055279001610
+    - rid: 7215798072098422784
       type: {class: NoiseData, ns: , asm: Assembly-CSharp}
       data:
         isBiomeDistribution: 1
@@ -54,7 +54,7 @@ MonoBehaviour:
         - {x: -5027, y: -7786}
         - {x: -660, y: 5432}
         maxValue: 1.5
-    - rid: 7215798055279001611
+    - rid: 7215798072098422785
       type: {class: NoiseData, ns: , asm: Assembly-CSharp}
       data:
         isBiomeDistribution: 1
