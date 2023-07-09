@@ -76,7 +76,7 @@ namespace Player_Controller
         }
 
         // Start is called before the first frame update
-        protected virtual void Awake()
+        protected virtual void Start()
         {
             this.BindEvents();
 

@@ -71,6 +71,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Torch"",
+                    ""type"": ""Button"",
+                    ""id"": ""801df39f-a2e7-45ce-8b3f-b5f47321ff4f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -172,6 +181,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""NoClip"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""71bd0b30-5f33-4b42-912b-16d19d5572a0"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Torch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -185,6 +205,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Default_Jump = m_Default.FindAction("Jump", throwIfNotFound: true);
         m_Default_ToggleRun = m_Default.FindAction("ToggleRun", throwIfNotFound: true);
         m_Default_NoClip = m_Default.FindAction("NoClip", throwIfNotFound: true);
+        m_Default_Torch = m_Default.FindAction("Torch", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -251,6 +272,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Default_Jump;
     private readonly InputAction m_Default_ToggleRun;
     private readonly InputAction m_Default_NoClip;
+    private readonly InputAction m_Default_Torch;
     public struct DefaultActions
     {
         private @PlayerInput m_Wrapper;
@@ -260,6 +282,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Default_Jump;
         public InputAction @ToggleRun => m_Wrapper.m_Default_ToggleRun;
         public InputAction @NoClip => m_Wrapper.m_Default_NoClip;
+        public InputAction @Torch => m_Wrapper.m_Default_Torch;
         public InputActionMap Get() { return m_Wrapper.m_Default; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -284,6 +307,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @NoClip.started += instance.OnNoClip;
             @NoClip.performed += instance.OnNoClip;
             @NoClip.canceled += instance.OnNoClip;
+            @Torch.started += instance.OnTorch;
+            @Torch.performed += instance.OnTorch;
+            @Torch.canceled += instance.OnTorch;
         }
 
         private void UnregisterCallbacks(IDefaultActions instance)
@@ -303,6 +329,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @NoClip.started -= instance.OnNoClip;
             @NoClip.performed -= instance.OnNoClip;
             @NoClip.canceled -= instance.OnNoClip;
+            @Torch.started -= instance.OnTorch;
+            @Torch.performed -= instance.OnTorch;
+            @Torch.canceled -= instance.OnTorch;
         }
 
         public void RemoveCallbacks(IDefaultActions instance)
@@ -327,5 +356,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnToggleRun(InputAction.CallbackContext context);
         void OnNoClip(InputAction.CallbackContext context);
+        void OnTorch(InputAction.CallbackContext context);
     }
 }

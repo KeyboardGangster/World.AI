@@ -39,10 +39,7 @@ public class AthmosphereControl : MonoBehaviour
     [Header("Lightning Strikes")]
     [SerializeField] private bool isStriking;
     [SerializeField] private float lightningPeriod;
-    //[SerializeField] private float strikeDistanceMin;
-    //[SerializeField] private float strikeDistanceMax;
     [SerializeField] private ParticleSystem lightningEffect;
-    //private Camera mainCam;
     [SerializeField] private Material lightningMaterial;
 
     [SerializeField]
@@ -50,18 +47,12 @@ public class AthmosphereControl : MonoBehaviour
     [SerializeField]
     private float windRotation = 20; //degrees
 
-    [Header("Torch")]
-    [SerializeField] private GameObject torch;
-
     private void Awake()
     {
-        //this.mainCam = Camera.main;
         this.worldGenerator = this.GetComponent<WorldGenerator>();
         
         this.orbitSpeed = 24 / (this.dayDurationSeconds > 0 ? this.dayDurationSeconds : 1);
         this.rainEffectOffset = this.rainEffect.transform.localPosition;
-
-        this.SetLightingEmission(this.lightningMaterial, 20f);
     }
 
     private void Start()
@@ -113,12 +104,11 @@ public class AthmosphereControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             this.isRaining = !this.isRaining;
-            this.isStriking = this.isRaining;
         }
 
         if (Input.GetKeyDown(KeyCode.T))
         {
-            this.torch.SetActive(!this.torch.activeSelf);
+            this.isStriking = !this.isStriking;
         }
 
         if (!this.fixedTimeOfDay)
@@ -431,7 +421,7 @@ public class AthmosphereControl : MonoBehaviour
         Shader.SetGlobalVector("_WindDirection", Quaternion.Euler(0, this.windRotation, 0) * Vector3.forward);
     }
 
-    public void SetLightingEmission(Material mat, float intensity)
+    /*public void SetLightingEmission(Material mat, float intensity)
     {
         Color color = mat.GetColor("_Color");
 
@@ -439,5 +429,5 @@ public class AthmosphereControl : MonoBehaviour
 
         color *= Mathf.Pow(2.0F, adjustedIntensity);
         mat.SetColor("_EmissionColor", color);
-    }
+    }*/
 }
