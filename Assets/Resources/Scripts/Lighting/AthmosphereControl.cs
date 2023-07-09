@@ -43,11 +43,15 @@ public class AthmosphereControl : MonoBehaviour
     //[SerializeField] private float strikeDistanceMax;
     [SerializeField] private ParticleSystem lightningEffect;
     //private Camera mainCam;
+    [SerializeField] private Material lightningMaterial;
 
     [SerializeField]
     private WindStrength wind = WindStrength.Light;
     [SerializeField]
     private float windRotation = 20; //degrees
+
+    [Header("Torch")]
+    [SerializeField] private GameObject torch;
 
     private void Awake()
     {
@@ -56,6 +60,8 @@ public class AthmosphereControl : MonoBehaviour
         
         this.orbitSpeed = 24 / (this.dayDurationSeconds > 0 ? this.dayDurationSeconds : 1);
         this.rainEffectOffset = this.rainEffect.transform.localPosition;
+
+        this.SetLightingEmission(this.lightningMaterial, 20f);
     }
 
     private void Start()
@@ -105,7 +111,15 @@ public class AthmosphereControl : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
+        {
             this.isRaining = !this.isRaining;
+            this.isStriking = this.isRaining;
+        }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            this.torch.SetActive(!this.torch.activeSelf);
+        }
 
         if (!this.fixedTimeOfDay)
             this.UpdateDayCycle();
@@ -281,6 +295,7 @@ public class AthmosphereControl : MonoBehaviour
             {
                 this.moon.shadows = LightShadows.None;
                 this.sun.shadows = LightShadows.Soft;
+                // this.SetLightingEmission(100f);
             }
         }
         else
@@ -289,6 +304,7 @@ public class AthmosphereControl : MonoBehaviour
             {
                 this.sun.shadows = LightShadows.None;
                 this.moon.shadows = LightShadows.Soft;
+                // this.SetLightingEmission(6);
 
                 //Quickfix to avoid lighting-bug
                 if ((Application.isPlaying && this.fixedTimeOfDay) || !Application.isPlaying)
@@ -413,5 +429,15 @@ public class AthmosphereControl : MonoBehaviour
         Shader.SetGlobalFloat("_WindSpeed", speed);
         Shader.SetGlobalFloat("_WindStrength", strength);
         Shader.SetGlobalVector("_WindDirection", Quaternion.Euler(0, this.windRotation, 0) * Vector3.forward);
+    }
+
+    public void SetLightingEmission(Material mat, float intensity)
+    {
+        Color color = mat.GetColor("_Color");
+
+        float adjustedIntensity = intensity - (0.4169F);
+
+        color *= Mathf.Pow(2.0F, adjustedIntensity);
+        mat.SetColor("_EmissionColor", color);
     }
 }
