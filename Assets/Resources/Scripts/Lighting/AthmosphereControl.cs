@@ -40,10 +40,10 @@ public class AthmosphereControl : MonoBehaviour
 
     [Header("Lightning Strikes")]
     [SerializeField] private bool isStriking;
-    [SerializeField] private float lightningPeriod;
+    [SerializeField] private float lightningPeriod = 2;
     [SerializeField] private ParticleSystem lightningEffect;
-    [SerializeField] private Material lightningMaterial;
-    [SerializeField] private AudioClip LightingAudio;
+    //[SerializeField] private Material lightningMaterial;
+    //[SerializeField] private AudioClip LightingAudio;
 
     [SerializeField]
     private WindStrength wind = WindStrength.Light;
@@ -57,7 +57,7 @@ public class AthmosphereControl : MonoBehaviour
         this.orbitSpeed = 24 / (this.dayDurationSeconds > 0 ? this.dayDurationSeconds : 1);
         this.rainEffectOffset = this.rainEffect.transform.localPosition;
 
-        audioSource = GetComponent<AudioSource>();
+        this.audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -174,6 +174,28 @@ public class AthmosphereControl : MonoBehaviour
             ParticleSystem lightningEffect = Resources.Load<ParticleSystem>("WorldAI_DefaultAssets/Prefabs/_DEFAULT_LIGHTNING_EFFECT");
             this.lightningEffect = Instantiate(lightningEffect, this.transform);
         }
+
+
+        if (this.rainAudio == null)
+        {
+            AudioClip rainAudio = Resources.Load<AudioClip>("SoundEffects/forest rain world ai");
+            this.rainAudio = rainAudio;
+        }
+
+        if (this.audioSource == null)
+        {
+            AudioSource audioSource = this.GetComponent<AudioSource>();
+
+            if (audioSource == null)
+             audioSource = this.gameObject.AddComponent<AudioSource>();
+
+            audioSource.loop = true;
+            audioSource.volume = 1.0f;
+            audioSource.playOnAwake = false;
+            audioSource.rolloffMode = AudioRolloffMode.Custom;
+            audioSource.maxDistance = 2001;
+            audioSource.minDistance = 2000;
+        }
     }
 
     private IEnumerator BlendControl()
@@ -232,10 +254,11 @@ public class AthmosphereControl : MonoBehaviour
                     audioSource.loop = true;
                     audioSource.Play();
                     audioSource.volume = 0;
-                    for (float i = 0; i < 3000; i += Time.deltaTime)
-                    {
-                        audioSource.volume = i;
-                    }
+                }
+
+                if (biomeVolumeRain.weight > 0.6f && this.audioSource.isPlaying)
+                {
+                    audioSource.volume = Mathf.Lerp(0, 1, 1 - (0.6f / biomeVolumeRain.weight)) * 2.5f;
                 }
 
                 if (biomeVolumeRain.profile.TryGet(out VolumetricClouds biomeCloudsRain) && currentClouds.cloudPreset.value != biomeCloudsRain.cloudPreset.value)
@@ -250,7 +273,7 @@ public class AthmosphereControl : MonoBehaviour
                 if (this.rainEffect.isPlaying)
                 {
                     this.rainEffect.Stop(true);
-                    audioSource.Stop();
+                    this.audioSource.Stop();
                 }
 
                 if (biomeVolume.profile.TryGet(out VolumetricClouds biomeClouds) && currentClouds.cloudPreset.value != biomeClouds.cloudPreset.value)
