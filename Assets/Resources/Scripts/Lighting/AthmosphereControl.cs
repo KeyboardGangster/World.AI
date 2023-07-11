@@ -35,12 +35,15 @@ public class AthmosphereControl : MonoBehaviour
     [SerializeField] private bool isRaining;
     [SerializeField] private ParticleSystem rainEffect;
     private Vector3 rainEffectOffset;
+    [SerializeField] private AudioClip rainAudio;
+    private AudioSource audioSource;
 
     [Header("Lightning Strikes")]
     [SerializeField] private bool isStriking;
     [SerializeField] private float lightningPeriod;
     [SerializeField] private ParticleSystem lightningEffect;
     [SerializeField] private Material lightningMaterial;
+    [SerializeField] private AudioClip LightingAudio;
 
     [SerializeField]
     private WindStrength wind = WindStrength.Light;
@@ -53,6 +56,8 @@ public class AthmosphereControl : MonoBehaviour
         
         this.orbitSpeed = 24 / (this.dayDurationSeconds > 0 ? this.dayDurationSeconds : 1);
         this.rainEffectOffset = this.rainEffect.transform.localPosition;
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -223,6 +228,14 @@ public class AthmosphereControl : MonoBehaviour
                 if (biomeVolumeRain.weight > 0.6f && !this.rainEffect.isPlaying)
                 {
                     this.rainEffect.Play(true);
+                    audioSource.clip = rainAudio;
+                    audioSource.loop = true;
+                    audioSource.Play();
+                    audioSource.volume = 0;
+                    for (float i = 0; i < 3000; i += Time.deltaTime)
+                    {
+                        audioSource.volume = i;
+                    }
                 }
 
                 if (biomeVolumeRain.profile.TryGet(out VolumetricClouds biomeCloudsRain) && currentClouds.cloudPreset.value != biomeCloudsRain.cloudPreset.value)
@@ -237,6 +250,7 @@ public class AthmosphereControl : MonoBehaviour
                 if (this.rainEffect.isPlaying)
                 {
                     this.rainEffect.Stop(true);
+                    audioSource.Stop();
                 }
 
                 if (biomeVolume.profile.TryGet(out VolumetricClouds biomeClouds) && currentClouds.cloudPreset.value != biomeClouds.cloudPreset.value)
